@@ -1,8 +1,8 @@
-package com.example.accessingdatadb;
+package com.example.servingwebcontent;
 
 import jakarta.persistence.*;
 
-@Entity(name="public.user") // This tells Hibernate to make a table out of this class
+@Entity // This tells Hibernate to make a table out of this class
 public class User {
 
     @Id
