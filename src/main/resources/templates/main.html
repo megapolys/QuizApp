@@ -1,19 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
   <title>Getting Started: Serving Web Content</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<form method="post">
-  <label for="name">Name:</label>
-  <input id="name" type="text" name="name">
-  <label for="email">Email:</label>
-  <input id="email" type="text" name="email">
-  <input type="submit" value="Save">
-</form>
 <h3>Search by name</h3>
-<form method="post" action="findByName">
+<form method="post" th:action="@{findByName}">
   <input id="find_name" type="text" name="find_name">
   <input type="submit" value="Search">
 </form>
@@ -23,7 +16,7 @@
     <th>Email</th>
   </tr>
   <tr th:each="user : ${users}">
-    <td th:text="${user.name}"></td>
+    <td th:text="${user.username}"></td>
     <td th:text="${user.email}"></td>
   </tr>
 </table>

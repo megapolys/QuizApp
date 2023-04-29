@@ -1,5 +1,6 @@
-package com.example.servingwebcontent;
+package com.example.servingwebcontent.controller;
 
+import com.example.servingwebcontent.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class GreetingController {
+public class MainController {
     @Autowired
     private UserRepository userRepository;
 
@@ -26,20 +27,11 @@ public class GreetingController {
         return "main";
     }
 
-    @PostMapping("/main")
-    public String addNewUser(@RequestParam String name, @RequestParam String email, Model model) {
-        final User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
-        return "main";
-    }
 
     @PostMapping("findByName")
     public String findByName(@RequestParam String find_name, Model model) {
         if (StringUtils.isNotBlank(find_name)) {
-            model.addAttribute("users", userRepository.findByNameContaining(find_name));
+            model.addAttribute("users", userRepository.findByUsernameContaining(find_name));
         } else {
             model.addAttribute("users", userRepository.findAll());
         }
