@@ -5,6 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+<form th:action="@{/logout}" method="post">
+  <input type="submit" value="Sign Out"/>
+</form>
 <h3>Search by name</h3>
 <form method="post" th:action="@{findByName}">
   <input id="find_name" type="text" name="find_name">
