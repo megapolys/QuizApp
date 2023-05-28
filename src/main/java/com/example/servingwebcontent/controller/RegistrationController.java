@@ -25,11 +25,15 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Map<String, Object> model) {
+    public String addUser(User user, Model model) {
         User userFromDb = userRepository.findByUsername(user.getUsername());
         if (userFromDb != null) {
-            model.put("massage", "Username exists!");
+            model.addAttribute("message", "Username exists!");
             return "registration";
+        } else if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())
+                || StringUtils.isBlank(user.getEmail())) {
+              model.addAttribute("message", "Необходимо заполнить все поля");
+              return "registration";
         } else {
             user.setActive(true);
             user.setRoles(Set.of(Role.USER));
