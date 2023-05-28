@@ -4,8 +4,9 @@
     <div>Welcome, <span>${userName}</span></div>
     <h3>Search by name</h3>
     <@l.logout />
+    <a href="/user">Пользователи</a>
     <form action="/main" method="get">
-        <input id="findName" type="text" name="findName" value="${findNameFilter}">
+        <input id="findName" type="text" name="findName" value="${findNameFilter!}">
         <input type="submit" value="Search">
     </form>
     <table>
