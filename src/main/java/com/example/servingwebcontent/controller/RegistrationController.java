@@ -1,10 +1,9 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.UserRepository;
+import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.domain.Role;
 import com.example.servingwebcontent.domain.User;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

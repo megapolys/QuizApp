@@ -7,6 +7,7 @@
                 <th>Имя</th>
                 <th>Почта</th>
                 <th>Роли</th>
+                <th>Тесты</th>
                 <th></th>
             </tr>
         </thead>
@@ -16,6 +17,7 @@
                     <td>${user.username}</td>
                     <td>${user.email}</td>
                     <td><#list user.roles as role>${role}<#sep>, </#list></td>
+                    <td><#list user.quizzes as quiz>${quiz.shortName}<#sep>, </#list></td>
                     <td><a href="/user/${user.id}">Изменить</a></td>
                 </tr>
             </#list>

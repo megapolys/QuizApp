@@ -1,5 +1,7 @@
 package com.example.servingwebcontent.domain;
 
+import com.example.servingwebcontent.domain.quiz.Quiz;
+import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +13,7 @@ import java.util.Set;
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(unique = true)
@@ -25,6 +27,12 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Quiz> quizzes;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<QuizResult> results;
 
     private boolean active;
 
@@ -103,5 +111,21 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Quiz> getQuizzes() {
+        return quizzes;
+    }
+
+    public void setQuizzes(Set<Quiz> quizzes) {
+        this.quizzes = quizzes;
+    }
+
+    public Set<QuizResult> getResults() {
+        return results;
+    }
+
+    public void setResults(Set<QuizResult> results) {
+        this.results = results;
     }
 }

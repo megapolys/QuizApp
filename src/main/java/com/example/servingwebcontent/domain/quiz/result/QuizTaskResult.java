@@ -1,0 +1,71 @@
+package com.example.servingwebcontent.domain.quiz.result;
+
+import com.example.servingwebcontent.domain.quiz.QuizTask;
+import jakarta.persistence.*;
+
+@Entity
+public class QuizTaskResult {
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private QuizTask task;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "quiz_id", referencedColumnName = "id", nullable = false)
+    private QuizResult quiz;
+
+    private boolean complete;
+
+    private String variant;
+    private String text;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public QuizTask getTask() {
+        return task;
+    }
+
+    public void setTask(QuizTask task) {
+        this.task = task;
+    }
+
+    public QuizResult getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(QuizResult quiz) {
+        this.quiz = quiz;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
+    public String getVariant() {
+        return variant;
+    }
+
+    public void setVariant(String variant) {
+        this.variant = variant;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+}

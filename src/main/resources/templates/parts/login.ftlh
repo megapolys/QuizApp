@@ -18,11 +18,6 @@
             </div>
         </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <#if !registration>
-            <div class="mb-3">
-                <a class="btn btn-primary" href="../registration">Зарегистрироваться</a>
-            </div>
-        </#if>
         <button type="submit"
                 class="btn btn-primary">${registration?string("Зарегистрироваться","Залогиниться")}</button>
     </form>

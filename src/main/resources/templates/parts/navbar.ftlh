@@ -14,11 +14,17 @@
                     <a class="nav-link" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/main">Main</a>
+                    <a class="nav-link" href="/main">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/quizMain">Викторины</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link" href="/user">Users</a>
+                        <a class="nav-link" href="/user">Пользователи</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/quiz/list">Тесты</a>
                     </li>
                 </#if>
             </ul>

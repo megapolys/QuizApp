@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.service;
 
-import com.example.servingwebcontent.UserRepository;
+import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
