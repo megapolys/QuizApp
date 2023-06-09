@@ -20,6 +20,7 @@ public class User implements UserDetails {
     private String username;
 
     private String email;
+    private String activationCode;
 
     private String password;
 
@@ -111,6 +112,14 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     public Set<Quiz> getQuizzes() {

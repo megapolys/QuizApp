@@ -3,7 +3,7 @@
     <h3>Изменение пользователя ${user.username}</h3>
     <form action="/user" method="post">
         <input type="text" name="username" value="${user.username}">
-        <input type="text" name="email" value="${user.email}">
+        <input type="email" name="email" value="${user.email}">
         <#list roles as role>
             <div>
                 <label><input type="checkbox" name="roles"

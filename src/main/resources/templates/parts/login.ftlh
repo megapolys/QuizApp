@@ -14,7 +14,7 @@
         <#if registration>
             <div class="mb-3 col-3">
                 <label for="inputEmail" class="form-label">Адрес почты</label>
-                <input id="inputEmail" class="form-control" type="text" name="email" placeholder="email"/>
+                <input id="inputEmail" class="form-control" type="email" name="email" placeholder="email"/>
             </div>
         </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>

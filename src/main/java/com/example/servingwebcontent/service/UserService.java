@@ -1,19 +1,32 @@
 package com.example.servingwebcontent.service;
 
+import com.example.servingwebcontent.domain.Role;
 import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.domain.User;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
+    @Value("${spring.mail.username}")
+    private String username;
 
     private final UserRepository userRepository;
+    private final JavaMailSender mailSender;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JavaMailSender mailSender) {
         this.userRepository = userRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -27,5 +40,52 @@ public class UserService implements UserDetailsService {
             return userByEmail;
         }
         throw new UsernameNotFoundException("Пользователь не найден");
+    }
+
+    public User addUser(User user) {
+        User userFromDb = userRepository.findByUsername(user.getUsername());
+        if (userFromDb != null) {
+            return null;
+        }
+        user.setActive(true);
+        user.setRoles(Set.of(Role.USER));
+        user.setActivationCode(UUID.randomUUID().toString());
+        final User savedUser = userRepository.save(user);
+        if (StringUtils.hasText(user.getEmail())) {
+            final String message = String.format(
+                    "Здравствуйте, %s \n" +
+                            "Добро пожаловать на Health-3800. Пожалуйста перейдите по ссылки для подтверждения регистрации: http://localhost:8080/activate/%s",
+                    user.getUsername(), user.getActivationCode()
+            );
+            final SimpleMailMessage simpleMessage = new SimpleMailMessage();
+            simpleMessage.setFrom(username);
+            simpleMessage.setTo(user.getEmail());
+            simpleMessage.setSubject("Код активации");
+            simpleMessage.setText(message);
+            mailSender.send(simpleMessage);
+        }
+        return savedUser;
+    }
+
+    public boolean activateUser(String code) {
+        final User user = userRepository.findByActivationCode(code);
+
+        if (user == null) {
+            return false;
+        }
+
+        user.setActivationCode(null);
+
+        userRepository.save(user);
+
+        return false;
+    }
+
+    public void testMail() {
+        final SimpleMailMessage simpleMessage = new SimpleMailMessage();
+        simpleMessage.setFrom(username);
+        simpleMessage.setTo("losev.megapolys@yandex.ru");
+        simpleMessage.setText("testMessage");
+        mailSender.send(simpleMessage);
     }
 }
