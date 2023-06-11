@@ -29,7 +29,11 @@
                 </#if>
             </ul>
             <a href="/profile" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
-            <@l.logout/>
+            <#if user??>
+                <@l.logout true/>
+            <#else>
+                <@l.logout false/>
+            </#if>
         </div>
     </div>
 </nav>
