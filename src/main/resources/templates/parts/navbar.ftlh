@@ -17,18 +17,18 @@
                     <a class="nav-link" href="/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/quizMain">Викторины</a>
+                    <a class="nav-link" href="/quizMain">Опросники</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link" href="/user">Пользователи</a>
+                        <a class="nav-link" href="/user/list">Пользователи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/quiz/list">Тесты</a>
                     </li>
                 </#if>
             </ul>
-            <a href="/profile" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
+            <a href="/user" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
             <#if user??>
                 <@l.logout true/>
             <#else>

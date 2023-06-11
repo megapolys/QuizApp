@@ -4,6 +4,7 @@ import com.example.servingwebcontent.domain.Role;
 import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.domain.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -41,10 +43,11 @@ public class UserService implements UserDetailsService {
         throw new UsernameNotFoundException("Пользователь не найден");
     }
 
-    public User addUser(User user) {
-        User userFromDb = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
-        if (userFromDb != null) {
-            return null;
+    @NonNull
+    public UserResult addUser(User user) {
+        UserResult result = checkUser(user);
+        if (result != null) {
+            return result;
         }
         user.setActive(false);
         user.setRoles(Set.of(Role.USER));
@@ -63,7 +66,31 @@ public class UserService implements UserDetailsService {
             simpleMessage.setText(message);
             mailSender.send(simpleMessage);
         }
-        return savedUser;
+        return new UserResult(ResultType.SUCCESS, savedUser);
+    }
+
+    @NonNull
+    public UserResult updateUser(User currentUser, User newUser) {
+        currentUser.setUsername(newUser.getUsername());
+        currentUser.setPassword(newUser.getPassword());
+        currentUser.setEmail(newUser.getEmail());
+        UserResult result = checkUser(currentUser);
+        if (result != null) {
+            return result;
+        }
+        return new UserResult(ResultType.SUCCESS, userRepository.save(currentUser));
+    }
+
+    private UserResult checkUser(User user) {
+        User byUsername = userRepository.findByUsername(user.getUsername());
+        if (byUsername != null && !Objects.equals(byUsername.getId(), user.getId())) {
+            return new UserResult(ResultType.USERNAME_FOUND, null);
+        }
+        User byEmail = userRepository.findByEmail(user.getEmail());
+        if (byEmail != null && !Objects.equals(byEmail.getId(), user.getId())) {
+            return new UserResult(ResultType.EMAIL_FOUND, null);
+        }
+        return null;
     }
 
     public boolean activateUser(String code) {
@@ -79,5 +106,12 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
         return true;
+    }
+
+    public enum ResultType {
+        USERNAME_FOUND, EMAIL_FOUND, SUCCESS
+    }
+
+    public record UserResult(ResultType result, User user) {
     }
 }

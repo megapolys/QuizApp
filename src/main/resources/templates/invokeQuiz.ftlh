@@ -1,6 +1,5 @@
 <#import "parts/common.ftlh" as c>
 <@c.page>
-    <div class="text-danger mb-3">${message!}</div>
     <div class="card">
         <h3 class="card-header">Вопрос #${task.task.position}</h3>
         <div class="card-body">

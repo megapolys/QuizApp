@@ -1,11 +1,6 @@
 <#import "parts/common.ftlh" as c>
 <@c.page>
     <h3>Список тестов</h3>
-    <#if message?has_content>
-        <div class="row text-danger">
-            ${message}
-        </div>
-    </#if>
     <form action="/quiz/add" method="get">
         <div class="row">
             <div class="col-1">
