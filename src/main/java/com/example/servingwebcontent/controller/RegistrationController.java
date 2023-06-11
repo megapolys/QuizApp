@@ -24,15 +24,16 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Model model) {
-        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())) {
-            model.addAttribute("message", "Необходимо заполнить логин и пароль");
+        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())
+        || StringUtils.isBlank(user.getEmail())) {
+            model.addAttribute("message", "Необходимо заполнить все поля");
             return "registration";
         }
         if (userService.addUser(user) == null) {
-            model.addAttribute("message", "Пользователь с таким именем уже существует!");
+            model.addAttribute("message", "Пользователь с таким логином и/или почтой уже существует!");
             return "registration";
         }
-        return "redirect:/login";
+        return "redirect:/activate/activation";
     }
 
     @GetMapping("/activate/{code}")
@@ -48,9 +49,8 @@ public class RegistrationController {
         return "login";
     }
 
-    @GetMapping("/testMail")
-    public String testMail() {
-        userService.testMail();
-        return "redirect:/registration";
+    @GetMapping("/activate/activation")
+    public String activate() {
+        return "activation";
     }
 }

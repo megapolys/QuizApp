@@ -4,7 +4,6 @@ import com.example.servingwebcontent.domain.Role;
 import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.domain.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,8 +17,8 @@ import java.util.UUID;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Value("${spring.mail.username}")
-    private String username;
+    @Value("${spring.mail.from}")
+    private String from;
 
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
@@ -43,11 +42,11 @@ public class UserService implements UserDetailsService {
     }
 
     public User addUser(User user) {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+        User userFromDb = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         if (userFromDb != null) {
             return null;
         }
-        user.setActive(true);
+        user.setActive(false);
         user.setRoles(Set.of(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
         final User savedUser = userRepository.save(user);
@@ -58,7 +57,7 @@ public class UserService implements UserDetailsService {
                     user.getUsername(), user.getActivationCode()
             );
             final SimpleMailMessage simpleMessage = new SimpleMailMessage();
-            simpleMessage.setFrom(username);
+            simpleMessage.setFrom(from);
             simpleMessage.setTo(user.getEmail());
             simpleMessage.setSubject("Код активации");
             simpleMessage.setText(message);
@@ -75,17 +74,10 @@ public class UserService implements UserDetailsService {
         }
 
         user.setActivationCode(null);
+        user.setActive(true);
 
         userRepository.save(user);
 
-        return false;
-    }
-
-    public void testMail() {
-        final SimpleMailMessage simpleMessage = new SimpleMailMessage();
-        simpleMessage.setFrom(username);
-        simpleMessage.setTo("losev.megapolys@yandex.ru");
-        simpleMessage.setText("testMessage");
-        mailSender.send(simpleMessage);
+        return true;
     }
 }

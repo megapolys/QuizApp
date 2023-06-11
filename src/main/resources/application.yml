@@ -1,0 +1,17 @@
+spring.jpa.hibernate.ddl-auto: update
+spring.datasource.url: jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username: postgres
+spring.datasource.password: admin
+spring.datasource.driver-class-name: org.postgresql.Driver
+#spring.jpa.show-sql: true
+
+spring.freemarker:
+  expose-request-attributes: true
+  expose-session-attributes: true
+
+upload.path: /Users/Daniil/IdeaProjects/QuizApp/img
+spring.servlet.multipart.max-file-size: 1MB
+spring.servlet.multipart.max-request-size: 1MB
+
+spring.profiles.include:
+  - mail

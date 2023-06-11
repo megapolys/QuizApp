@@ -13,6 +13,7 @@
     <body>
     <#include "navbar.ftlh">
     <div class="container mt-5">
+        <div class="text-danger">${message!}</div>
         <#nested>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
