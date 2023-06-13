@@ -17,7 +17,7 @@
                     <a class="nav-link" href="/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/quizMain">Опросники</a>
+                    <a class="nav-link" href="/userQuizList">Опросники</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">

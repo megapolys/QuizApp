@@ -1,4 +1,5 @@
 <#import "parts/common.ftlh" as c>
+<#import "parts/modal.ftlh" as modal>
 <@c.page>
     <div class="card">
         <h3 class="card-header">Вопрос #${task.task.position}</h3>
@@ -7,7 +8,7 @@
             <form action="/invokeQuiz/${task.quiz.id?c}" method="post">
                 <#if task.task.fiveVariantTask??>
                     <#if task.task.fiveVariantTask.fileName??>
-                        <img class="mb-3 img-thumbnail" src="/img/${task.task.fiveVariantTask.fileName}" width="200px" height="200px">
+                        <@modal.image "Показать картинку, возможно картинка будет стрёмная. Просьба удостовериться, что вы не потребляете пищу в данный момент, спасибо." "/img/${task.task.fiveVariantTask.fileName}" "modalImageFiveVariant"/>
                     </#if>
                     <div class="input-group mb-3">
                         <div class="form-check me-3">
@@ -38,7 +39,7 @@
                 </#if>
                 <#if task.task.yesOrNoTask??>
                     <#if task.task.yesOrNoTask.fileName??>
-                        <img class="mb-3 img-thumbnail" src="/img/${task.task.yesOrNoTask.fileName}" width="200px" height="200px">
+                        <@modal.image "Показать картинку, возможно картинка будет стрёмная. Просьба удостовериться, что вы не потребляете пищу в данный момент, спасибо." "/img/${task.task.yesOrNoTask.fileName}" "modalImageYesOrNo"/>
                     </#if>
                     <div class="input-group mb-3">
                         <div class="form-check me-3">
@@ -55,7 +56,7 @@
                         <textarea id="inputText" class="form-control" name="text" placeholder="Свой вариант...">${areaText!}</textarea>
                     </div>
                 </#if>
-                <input type="hidden" name="task" value="${task.id}"/>
+                <input type="hidden" name="task" value="${task.id?c}"/>
                 <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <#if lastTask>
                     <button type="submit" class="btn btn-success">Завершить тестирование</button>
