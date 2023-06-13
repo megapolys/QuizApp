@@ -12,7 +12,7 @@
     </head>
     <body>
     <#include "navbar.ftlh">
-    <div class="container mt-5">
+    <div class="container mt-3">
         <div class="text-danger mb-3">${message!}</div>
         <div class="text-success mb-3">${successMessage!}</div>
         <#nested>

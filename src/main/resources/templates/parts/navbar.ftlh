@@ -2,7 +2,7 @@
 <#import "login.ftlh" as l>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid mx-5">
+    <div class="container">
         <a class="navbar-brand" href="/">Health-3800</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +25,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/quiz/list">Тесты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/decisions">Решения</a>
                     </li>
                 </#if>
             </ul>
