@@ -44,28 +44,44 @@ public class QuizTaskService {
         this.quizTaskResultRepository = quizTaskResultRepository;
     }
 
-    public QuizTaskResult save(Quiz quiz, Object task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions, TaskType type) {
-        QuizTask quizTask = new QuizTask();
+    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions) {
+        return saveFiveVariant(quiz, task, file, pos, decisions, new QuizTask());
+    }
+
+    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
         try {
+            deleteFile(quizTask);
             final String resultFileName = saveFile(file);
             if (file != null && !file.getOriginalFilename().isEmpty()) {
-                if (type == TaskType.FIVE_VARIANT) {
-                    ((FiveVariantTask)task).setFileName(resultFileName);
-                }
-                if (type == TaskType.YES_OR_NO) {
-                    ((YesOrNoTask)task).setFileName(resultFileName);
-                }
+                task.setFileName(resultFileName);
             }
         } catch (IOException e) {
             return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
         }
-        if (type == TaskType.FIVE_VARIANT) {
-            quizTask.setFiveVariantTask((FiveVariantTask)task);
+        quizTask.setFiveVariantTask(task);
+        return finalSaving(quiz, pos, decisions, quizTask);
+    }
+
+    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions) {
+        return saveYesOrNo(quiz, task, file, pos, decisions, new QuizTask());
+    }
+
+    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
+        try {
+            deleteFile(quizTask);
+            final String resultFileName = saveFile(file);
+            if (file != null && !file.getOriginalFilename().isEmpty()) {
+                task.setFileName(resultFileName);
+            }
+        } catch (IOException e) {
+            return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
         }
-        if (type == TaskType.YES_OR_NO) {
-            quizTask.setYesOrNoTask((YesOrNoTask)task);
-        }
-        movePosition(quiz, pos);
+        quizTask.setYesOrNoTask(task);
+        return finalSaving(quiz, pos, decisions, quizTask);
+    }
+
+    private QuizTaskResult finalSaving(Quiz quiz, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
+        movePosition(quiz, pos, quizTask);
         quizTask.setPosition(pos);
         quizTask.setQuiz(quiz);
         quizTask.setDecisions(decisions);
@@ -89,8 +105,9 @@ public class QuizTaskService {
         return resultFileName;
     }
 
-    private void movePosition(Quiz quiz, int pos) {
-        if (quizTaskRepository.findByPositionAndQuiz(pos, quiz) != null) {
+    private void movePosition(Quiz quiz, int pos, QuizTask quizTask) {
+        final QuizTask foundTask = quizTaskRepository.findByPositionAndQuiz(pos, quiz);
+        if (foundTask != null && !Objects.equals(foundTask.getId(), quizTask.getId())) {
             for (QuizTask task : quiz.getTaskList()) {
                 if (task.getPosition() >= pos) {
                     task.setPosition(task.getPosition() + 1);
@@ -110,9 +127,7 @@ public class QuizTaskService {
             }
         }
         quizTaskResultRepository.removeAllByTask(task);
-        final String fileName = task.getFiveVariantTask() != null ? task.getFiveVariantTask().getFileName()
-                : task.getYesOrNoTask() != null ? task.getYesOrNoTask().getFileName() : null;
-        new File(uploadPathPrefix + uploadPath + "/" + fileName).delete();
+        deleteFile(task);
         final Quiz quiz = task.getQuiz();
         for (QuizTask quizTask : quiz.getTaskList()) {
             if (quizTask.getPosition() > task.getPosition()) {
@@ -123,6 +138,12 @@ public class QuizTaskService {
         quiz.getTaskList().remove(task);
         quizRepository.save(quiz);
         quizTaskRepository.delete(task);
+    }
+
+    private void deleteFile(QuizTask task) {
+        final String fileName = task.getFiveVariantTask() != null ? task.getFiveVariantTask().getFileName()
+                : task.getYesOrNoTask() != null ? task.getYesOrNoTask().getFileName() : null;
+        new File(uploadPathPrefix + uploadPath + "/" + fileName).delete();
     }
 
     public enum ResultType {
