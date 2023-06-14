@@ -19,11 +19,13 @@ public class QuizService {
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
     private final QuizResultRepository quizResultRepository;
+    private final QuizTaskService quizTaskService;
 
-    public QuizService(QuizRepository quizRepository, UserRepository userRepository, QuizResultRepository quizResultRepository) {
+    public QuizService(QuizRepository quizRepository, UserRepository userRepository, QuizResultRepository quizResultRepository, QuizTaskService quizTaskService) {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
         this.quizResultRepository = quizResultRepository;
+        this.quizTaskService = quizTaskService;
     }
 
     public QuizResult save(Quiz quiz) {
@@ -40,6 +42,9 @@ public class QuizService {
 
     @Transactional
     public void delete(Quiz quiz) {
+        for (QuizTask quizTask : quiz.getTaskList()) {
+            quizTaskService.delete(quizTask);
+        }
         for (User user : userRepository.findAll()) {
             user.getQuizzes().remove(quiz);
             user.getResults().removeIf(result -> Objects.equals(result.getQuiz().getId(), quiz.getId()));
