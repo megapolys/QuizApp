@@ -11,22 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
-    private final UserRepository userRepository;
-
-    public MainController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false) String findName, @AuthenticationPrincipal User user, Model model) {
-        if (StringUtils.isNotBlank(findName)) {
-            model.addAttribute("users", userRepository.findByUsernameContaining(findName));
-        } else {
-            model.addAttribute("users", userRepository.findAll());
-        }
-        model.addAttribute("userName", user.getUsername());
-        model.addAttribute("findNameFilter", findName);
+    public String getMain() {
         return "main";
     }
+
+
 }
