@@ -18,7 +18,7 @@
                         <span>Тест пройден</span>
                     <#else>
                         <#if quiz.inProgress()>
-                            <a href="/invokeQuiz/${quiz.quizId()?c}">Продолжить</a>
+                            <a href="/invokeQuiz/${quiz.quizId()?c}">Продолжить ${quiz.progress()}</a>
                         <#else>
                             <a href="/startQuiz/${quiz.quizId()?c}">Начать</a>
                         </#if>

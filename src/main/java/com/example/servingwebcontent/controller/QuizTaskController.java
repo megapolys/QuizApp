@@ -94,7 +94,7 @@ public class QuizTaskController {
         yesOrNoTask.setNoWeight(noWeight);
         if (isAttributesValid(redirectAttributes, questionText, position, decisions)){
             final Quiz quiz = quizTask.getQuiz();
-            final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, yesOrNoTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()));
+            final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, yesOrNoTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()), quizTask);
             resultProcess(redirectAttributes, result);
             if (result.result() == QuizTaskService.ResultType.SUCCESS) {
                 redirectAttributes.addAttribute("quizId", quiz.getId());

@@ -19,6 +19,7 @@ public class QuizTaskResult {
     private boolean complete;
 
     private String variant;
+    private Float altScore;
     private String text;
 
     public void setId(Long id) {
@@ -67,5 +68,13 @@ public class QuizTaskResult {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Float getAltScore() {
+        return altScore;
+    }
+
+    public void setAltScore(Float altScore) {
+        this.altScore = altScore;
     }
 }

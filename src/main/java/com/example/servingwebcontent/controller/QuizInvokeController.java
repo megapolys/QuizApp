@@ -77,7 +77,10 @@ public class QuizInvokeController {
             RedirectAttributes redirectAttributes
     ) {
         if (StringUtils.hasText(variant)) {
-            quizInvokeService.completeTask(task, text, variant);
+            task.setVariant(variant);
+            task.setText(text);
+            task.setComplete(true);
+            quizInvokeService.saveTask(task);
         } else {
             redirectAttributes.addFlashAttribute("message", "Необходимо выбрать вариант ответа");
             redirectAttributes.addFlashAttribute("areaText", text);

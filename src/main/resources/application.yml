@@ -18,3 +18,17 @@ spring.servlet.multipart.max-request-size: 1MB
 
 spring.profiles.include:
   - mail
+
+default:
+  fiveVariant:
+    firstWeight: 0
+    secondWeight: 0
+    thirdWeight: 2
+    fourthWeight: 3
+    fifthWeight: 4
+  yesOrNo:
+    noWeight: 0
+    yesWeight: 4
+  ratio:
+    yellow: 2
+    red: 3

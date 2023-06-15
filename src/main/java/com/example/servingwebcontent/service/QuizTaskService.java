@@ -3,7 +3,6 @@ package com.example.servingwebcontent.service;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.quiz.TaskType;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;

@@ -3,7 +3,9 @@ package com.example.servingwebcontent.domain.quiz.result;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import jakarta.persistence.*;
+import org.springframework.stereotype.Controller;
 
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -17,6 +19,8 @@ public class QuizResult {
     private Quiz quiz;
 
     private boolean complete;
+    @Column(name = "complete_date")
+    private Date completeDate;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<QuizTaskResult> taskList;
@@ -51,5 +55,13 @@ public class QuizResult {
 
     public void setTaskList(Set<QuizTaskResult> taskList) {
         this.taskList = taskList;
+    }
+
+    public Date getCompleteDate() {
+        return completeDate;
+    }
+
+    public void setCompleteDate(Date completeDate) {
+        this.completeDate = completeDate;
     }
 }

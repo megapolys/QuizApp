@@ -29,12 +29,19 @@ public class QuizInvokeService {
         for (Quiz quiz : user.getQuizzes()) {
             final Optional<QuizResult> quizResultOptional = results.stream().filter(r -> Objects.equals(r.getQuiz().getId(), quiz.getId())).findFirst();
             if (quizResultOptional.isPresent()) {
-                quizzes.add(new QuizBean(quiz.getName(), true, quizResultOptional.get().isComplete(), quizResultOptional.get().getId()));
+                final QuizResult quizResult = quizResultOptional.get();
+                quizzes.add(new QuizBean(quiz.getName(), true, quizResult.isComplete(), quizResult.getId(), getProgress(quizResult)));
             } else {
-                quizzes.add(new QuizBean(quiz.getName(), false, false, quiz.getId()));
+                quizzes.add(new QuizBean(quiz.getName(), false, false, quiz.getId(), null));
             }
         }
         return quizzes;
+    }
+
+    public String getProgress(QuizResult quizResult) {
+        final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
+        final int taskCount = quizResult.getTaskList().size();
+        return countCompleted + "/" + taskCount;
     }
 
     public QuizResult startQuiz(long userId, Quiz quiz) {
@@ -60,18 +67,16 @@ public class QuizInvokeService {
 
     public void completeQuiz(QuizResult quizResult) {
         quizResult.setComplete(true);
+        quizResult.setCompleteDate(new Date());
         quizResultRepository.save(quizResult);
     }
 
-    public void completeTask(QuizTaskResult task, String text, String variant) {
-        task.setVariant(variant);
-        task.setText(text);
-        task.setComplete(true);
+    public void saveTask(QuizTaskResult task) {
         quizResultRepository.save(task.getQuiz());
     }
 
 
-    public record QuizBean(String name, boolean inProgress, boolean complete, Long quizId) {
+    public record QuizBean(String name, boolean inProgress, boolean complete, Long quizId, String progress) {
     }
 
 }

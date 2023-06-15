@@ -28,7 +28,7 @@
             <input type="number" name="firstWeight" class="form-control" step="0.5" placeholder="0"
                    value="${(fiveVariantTask.firstWeight)!?c}">
             <span class="input-group-text">Редко</span>
-            <input type="number" name="secondWeight" class="form-control" step="0.5" placeholder="1"
+            <input type="number" name="secondWeight" class="form-control" step="0.5" placeholder="0"
                    value="${(fiveVariantTask.secondWeight)!?c}">
             <span class="input-group-text">Иногда</span>
             <input type="number" name="thirdWeight" class="form-control" step="0.5" placeholder="2"
