@@ -75,6 +75,11 @@ public class QuizInvokeService {
         quizResultRepository.save(task.getQuiz());
     }
 
+    public boolean isUserContainsQuiz(Long userId, Long quizResultId) {
+        final User user = userRepository.findById(userId).get();
+        return user.getResults().stream().anyMatch(r -> r.getId().equals(quizResultId));
+    }
+
 
     public record QuizBean(String name, boolean inProgress, boolean complete, Long quizId, String progress) {
     }

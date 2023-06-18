@@ -13,10 +13,24 @@
     <body>
     <#include "navbar.ftlh">
     <div class="container mt-3">
-        <div class="text-danger mb-3">${message!}</div>
-        <div class="text-success mb-3">${successMessage!}</div>
+        <#if message??>
+            <div class="alert alert-danger mb-3">${message!}</div>
+        </#if>
+        <#if successMessage??>
+            <div class="alert alert-success mb-3">${successMessage!}</div>
+        </#if>
         <#nested>
     </div>
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">Это будет футер</p>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
             integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
             crossorigin="anonymous"></script>

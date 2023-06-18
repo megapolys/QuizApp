@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -79,9 +80,13 @@ public class UserController {
     ) {
         currentUser = userRepository.findById(currentUser.getId()).orElse(null);
         model.addAttribute("user", user);
-        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword())
-                || StringUtils.isBlank(user.getEmail())) {
+        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null
+                || StringUtils.isBlank(user.getLastName()) || StringUtils.isBlank(user.getFirstName())) {
             model.addAttribute("message", "Необходимо заполнить все поля");
+            return "editProfile";
+        }
+        if (!Objects.equals(user.getPassword(), user.getPassword2())) {
+            model.addAttribute("message", "Пароли не совпадают");
             return "editProfile";
         }
         UserService.UserResult result = userService.updateUser(currentUser, user);

@@ -2,5 +2,5 @@
 <#import "parts/login.ftlh" as l>
 <@c.page>
     <h3>Add new user</h3>
-    <@l.login "/registration" true />
+    <@l.registration "/registration"/>
 </@c.page>

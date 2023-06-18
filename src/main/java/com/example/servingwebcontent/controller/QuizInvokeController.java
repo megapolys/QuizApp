@@ -48,9 +48,13 @@ public class QuizInvokeController {
 
     @GetMapping("/invokeQuiz/{quizResult}")
     public String invokeQuiz(
+            @AuthenticationPrincipal User user,
             @PathVariable QuizResult quizResult,
             Model model
     ) {
+        if (!quizInvokeService.isUserContainsQuiz(user.getId(), quizResult.getId())) {
+            throw new RuntimeException("Access denied!");
+        }
         final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
         final Optional<QuizTaskResult> optionalTask = quizResult.getTaskList().stream()
                 .filter(task -> !task.isComplete())
@@ -70,12 +74,16 @@ public class QuizInvokeController {
 
     @PostMapping("/invokeQuiz/{quizResult}")
     public String saveTaskResult(
+            @AuthenticationPrincipal User user,
             @PathVariable Long quizResult,
             @RequestParam(required = false) String variant,
             @RequestParam String text,
             @RequestParam QuizTaskResult task,
             RedirectAttributes redirectAttributes
     ) {
+        if (!quizInvokeService.isUserContainsQuiz(user.getId(), quizResult)) {
+            throw new RuntimeException("Access denied!");
+        }
         if (StringUtils.hasText(variant)) {
             task.setVariant(variant);
             task.setText(text);

@@ -19,10 +19,17 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
+    private String firstName;
+    private String lastName;
     private String email;
+    private Boolean male;
+    private Integer yearBorn;
     private String activationCode;
+    private String repairPasswordCode;
 
     private String password;
+    @Transient
+    private String password2;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -136,5 +143,53 @@ public class User implements UserDetails {
 
     public void setResults(Set<QuizResult> results) {
         this.results = results;
+    }
+
+    public Boolean getMale() {
+        return male;
+    }
+
+    public void setMale(Boolean male) {
+        this.male = male;
+    }
+
+    public Integer getYearBorn() {
+        return yearBorn;
+    }
+
+    public void setYearBorn(Integer age) {
+        this.yearBorn = age;
+    }
+
+    public String getPassword2() {
+        return password2;
+    }
+
+    public void setPassword2(String confirmPassword) {
+        this.password2 = confirmPassword;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getRepairPasswordCode() {
+        return repairPasswordCode;
+    }
+
+    public void setRepairPasswordCode(String repairPasswordCode) {
+        this.repairPasswordCode = repairPasswordCode;
     }
 }

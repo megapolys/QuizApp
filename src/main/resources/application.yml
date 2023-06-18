@@ -12,6 +12,7 @@ spring.freemarker:
 upload.path:
   img: '/Users/i/IdeaProjects/QuizApp/img'
   imgPrefix: 'C:'
+domain.name: 'http://localhost:8080'
 
 spring.servlet.multipart.max-file-size: 1MB
 spring.servlet.multipart.max-request-size: 1MB
