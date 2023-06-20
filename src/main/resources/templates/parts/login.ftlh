@@ -13,7 +13,7 @@
 </#macro>
 
 <#macro loginForm path registration edit passwordOnly>
-    <form action="${path}" method="post">
+    <form <#if registration>id="recaptcha-form"</#if> action="${path}" method="post">
         <#if !passwordOnly>
         <div class="mb-3 col-3">
             <label for="inputLogin" class="form-label">Логин</label>
@@ -73,9 +73,20 @@
             </div>
         </#if>
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <button type="submit"
-                class="btn btn-primary">${registration?string("Нажми меня","Жмяк")}</button>
+        <#if registration>
+            <button class="g-recaptcha btn btn-primary" type="submit"
+                    data-sitekey="6LcB3a4mAAAAAOacyjBVQqzuXSNZsDRRPCYjuYiF"
+                    data-callback='onSubmit'
+                    data-action='submit'>Нажми меня</button>
+        <#else>
+            <button type="submit" class="btn btn-primary">Жмяк</button>
+        </#if>
     </form>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("recaptcha-form").submit();
+        }
+    </script>
 </#macro>
 
 <#macro logout out>

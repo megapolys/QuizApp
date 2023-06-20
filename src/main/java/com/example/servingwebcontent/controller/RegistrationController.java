@@ -1,25 +1,35 @@
 package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.domain.User;
+import com.example.servingwebcontent.domain.dto.CaptchaResponseDto;
 import com.example.servingwebcontent.service.UserService;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
 @Controller
 public class RegistrationController {
-    private final UserService userService;
+    private final static String CAPTCHA_URL = "https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s";
+    @Value("${captcha.secret}")
+    private String captchaSecret;
 
-    public RegistrationController(UserService userService) {
+    private final UserService userService;
+    private final RestTemplate restTemplate;
+
+    public RegistrationController(UserService userService, RestTemplate restTemplate) {
         this.userService = userService;
+        this.restTemplate = restTemplate;
     }
 
     @GetMapping("/registration")
@@ -28,10 +38,20 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Model model) {
+    public String addUser(
+            @RequestParam("g-recaptcha-response") String captchaResponse,
+            User user,
+            Model model
+    ) {
+        final String url = String.format(CAPTCHA_URL, captchaSecret, captchaResponse);
+        final CaptchaResponseDto response = restTemplate.postForObject(url, Collections.emptyList(), CaptchaResponseDto.class);
         model.addAttribute("user", user);
+        if (response != null && !response.isSuccess()) {
+            model.addAttribute("message", "Ошибка капчи");
+            return "registration";
+        }
         if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword()) || StringUtils.isBlank(user.getPassword2())
-        || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null || StringUtils.isBlank(user.getLastName())
+                || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null || StringUtils.isBlank(user.getLastName())
                 || StringUtils.isBlank(user.getFirstName())) {
             model.addAttribute("message", "Необходимо заполнить все поля");
             return "registration";
@@ -67,7 +87,7 @@ public class RegistrationController {
         if (params.containsKey("error")) {
             message = "Ошибочка, похоже логин или пароль не подходят";
             model.addAttribute("repairPassword", true);
-        } else if(params.containsKey("logout")) {
+        } else if (params.containsKey("logout")) {
             message = "Вы покинули нас...";
         }
         model.addAttribute("message", message);
