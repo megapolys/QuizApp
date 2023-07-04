@@ -11,10 +11,26 @@
     <groupId>com.example</groupId>
     <artifactId>Quiz_app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>com.example</groupId>-->
+<!--                <artifactId>Quiz_app</artifactId>-->
+<!--                <version>0.0.1-SNAPSHOT</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>repackage</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
     <name>Quiz_app</name>
     <description>Quiz_app</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>20</java.version>
     </properties>
     <dependencies>
         <!-- DataBase support -->
