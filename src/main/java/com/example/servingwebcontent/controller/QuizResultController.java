@@ -33,6 +33,17 @@ public class QuizResultController {
         return "adminQuizList";
     }
 
+    @GetMapping("/{userId}/delete/{quizResultId}")
+    public String deleteQuizResult(
+            @PathVariable Long userId,
+            @PathVariable Long quizResultId,
+            RedirectAttributes redirectAttributes
+    ) {
+        quizResultService.deleteResult(userId, quizResultId);
+        redirectAttributes.addAttribute("userId", userId);
+        return "redirect:/result/quiz/{userId}";
+    }
+
     @GetMapping("/{userId}/{quizResult}")
     public String getQuizResult(
             @PathVariable Long userId,

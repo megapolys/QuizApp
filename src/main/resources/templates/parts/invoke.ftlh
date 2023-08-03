@@ -2,7 +2,7 @@
 <#import "modal.ftlh" as modal>
 <#macro invoke path admin>
     <div class="card">
-        <h3 class="card-header">Вопрос #${task.task.position}</h3>
+        <h3 class="card-header">№${task.task.position}</h3>
         <div class="card-body">
             <p class="card-text"><#if task.task.fiveVariantTask??>${task.task.fiveVariantTask.questionText!}<#else>${task.task.yesOrNoTask.questionText!}</#if></p>
             <form action="${path}" method="post">

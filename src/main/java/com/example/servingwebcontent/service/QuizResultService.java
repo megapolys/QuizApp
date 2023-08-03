@@ -7,6 +7,7 @@ import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.repositories.QuizResultRepository;
 import com.example.servingwebcontent.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,10 +41,12 @@ public class QuizResultService {
 
     private final UserRepository userRepository;
     private final QuizInvokeService quizInvokeService;
+    public final QuizResultRepository quizResultRepository;
 
-    public QuizResultService(UserRepository userRepository, QuizInvokeService quizInvokeService) {
+    public QuizResultService(UserRepository userRepository, QuizInvokeService quizInvokeService, QuizResultRepository quizResultRepository) {
         this.userRepository = userRepository;
         this.quizInvokeService = quizInvokeService;
+        this.quizResultRepository = quizResultRepository;
     }
 
     public List<ResultBean> getResults(Long userId) {
@@ -113,6 +116,14 @@ public class QuizResultService {
 
     private float withDefault(Float weight, float defaultWeight) {
         return weight == null ? defaultWeight : weight;
+    }
+
+    public void deleteResult(Long userId, Long quizResultId) {
+        final QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
+        final User user = userRepository.findById(userId).orElseThrow();
+        user.getResults().remove(quizResult);
+        userRepository.save(user);
+        quizResultRepository.delete(quizResult);
     }
 
     public record ResultBean(QuizResult quizResult, List<DecisionBean> decisions,

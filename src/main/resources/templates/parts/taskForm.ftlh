@@ -7,7 +7,7 @@
           enctype="multipart/form-data">
         <div class="col-2 mb-3">
             <div class="input-group">
-                <span class="input-group-text">#</span>
+                <span class="input-group-text">№</span>
                 <input id="positionValue" class="form-control" type="number" min="1"
                        value="${((quizTask.position)!position)!?c}" name="position"/>
             </div>
@@ -66,7 +66,7 @@
           enctype="multipart/form-data">
         <div class="col-2 mb-3">
             <div class="input-group">
-                <span class="input-group-text">#</span>
+                <span class="input-group-text">№</span>
                 <input id="positionValue" class="form-control" type="number" min="1"
                        value="${((quizTask.position)!position)!?c}" name="position"/>
             </div>

@@ -7,7 +7,8 @@
         <tr>
             <th style="width: 60%">Название опросника</th>
             <th style="width: 10%">Балл</th>
-            <th style="width: 20%"></th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
             <th style="width: 10%"></th>
         </tr>
         </thead>
@@ -28,6 +29,9 @@
                     <#if quiz.quizResult().complete>
                         <a href="/result/quiz/${userId?c}/${quiz.quizResult().id?c}">Результаты</a>
                     </#if>
+                </td>
+                <td>
+                    <a href="/result/quiz/${userId?c}/delete/${quiz.quizResult().id?c}">Удалить</a>
                 </td>
             </tr>
         </#list>

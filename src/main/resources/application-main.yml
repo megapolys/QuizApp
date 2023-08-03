@@ -9,4 +9,4 @@ spring.datasource.driver-class-name: org.postgresql.Driver
 upload.path:
   img: '/Users/i/IdeaProjects/QuizApp/img'
   imgPrefix: 'C:'
-domain.name: 'http://185.182.111.235'
+domain.name: 'localhost:8080'
