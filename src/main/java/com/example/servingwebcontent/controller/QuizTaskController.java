@@ -36,6 +36,7 @@ public class QuizTaskController {
     public String addQuizTask(
             @RequestParam Quiz quiz,
             @RequestParam Integer position,
+            @RequestParam String preQuestionText,
             @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
             @RequestParam(required = false) Float yesWeight,
@@ -44,6 +45,7 @@ public class QuizTaskController {
             RedirectAttributes redirectAttributes
     ) {
         YesOrNoTask yesOrNoTask = new YesOrNoTask();
+        yesOrNoTask.setPreQuestionText(preQuestionText);
         yesOrNoTask.setQuestionText(questionText);
         yesOrNoTask.setYesWeight(yesWeight);
         yesOrNoTask.setNoWeight(noWeight);
@@ -81,6 +83,7 @@ public class QuizTaskController {
     public String updateYesOrNo(
             @RequestParam QuizTask quizTask,
             @RequestParam Integer position,
+            @RequestParam String preQuestionText,
             @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
             @RequestParam(required = false) Float yesWeight,
@@ -89,6 +92,7 @@ public class QuizTaskController {
             RedirectAttributes redirectAttributes
     ) {
         YesOrNoTask yesOrNoTask = new YesOrNoTask();
+        yesOrNoTask.setPreQuestionText(preQuestionText);
         yesOrNoTask.setQuestionText(questionText);
         yesOrNoTask.setYesWeight(yesWeight);
         yesOrNoTask.setNoWeight(noWeight);
@@ -111,6 +115,7 @@ public class QuizTaskController {
     public String addQuizTask(
             @RequestParam Quiz quiz,
             @RequestParam Integer position,
+            @RequestParam String preQuestionText,
             @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
             @RequestParam(required = false) Float firstWeight,
@@ -121,7 +126,7 @@ public class QuizTaskController {
             @RequestParam(name = "decisions", required = false) QuizDecision[] decisions,
             RedirectAttributes redirectAttributes
     ) {
-        FiveVariantTask fiveVariantTask = getFiveVariantTask(questionText, firstWeight, secondWeight, thirdWeight, fourthWeight, fifthWeight);
+        FiveVariantTask fiveVariantTask = getFiveVariantTask(preQuestionText, questionText, firstWeight, secondWeight, thirdWeight, fourthWeight, fifthWeight);
         if (isAttributesValid(redirectAttributes, questionText, position, decisions)){
             final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, fiveVariantTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()));
             resultProcess(redirectAttributes, result);
@@ -156,6 +161,7 @@ public class QuizTaskController {
     public String updateQuizTask(
             @RequestParam QuizTask quizTask,
             @RequestParam Integer position,
+            @RequestParam String preQuestionText,
             @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
             @RequestParam(required = false) Float firstWeight,
@@ -166,7 +172,7 @@ public class QuizTaskController {
             @RequestParam(name = "decisions", required = false) QuizDecision[] decisions,
             RedirectAttributes redirectAttributes
     ) {
-        FiveVariantTask fiveVariantTask = getFiveVariantTask(questionText, firstWeight, secondWeight, thirdWeight, fourthWeight, fifthWeight);
+        FiveVariantTask fiveVariantTask = getFiveVariantTask(preQuestionText, questionText, firstWeight, secondWeight, thirdWeight, fourthWeight, fifthWeight);
         if (isAttributesValid(redirectAttributes, questionText, position, decisions)){
             final Quiz quiz = quizTask.getQuiz();
             final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, fiveVariantTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()), quizTask);
@@ -195,8 +201,10 @@ public class QuizTaskController {
         return false;
     }
 
-    private static FiveVariantTask getFiveVariantTask(String questionText, Float firstWeight, Float secondWeight, Float thirdWeight, Float fourthWeight, Float fifthWeight) {
+    private static FiveVariantTask getFiveVariantTask(String preQuestionText, String questionText, Float firstWeight, Float secondWeight, Float thirdWeight, Float fourthWeight, Float fifthWeight) {
         FiveVariantTask fiveVariantTask = new FiveVariantTask();
+
+        fiveVariantTask.setPreQuestionText(preQuestionText);
         fiveVariantTask.setQuestionText(questionText);
         fiveVariantTask.setFirstWeight(firstWeight);
         fiveVariantTask.setSecondWeight(secondWeight);

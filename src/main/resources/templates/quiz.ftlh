@@ -22,7 +22,7 @@
                         Пять вариантов (Никогда - Всегда)
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                <div id="collapseOne" class="accordion-collapse collapse ${yesOrNoTask?has_content?string("", "show")}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <@task.fiveVariant "/quiz/task/add/fiveVariant"/>
                     </div>
@@ -35,7 +35,7 @@
                         Два варианта (Да, Нет)
                     </button>
                 </h2>
-                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div id="collapseTwo" class="accordion-collapse collapse ${yesOrNoTask?has_content?string("show", "")}" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <@task.yesOrNo "/quiz/task/add/yesOrNo"/>
                     </div>

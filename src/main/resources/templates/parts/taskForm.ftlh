@@ -14,6 +14,13 @@
         </div>
         <div class="col-10 mb-3">
             <div class="input-group col-9">
+                <span class="input-group-text">Текст задания</span>
+                <textarea id="inputText" class="form-control"
+                          name="preQuestionText">${(fiveVariantTask.preQuestionText)!}</textarea>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <div class="input-group">
                 <span class="input-group-text">Текст вопроса</span>
                 <textarea id="inputText" class="form-control"
                           name="questionText">${(fiveVariantTask.questionText)!}</textarea>
@@ -73,6 +80,13 @@
         </div>
         <div class="col-10 mb-3">
             <div class="input-group col-9">
+                <span class="input-group-text">Текст задания</span>
+                <textarea id="inputText" class="form-control"
+                          name="preQuestionText">${(yesOrNoTask.preQuestionText)!}</textarea>
+            </div>
+        </div>
+        <div class="col-12 mb-3">
+            <div class="input-group">
                 <span class="input-group-text">Текст вопроса</span>
                 <textarea id="inputText" class="form-control"
                           name="questionText">${(yesOrNoTask.questionText)!}</textarea>

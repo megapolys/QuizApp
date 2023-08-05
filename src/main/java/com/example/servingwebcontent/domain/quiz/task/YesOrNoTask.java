@@ -11,6 +11,7 @@ public class YesOrNoTask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String preQuestionText;
     private String questionText;
     private String fileName;
 
@@ -23,6 +24,14 @@ public class YesOrNoTask {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPreQuestionText() {
+        return preQuestionText;
+    }
+
+    public void setPreQuestionText(String preQuestionText) {
+        this.preQuestionText = preQuestionText;
     }
 
     public String getQuestionText() {
