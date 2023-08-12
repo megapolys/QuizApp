@@ -6,6 +6,7 @@ import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.domain.validation.TaskForm;
 import com.example.servingwebcontent.repositories.QuizRepository;
 import com.example.servingwebcontent.repositories.QuizResultRepository;
 import com.example.servingwebcontent.repositories.QuizTaskRepository;
@@ -43,6 +44,18 @@ public class QuizTaskService {
         this.quizTaskResultRepository = quizTaskResultRepository;
     }
 
+    public QuizTaskResult saveFiveVariant(Quiz quiz, MultipartFile file, TaskForm taskForm) {
+        final FiveVariantTask fiveVariantTask = new FiveVariantTask();
+        fiveVariantTask.setPreQuestionText(taskForm.getPreQuestionText());
+        fiveVariantTask.setQuestionText(taskForm.getQuestionText());
+        fiveVariantTask.setFirstWeight(taskForm.getFirstWeight());
+        fiveVariantTask.setSecondWeight(taskForm.getSecondWeight());
+        fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
+        fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
+        fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
+        return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions());
+    }
+
     public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions) {
         return saveFiveVariant(quiz, task, file, pos, decisions, new QuizTask());
     }
@@ -61,8 +74,17 @@ public class QuizTaskService {
         return finalSaving(quiz, pos, decisions, quizTask);
     }
 
-    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions) {
-        return saveYesOrNo(quiz, task, file, pos, decisions, new QuizTask());
+    public QuizTaskResult saveYesOrNo(Quiz quiz, MultipartFile file, TaskForm taskForm) {
+        return saveYesOrNo(quiz, file, taskForm, new QuizTask());
+    }
+
+    public QuizTaskResult saveYesOrNo(Quiz quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
+        final YesOrNoTask yesOrNoTask = new YesOrNoTask();
+        yesOrNoTask.setPreQuestionText(taskForm.getPreQuestionText());
+        yesOrNoTask.setQuestionText(taskForm.getQuestionText());
+        yesOrNoTask.setYesWeight(taskForm.getYesWeight());
+        yesOrNoTask.setNoWeight(taskForm.getNoWeight());
+        return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask);
     }
 
     public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {

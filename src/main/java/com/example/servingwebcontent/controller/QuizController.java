@@ -2,6 +2,8 @@ package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
+import com.example.servingwebcontent.domain.validation.TaskForm;
+import com.example.servingwebcontent.domain.validation.TaskType;
 import com.example.servingwebcontent.repositories.*;
 import com.example.servingwebcontent.service.QuizService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,11 +26,13 @@ public class QuizController {
     private final QuizRepository quizRepository;
     private final QuizService quizService;
     private final QuizDecisionRepository quizDecisionRepository;
+    private final TaskForm taskForm;
 
-    public QuizController(QuizRepository quizRepository, QuizService quizService, QuizTaskRepository quizTaskRepository, QuizDecisionRepository quizDecisionRepository, QuizResultRepository quizResultRepository, UserRepository userRepository) {
+    public QuizController(QuizRepository quizRepository, QuizService quizService, QuizDecisionRepository quizDecisionRepository, QuizResultRepository quizResultRepository, UserRepository userRepository, TaskForm taskForm) {
         this.quizRepository = quizRepository;
         this.quizService = quizService;
         this.quizDecisionRepository = quizDecisionRepository;
+        this.taskForm = taskForm;
     }
 
     @GetMapping("/list")
@@ -92,10 +96,16 @@ public class QuizController {
     @GetMapping("{quiz}")
     public String quiz(@PathVariable Quiz quiz, Model model) {
         model.addAttribute("quiz", quiz);
-        model.addAttribute("position", quizService.getNextTaskPosition(quiz));
         model.addAttribute("taskList", quiz.getTaskList().stream()
                 .sorted(Comparator.comparingInt(QuizTask::getPosition)).toList());
         model.addAttribute("decisions", quizDecisionRepository.findAllByOrderByName());
+        if (model.asMap().get("taskForm") != null) {
+            this.taskForm.setFromTaskForm((TaskForm) model.asMap().get("taskForm"));
+        }
+        this.taskForm.setPosition(quizService.getNextTaskPosition(quiz));
+        model.addAttribute("taskForm", this.taskForm);
+        model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
+        model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
         return "quiz";
     }
 

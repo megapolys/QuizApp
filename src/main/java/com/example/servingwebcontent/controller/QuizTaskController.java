@@ -5,8 +5,11 @@ import com.example.servingwebcontent.domain.quiz.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.domain.validation.TaskForm;
+import com.example.servingwebcontent.domain.validation.TaskType;
 import com.example.servingwebcontent.repositories.QuizDecisionRepository;
 import com.example.servingwebcontent.service.QuizTaskService;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,32 +37,24 @@ public class QuizTaskController {
 
 
     @PostMapping("/add/yesOrNo")
-    public String addQuizTask(
+    public String addYesOrNoTask(
             @RequestParam Quiz quiz,
-            @RequestParam Integer position,
-            @RequestParam String preQuestionText,
-            @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
-            @RequestParam(required = false) Float yesWeight,
-            @RequestParam(required = false) Float noWeight,
-            @RequestParam(name = "decisions", required = false) QuizDecision[] decisions,
+            TaskForm taskForm,
             RedirectAttributes redirectAttributes
     ) {
-        YesOrNoTask yesOrNoTask = new YesOrNoTask();
-        yesOrNoTask.setPreQuestionText(preQuestionText);
-        yesOrNoTask.setQuestionText(questionText);
-        yesOrNoTask.setYesWeight(yesWeight);
-        yesOrNoTask.setNoWeight(noWeight);
-        if (isAttributesValid(redirectAttributes, questionText, position, decisions)){
-            final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, yesOrNoTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()));
+        taskForm.setTaskType(TaskType.YES_OR_NO);
+        if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
+            final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, file, taskForm);
             resultProcess(redirectAttributes, result);
             if (result.result() == QuizTaskService.ResultType.SUCCESS) {
-                yesOrNoTask = new YesOrNoTask();
-                decisions = new QuizDecision[]{};
+                taskForm.setQuestionText(null);
+                taskForm.setYesWeight(null);
+                taskForm.setNoWeight(null);
+                taskForm.setDecisions(null);
             }
         }
-        redirectAttributes.addFlashAttribute("taskDecisions", decisions);
-        redirectAttributes.addFlashAttribute("yesOrNoTask", yesOrNoTask);
+        redirectAttributes.addFlashAttribute("taskForm", taskForm);
         redirectAttributes.addAttribute("quizId", quiz.getId());
         return "redirect:/quiz/{quizId}";
     }
@@ -112,31 +108,27 @@ public class QuizTaskController {
     }
 
     @PostMapping("/add/fiveVariant")
-    public String addQuizTask(
+    public String addFiveVariantTask(
             @RequestParam Quiz quiz,
-            @RequestParam Integer position,
-            @RequestParam String preQuestionText,
-            @RequestParam String questionText,
             @RequestParam("file") MultipartFile file,
-            @RequestParam(required = false) Float firstWeight,
-            @RequestParam(required = false) Float secondWeight,
-            @RequestParam(required = false) Float thirdWeight,
-            @RequestParam(required = false) Float fourthWeight,
-            @RequestParam(required = false) Float fifthWeight,
-            @RequestParam(name = "decisions", required = false) QuizDecision[] decisions,
+            TaskForm taskForm,
             RedirectAttributes redirectAttributes
     ) {
-        FiveVariantTask fiveVariantTask = getFiveVariantTask(preQuestionText, questionText, firstWeight, secondWeight, thirdWeight, fourthWeight, fifthWeight);
-        if (isAttributesValid(redirectAttributes, questionText, position, decisions)){
-            final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, fiveVariantTask, file, position, Arrays.stream(decisions).collect(Collectors.toSet()));
+        taskForm.setTaskType(TaskType.FIVE_VARIANT);
+        if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
+            final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, file, taskForm);
             resultProcess(redirectAttributes, result);
             if (result.result() == QuizTaskService.ResultType.SUCCESS) {
-                fiveVariantTask = new FiveVariantTask();
-                decisions = new QuizDecision[]{};
+                taskForm.setQuestionText(null);
+                taskForm.setFirstWeight(null);
+                taskForm.setSecondWeight(null);
+                taskForm.setThirdWeight(null);
+                taskForm.setFourthWeight(null);
+                taskForm.setFifthWeight(null);
+                taskForm.setDecisions(null);
             }
         }
-        redirectAttributes.addFlashAttribute("taskDecisions", decisions);
-        redirectAttributes.addFlashAttribute("fiveVariantTask", fiveVariantTask);
+        redirectAttributes.addFlashAttribute("taskForm", taskForm);
         redirectAttributes.addAttribute("quizId", quiz.getId());
         return "redirect:/quiz/{quizId}";
     }
@@ -186,6 +178,10 @@ public class QuizTaskController {
         redirectAttributes.addFlashAttribute("fiveVariantTask", fiveVariantTask);
         redirectAttributes.addFlashAttribute("quizTask", quizTask);
         return "redirect:/quiz/task/update/fiveVariant/{quizTask}";
+    }
+
+    private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, Set<QuizDecision> decisions) {
+        return isAttributesValid(redirectAttributes, questionText, position, decisions == null ? new QuizDecision[]{} : decisions.toArray(new QuizDecision[]{}));
     }
 
     private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, QuizDecision[] decisions) {
