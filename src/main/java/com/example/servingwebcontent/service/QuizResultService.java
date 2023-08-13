@@ -62,6 +62,7 @@ public class QuizResultService {
 
     public ResultBean getResult(QuizResult result) {
         final Map<QuizDecision, Float> decisionBeans = new LinkedHashMap<>();
+        final Map<QuizDecision, Integer> decisionsCount = new LinkedHashMap<>();
         float weightSum = 0;
         final String progress = quizInvokeService.getProgress(result);
         if (!result.isComplete()) {
@@ -73,13 +74,14 @@ public class QuizResultService {
             final float weight = taskResult.getAltScore() == null ? getWeight(taskResult) : taskResult.getAltScore();
             for (QuizDecision decision : decisions) {
                 decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
+                decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
             }
-            taskResult.setAltScore(weight); //сделано для отображения балла, не сохраняется в бд
-            weightSum += taskResult.getAltScore();
+            taskResult.setResultScore(weight); //сделано для отображения балла, не сохраняется в бд
+            weightSum += weight;
         }
         final float score = weightSum / result.getTaskList().size();
         final List<DecisionBean> decisionsList = decisionBeans.entrySet().stream()
-                .map(entry -> new DecisionBean(entry.getKey(), entry.getValue()))
+                .map(entry -> new DecisionBean(entry.getKey(), entry.getValue(), entry.getValue() / decisionsCount.get(entry.getKey()), decisionsCount.get(entry.getKey())))
                 .sorted(Comparator.comparing(bean -> bean.score, Comparator.reverseOrder()))
                 .toList();
         result.setTaskList(result.getTaskList().stream()
@@ -130,7 +132,7 @@ public class QuizResultService {
                              float score, boolean yellow, boolean red, String progress) {
     }
 
-    public record DecisionBean(QuizDecision decision, float score) {
+    public record DecisionBean(QuizDecision decision, float score, float altScore, int count) {
     }
 
 }

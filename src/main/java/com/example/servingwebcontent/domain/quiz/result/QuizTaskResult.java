@@ -20,6 +20,8 @@ public class QuizTaskResult {
 
     private String variant;
     private Float altScore;
+    @Transient
+    private Float resultScore;
     private String text;
 
     public void setId(Long id) {
@@ -76,5 +78,13 @@ public class QuizTaskResult {
 
     public void setAltScore(Float altScore) {
         this.altScore = altScore;
+    }
+
+    public Float getResultScore() {
+        return resultScore;
+    }
+
+    public void setResultScore(Float resultScore) {
+        this.resultScore = resultScore;
     }
 }

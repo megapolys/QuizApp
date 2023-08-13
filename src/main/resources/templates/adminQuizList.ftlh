@@ -17,7 +17,7 @@
             <#assign color=quiz.quizResult().complete?then(quiz.red()?then("table-danger", quiz.yellow()?then("table-warning", "table-success")), "")>
             <tr class="${color}">
                 <td>${quiz.quizResult().quiz.shortName}. ${quiz.quizResult().quiz.name}</td>
-                <td>${quiz.quizResult().complete?then(quiz.score()?c, "")}</td>
+                <td>${quiz.quizResult().complete?then(quiz.score()?string["0.##"], "")}</td>
                 <td>
                     <#if quiz.quizResult().complete>
                         <span>Тест пройден</span>

@@ -8,13 +8,17 @@
         <tr>
             <th>Решение</th>
             <th>Баллы</th>
+            <th>Баллы/Вопросы</th>
+            <th>Вопросы</th>
         </tr>
         </thead>
         <tbody>
         <#list result.decisions() as decision>
             <tr>
                 <td><@d.decisionWithDescription decision.decision()/></td>
-                <td>${decision.score()?c}</td>
+                <td>${decision.score()?string["0.##"]}</td>
+                <td>${decision.altScore()?string["0.##"]}</td>
+                <td>${decision.count()?c}</td>
             </tr>
         </#list>
         </tbody>
@@ -31,10 +35,11 @@
         <tbody>
         <#list result.quizResult().taskList as task>
             <#if task.text??>
-                <tr>
+                <#assign color=task.altScore?has_content?then("table-success", task.text?has_content?then("table-warning", ""))>
+                <tr class="${color}">
                     <td>${task.task.position}</td>
                     <td>${(task.task.fiveVariantTask.questionText)!(task.task.yesOrNoTask.questionText)?truncate(50, "...")}</td>
-                    <td>${task.altScore}</td>
+                    <td>${task.resultScore}</td>
                     <td><a href="/result/quiz/${userId?c}/${result.quizResult().id?c}/${task.id?c}">Посмотреть</a></td>
                 </tr>
             </#if>
