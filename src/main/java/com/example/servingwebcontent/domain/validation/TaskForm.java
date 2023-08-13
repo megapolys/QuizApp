@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.domain.validation;
 
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +11,9 @@ import java.util.Set;
 public class TaskForm {
 
     private int taskId;
+
+    private String fileName;
+    private boolean deleteFile;
 
     private int position;
     private String preQuestionText;
@@ -44,6 +46,22 @@ public class TaskForm {
         this.noWeight = taskForm.noWeight;
         this.decisions = taskForm.decisions;
         this.taskType = taskForm.taskType;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public boolean isDeleteFile() {
+        return deleteFile;
+    }
+
+    public void setDeleteFile(boolean deleteFile) {
+        this.deleteFile = deleteFile;
     }
 
     public int getTaskId() {

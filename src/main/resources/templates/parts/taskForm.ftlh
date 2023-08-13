@@ -3,6 +3,7 @@
 <#-- @ftlvariable name="quizTask" type="com.example.servingwebcontent.domain.quiz.QuizTask" -->
 <#import "decisions.ftlh" as d>
 <#macro task path taskForm groups decisions update>
+    <#-- @ftlvariable name="taskForm" type="com.example.servingwebcontent.domain.validation.TaskForm" -->
     <form id="taskForm" class="row g-3" action="${path}" method="post"
           enctype="multipart/form-data">
         <div class="col-2 mb-3">
@@ -26,9 +27,18 @@
                           name="questionText">${(taskForm.questionText)!}</textarea>
             </div>
         </div>
-        <div class="col-12 mb-3">
+        <div class="col-6 mb-3">
             <label for="formFile" class="form-label">Вспомогательная картинка</label>
             <input class="form-control" type="file" name="file" id="formFile">
+        </div>
+        <div class="col-6 mb-3">
+            <#if taskForm.fileName??>
+                <div>Выбрана картинка: ${taskForm.fileName?substring(37)}</div>
+                <div>
+                    <input class="form-check-input" type="checkbox" name="deleteFile" id="deleteFile_id">
+                    <label class="form-check-label" for="deleteFile_id">Удалить картинку</label>
+                </div>
+            </#if>
         </div>
         <#if update>
             <#if taskForm.taskType == FIVE_VARIANT>

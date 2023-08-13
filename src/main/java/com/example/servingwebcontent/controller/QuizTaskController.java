@@ -87,6 +87,7 @@ public class QuizTaskController {
         taskForm.setYesWeight(yesOrNoTask.getYesWeight());
         taskForm.setNoWeight(yesOrNoTask.getNoWeight());
         taskForm.setDecisions(task.getDecisions());
+        taskForm.setFileName(yesOrNoTask.getFileName());
         return taskForm;
     }
 
@@ -169,6 +170,7 @@ public class QuizTaskController {
         taskForm.setFifthWeight(fiveVariantTask.getFifthWeight());
         taskForm.setDecisions(task.getDecisions());
         taskForm.setTaskType(TaskType.FIVE_VARIANT);
+        taskForm.setFileName(fiveVariantTask.getFileName());
         return taskForm;
     }
 

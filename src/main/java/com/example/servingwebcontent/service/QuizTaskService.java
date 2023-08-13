@@ -57,12 +57,17 @@ public class QuizTaskService {
         fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
         fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
         fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
-        return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask);
+        if (!taskForm.isDeleteFile()) {
+            fiveVariantTask.setFileName(quizTask.getFiveVariantTask().getFileName());
+        }
+        return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
     }
 
-    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
+    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask, boolean deleteFile) {
         try {
-            deleteFile(quizTask);
+            if (deleteFile || !file.isEmpty()) {
+                deleteFile(quizTask);
+            }
             final String resultFileName = saveFile(file);
             if (file != null && !file.getOriginalFilename().isEmpty()) {
                 task.setFileName(resultFileName);
@@ -84,12 +89,17 @@ public class QuizTaskService {
         yesOrNoTask.setQuestionText(taskForm.getQuestionText());
         yesOrNoTask.setYesWeight(taskForm.getYesWeight());
         yesOrNoTask.setNoWeight(taskForm.getNoWeight());
-        return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask);
+        if (!taskForm.isDeleteFile()) {
+            yesOrNoTask.setFileName(quizTask.getYesOrNoTask().getFileName());
+        }
+        return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
     }
 
-    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
+    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask, boolean deleteFile) {
         try {
-            deleteFile(quizTask);
+            if (deleteFile || !file.isEmpty()) {
+                deleteFile(quizTask);
+            }
             final String resultFileName = saveFile(file);
             if (file != null && !file.getOriginalFilename().isEmpty()) {
                 task.setFileName(resultFileName);
