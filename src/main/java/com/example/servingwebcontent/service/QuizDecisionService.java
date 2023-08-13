@@ -8,8 +8,11 @@ import com.example.servingwebcontent.repositories.QuizDecisionRepository;
 import com.example.servingwebcontent.repositories.QuizTaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizDecisionService {
@@ -24,12 +27,20 @@ public class QuizDecisionService {
         this.quizTaskRepository = quizTaskRepository;
     }
 
+    public List<QuizDecision> decisionsWithoutGroups() {
+        return decisions().stream().filter((d) -> d.getGroup() == null).toList();
+    }
+
     public List<QuizDecision> decisions() {
         return quizDecisionRepository.findAllByOrderByName();
     }
 
     public List<DecisionGroup> groups() {
-        return decisionGroupRepository.findAllByOrderByName();
+        final List<DecisionGroup> groups = decisionGroupRepository.findAllByOrderByName();
+        for (DecisionGroup group : groups) {
+            group.setDecisions(group.getDecisions().stream().sorted(Comparator.comparing(QuizDecision::getName)).collect(Collectors.toCollection(LinkedHashSet::new)));
+        }
+        return groups;
     }
 
     public ResultType add(QuizDecision decision) {

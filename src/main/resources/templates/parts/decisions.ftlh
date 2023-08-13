@@ -1,23 +1,32 @@
 <#macro decisions groups decisions_>
     <div class="accordion" id="accordion_groups">
         <#list groups as group>
-            <@accordionGroup group.id?c group.name group.decisions/>
+            <@accordionGroup group.id?c group.name group.decisions false ""/>
         </#list>
-        <@accordionGroup "nonGroup" "Не в группе" decisions_/>
+        <@accordionGroup "nonGroup" "Не в группе" decisions_ false ""/>
     </div>
 </#macro>
 
-<#macro accordionGroup id name decisions>
+<#macro decisionsCheckbox groups decisions_ checkedDecisions>
+    <div class="accordion" id="accordion_groups">
+        <#list groups as group>
+            <@accordionGroup group.id?c group.name group.decisions true checkedDecisions/>
+        </#list>
+        <@accordionGroup "nonGroup" "Не в группе" decisions_ true checkedDecisions/>
+    </div>
+</#macro>
+
+<#macro accordionGroup id name decisions checkbox checkedDecisions>
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}">
                 ${name}
             </button>
         </h2>
-        <div id="panelsStayOpen-group-${id}" class="accordion-collapse collapse show">
+        <div id="panelsStayOpen-group-${id}" class="accordion-collapse collapse <#if !checkbox>show</#if>">
             <div class="row">
                 <div class="col-2">
-                    <#if id != "nonGroup">
+                    <#if id != "nonGroup" && !checkbox>
                         <div class="m-3">
                             <a href="/decisions/group/updateAction/${id}">Изменить группу</a>
                         </div>
@@ -36,9 +45,23 @@
                             <tbody>
                             <#list decisions as decision>
                                 <tr>
-                                    <td><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a></td>
-                                    <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
-                                    <td><a href="/decisions/delete/${decision.id?c}">Удалить</a></td>
+                                    <#if checkbox>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="decisions"
+                                                       value="${decision.id}"
+                                                       id="decision-${decision.id}" ${checkedDecisions?map(d -> d.id)?seq_contains(decision.id)?string("checked", "")}>
+                                                <label class="form-check-label" for="decision-${decision.id}">
+                                                    ${decision.name}
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td colspan="2"><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>Описание</a></td>
+                                    <#else>
+                                        <td><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a></td>
+                                        <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
+                                        <td><a href="/decisions/delete/${decision.id?c}">Удалить</a></td>
+                                    </#if>
                                 </tr>
                             </#list>
                             </tbody>

@@ -45,6 +45,10 @@ public class QuizTaskService {
     }
 
     public QuizTaskResult saveFiveVariant(Quiz quiz, MultipartFile file, TaskForm taskForm) {
+        return saveFiveVariant(quiz, file, taskForm, new QuizTask());
+    }
+
+    public QuizTaskResult saveFiveVariant(Quiz quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
         final FiveVariantTask fiveVariantTask = new FiveVariantTask();
         fiveVariantTask.setPreQuestionText(taskForm.getPreQuestionText());
         fiveVariantTask.setQuestionText(taskForm.getQuestionText());
@@ -53,11 +57,7 @@ public class QuizTaskService {
         fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
         fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
         fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
-        return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions());
-    }
-
-    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, @NonNull Set<QuizDecision> decisions) {
-        return saveFiveVariant(quiz, task, file, pos, decisions, new QuizTask());
+        return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask);
     }
 
     public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {

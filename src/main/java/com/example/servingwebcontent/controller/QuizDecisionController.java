@@ -31,13 +31,8 @@ public class QuizDecisionController {
 
     @GetMapping
     public String getDecisions(Model model) {
-        final List<QuizDecision> decisions = quizDecisionService.decisions().stream().filter((d) -> d.getGroup() == null).toList();
-        model.addAttribute("decisions", decisions);
-        final List<DecisionGroup> groups = quizDecisionService.groups();
-        for (DecisionGroup group : groups) {
-            group.setDecisions(group.getDecisions().stream().sorted(Comparator.comparing(QuizDecision::getName)).collect(Collectors.toCollection(LinkedHashSet::new)));
-        }
-        model.addAttribute("groups", groups);
+        model.addAttribute("decisions", quizDecisionService.decisions());
+        model.addAttribute("groups", quizDecisionService.groups());
         return "decisions";
     }
 
@@ -56,6 +51,7 @@ public class QuizDecisionController {
                 redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
             }
         }
+        redirectAttributes.addFlashAttribute("successMessage", "Группа добавлена");
         return "redirect:/decisions";
     }
 
@@ -76,6 +72,7 @@ public class QuizDecisionController {
                 redirectAttributes.addFlashAttribute("changeGroup", group);
             }
         }
+        redirectAttributes.addFlashAttribute("successMessage", "Группа обновлена");
         return "redirect:/decisions";
     }
 
@@ -94,6 +91,7 @@ public class QuizDecisionController {
             RedirectAttributes redirectAttributes
     ) {
         quizDecisionService.delete(group);
+        redirectAttributes.addFlashAttribute("successMessage", "Группа удалена");
         return "redirect:/decisions";
     }
 
@@ -116,6 +114,7 @@ public class QuizDecisionController {
                 redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
             }
         }
+        redirectAttributes.addFlashAttribute("successMessage", "Решение добавлено");
         return "redirect:/decisions";
     }
 
@@ -141,6 +140,7 @@ public class QuizDecisionController {
                 redirectAttributes.addFlashAttribute("changeDecision", decision);
             }
         }
+        redirectAttributes.addFlashAttribute("successMessage", "Решение обновлено");
         return "redirect:/decisions";
     }
 
@@ -155,9 +155,11 @@ public class QuizDecisionController {
 
     @GetMapping("/delete/{decision}")
     public String deleteDecision(
-            @PathVariable QuizDecision decision
+            @PathVariable QuizDecision decision,
+            RedirectAttributes redirectAttributes
     ) {
         quizDecisionService.delete(decision);
+        redirectAttributes.addFlashAttribute("successMessage", "Решение удалено");
         return "redirect:/decisions";
     }
 

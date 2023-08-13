@@ -5,6 +5,7 @@ import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.validation.TaskForm;
 import com.example.servingwebcontent.domain.validation.TaskType;
 import com.example.servingwebcontent.repositories.*;
+import com.example.servingwebcontent.service.QuizDecisionService;
 import com.example.servingwebcontent.service.QuizService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,13 +26,13 @@ public class QuizController {
 
     private final QuizRepository quizRepository;
     private final QuizService quizService;
-    private final QuizDecisionRepository quizDecisionRepository;
+    private final QuizDecisionService decisionService;
     private final TaskForm taskForm;
 
-    public QuizController(QuizRepository quizRepository, QuizService quizService, QuizDecisionRepository quizDecisionRepository, QuizResultRepository quizResultRepository, UserRepository userRepository, TaskForm taskForm) {
+    public QuizController(QuizRepository quizRepository, QuizService quizService, QuizDecisionService decisionService, TaskForm taskForm) {
         this.quizRepository = quizRepository;
         this.quizService = quizService;
-        this.quizDecisionRepository = quizDecisionRepository;
+        this.decisionService = decisionService;
         this.taskForm = taskForm;
     }
 
@@ -98,7 +99,8 @@ public class QuizController {
         model.addAttribute("quiz", quiz);
         model.addAttribute("taskList", quiz.getTaskList().stream()
                 .sorted(Comparator.comparingInt(QuizTask::getPosition)).toList());
-        model.addAttribute("decisions", quizDecisionRepository.findAllByOrderByName());
+        model.addAttribute("groups", decisionService.groups());
+        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
         if (model.asMap().get("taskForm") != null) {
             this.taskForm.setFromTaskForm((TaskForm) model.asMap().get("taskForm"));
         }
