@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizDecision;
+import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
@@ -9,7 +9,6 @@ import com.example.servingwebcontent.domain.validation.TaskForm;
 import com.example.servingwebcontent.domain.validation.TaskType;
 import com.example.servingwebcontent.repositories.QuizDecisionRepository;
 import com.example.servingwebcontent.service.QuizTaskService;
-import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

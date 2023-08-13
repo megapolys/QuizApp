@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.domain.validation;
 
-import com.example.servingwebcontent.domain.quiz.QuizDecision;
+import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

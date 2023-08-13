@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.domain.quiz.QuizDecision;
-import com.example.servingwebcontent.repositories.QuizDecisionRepository;
+import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
+import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.service.QuizDecisionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -13,40 +13,143 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/decisions")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class QuizDecisionController {
 
-    private final QuizDecisionRepository quizDecisionRepository;
     private final QuizDecisionService quizDecisionService;
 
-    public QuizDecisionController(QuizDecisionRepository quizDecisionRepository, QuizDecisionService quizDecisionService) {
-        this.quizDecisionRepository = quizDecisionRepository;
+    public QuizDecisionController(QuizDecisionService quizDecisionService) {
         this.quizDecisionService = quizDecisionService;
     }
 
     @GetMapping
     public String getDecisions(Model model) {
-        model.addAttribute("decisions", quizDecisionRepository.findAll());
+        final List<QuizDecision> decisions = quizDecisionService.decisions().stream().filter((d) -> d.getGroup() == null).toList();
+        model.addAttribute("decisions", decisions);
+        final List<DecisionGroup> groups = quizDecisionService.groups();
+        for (DecisionGroup group : groups) {
+            group.setDecisions(group.getDecisions().stream().sorted(Comparator.comparing(QuizDecision::getName)).collect(Collectors.toCollection(LinkedHashSet::new)));
+        }
+        model.addAttribute("groups", groups);
         return "decisions";
+    }
+
+    @GetMapping("/group/add")
+    public String addGroup(
+            @RequestParam String name,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (!StringUtils.hasText(name)) {
+            redirectAttributes.addFlashAttribute("message", "Пустое название группы!");
+        } else {
+            final DecisionGroup group = new DecisionGroup();
+            group.setName(name.trim());
+            final QuizDecisionService.ResultType result = quizDecisionService.add(group);
+            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+                redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
+            }
+        }
+        return "redirect:/decisions";
+    }
+
+    @GetMapping("/group/update/{group}")
+    public String groupUpdate(
+            @PathVariable DecisionGroup group,
+            @RequestParam(required = false) String name,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (!StringUtils.hasText(name)) {
+            redirectAttributes.addFlashAttribute("message", "Пустое название группы!");
+            redirectAttributes.addFlashAttribute("changeGroup", group);
+        } else {
+            group.setName(name.trim());
+            final QuizDecisionService.ResultType result = quizDecisionService.updateGroup(group);
+            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+                redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
+                redirectAttributes.addFlashAttribute("changeGroup", group);
+            }
+        }
+        return "redirect:/decisions";
+    }
+
+    @GetMapping("/group/updateAction/{group}")
+    public String groupUpdateAction(
+            @PathVariable DecisionGroup group,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute("changeGroup", group);
+        return "redirect:/decisions";
+    }
+
+    @GetMapping("/group/delete/{group}")
+    public String groupDelete(
+            @PathVariable DecisionGroup group,
+            RedirectAttributes redirectAttributes
+    ) {
+        quizDecisionService.delete(group);
+        return "redirect:/decisions";
     }
 
     @GetMapping("/add")
     public String addDecision(
-        @RequestParam String name,
-        RedirectAttributes redirectAttributes
+            @RequestParam(required = false) DecisionGroup group,
+            @RequestParam String name,
+            @RequestParam String description,
+            RedirectAttributes redirectAttributes
     ) {
         if (!StringUtils.hasText(name)) {
             redirectAttributes.addFlashAttribute("message", "Пустое имя!");
         } else {
             final QuizDecision decision = new QuizDecision();
-            decision.setName(name);
-            final QuizDecisionService.DecisionResult result = quizDecisionService.add(decision);
-            if (result.result() == QuizDecisionService.ResultType.NAME_FOUND) {
-                redirectAttributes.addFlashAttribute("message", "Такое имя уже занято.");
+            decision.setName(name.trim());
+            decision.setDescription(description != null ? description.trim() : null);
+            decision.setGroup(group);
+            final QuizDecisionService.ResultType result = quizDecisionService.add(decision);
+            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+                redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
             }
         }
+        return "redirect:/decisions";
+    }
+
+    @GetMapping("/update/{decision}")
+    public String decisionUpdate(
+            @PathVariable QuizDecision decision,
+            @RequestParam String name,
+            @RequestParam String description,
+            @RequestParam(required = false) DecisionGroup group,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (!StringUtils.hasText(name)) {
+            redirectAttributes.addFlashAttribute("message", "Пустое имя!");
+            redirectAttributes.addFlashAttribute("changeDecision", decision);
+        } else {
+            final DecisionGroup oldGroup = decision.getGroup();
+            decision.setName(name.trim());
+            decision.setDescription(description != null ? description.trim() : null);
+            decision.setGroup(group);
+            final QuizDecisionService.ResultType result = quizDecisionService.updateDecision(decision, oldGroup);
+            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+                redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
+                redirectAttributes.addFlashAttribute("changeDecision", decision);
+            }
+        }
+        return "redirect:/decisions";
+    }
+
+    @GetMapping("/updateAction/{decision}")
+    public String decisionUpdateAction(
+            @PathVariable QuizDecision decision,
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute("changeDecision", decision);
         return "redirect:/decisions";
     }
 

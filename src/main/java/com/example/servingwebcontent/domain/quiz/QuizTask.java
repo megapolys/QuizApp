@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain.quiz;
 
+import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
 import jakarta.persistence.*;

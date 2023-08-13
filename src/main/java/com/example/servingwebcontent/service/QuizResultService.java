@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.service;
 
 import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.QuizDecision;
+import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
