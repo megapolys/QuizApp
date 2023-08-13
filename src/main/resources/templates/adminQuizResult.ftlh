@@ -1,4 +1,5 @@
 <#import "parts/common.ftlh" as c>
+<#import "parts/decisions.ftlh" as d>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/result/quiz/${userId}">Назад</a>
     <h3 class="mb-3">Сводная таблица решений</h3>
@@ -12,7 +13,7 @@
         <tbody>
         <#list result.decisions() as decision>
             <tr>
-                <td>${decision.decision().name}</td>
+                <td><@d.decisionWithDescription decision.decision()/></td>
                 <td>${decision.score()?c}</td>
             </tr>
         </#list>

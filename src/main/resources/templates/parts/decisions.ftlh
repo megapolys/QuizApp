@@ -58,7 +58,7 @@
                                         </td>
                                         <td colspan="2"><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>Описание</a></td>
                                     <#else>
-                                        <td><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a></td>
+                                        <td><@decisionWithDescription decision/></td>
                                         <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
                                         <td><a href="/decisions/delete/${decision.id?c}">Удалить</a></td>
                                     </#if>
@@ -73,4 +73,19 @@
             </div>
         </div>
     </div>
+</#macro>
+
+<#macro listOfChosenDecisions decisions_>
+    <#if decisions_?has_content>
+        <div class="mb-3">
+            Выбранные решения:
+            <#list decisions_ as decision>
+                ${decision.group?has_content?string(decision.group.name + ".", "")}<@decisionWithDescription decision/><#sep>, </#sep>
+            </#list>
+        </div>
+    </#if>
+</#macro>
+
+<#macro decisionWithDescription decision>
+    <a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a>
 </#macro>
