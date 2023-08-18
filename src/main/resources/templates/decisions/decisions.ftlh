@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="changeDecision" type="com.example.servingwebcontent.domain.quiz.decision.QuizDecision" -->
 <#-- @ftlvariable name="changeGroup" type="com.example.servingwebcontent.domain.quiz.decision.DecisionGroup" -->
-<#import "parts/common.ftlh" as c>
-<#import "parts/decisions.ftlh" as d>
+<#import "../parts/common.ftlh" as c>
+<#import "../parts/decisions.ftlh" as d>
 <@c.page>
     <h3 class="mb-3">Список решений</h3>
     <h5 class="mb-3">Группа</h5>

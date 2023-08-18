@@ -30,7 +30,7 @@ public class QuizResultController {
     ) {
         model.addAttribute("quizzes", quizResultService.getResults(userId));
         model.addAttribute("userId", userId);
-        return "adminQuizList";
+        return "result/quizList";
     }
 
     @GetMapping("/{userId}/delete/{quizResultId}")
@@ -52,7 +52,7 @@ public class QuizResultController {
     ) {
         model.addAttribute("result", quizResultService.getResult(quizResult));
         model.addAttribute("userId", userId);
-        return "adminQuizResult";
+        return "result/quizResult";
     }
 
     @GetMapping("/{userId}/{quizResultId}/{quizTaskResult}")
@@ -66,7 +66,7 @@ public class QuizResultController {
         model.addAttribute("score", quizResultService.getWeight(quizTaskResult));
         model.addAttribute("userId", userId);
         model.addAttribute("quizResultId", quizResultId);
-        return "adminQuizTask";
+        return "result/quizTask";
     }
 
     @PostMapping("/{userId}/{quizResultId}/{quizTaskResult}")

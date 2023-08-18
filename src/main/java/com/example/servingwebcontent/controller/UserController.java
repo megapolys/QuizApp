@@ -38,7 +38,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String userList(Model model) {
         model.addAttribute("users", userRepository.findAll());
-        return "userList";
+        return "user/userList";
     }
 
     @GetMapping("/{user}")
@@ -47,7 +47,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roles", Arrays.asList(Role.values()));
         model.addAttribute("quizzes", quizRepository.findAll());
-        return "userEdit";
+        return "user/userEdit";
     }
 
     @GetMapping
@@ -59,7 +59,7 @@ public class UserController {
             return "redirect:/login";
         }
         model.addAttribute("user", userRepository.findById(user.getId()).orElse(null));
-        return "profile";
+        return "user/profile";
     }
 
     @GetMapping("/edit")
@@ -68,7 +68,7 @@ public class UserController {
             Model model
     ) {
         model.addAttribute("user", userRepository.findById(user.getId()).orElse(null));
-        return "editProfile";
+        return "user/editProfile";
     }
 
     @PostMapping("/edit")
@@ -83,20 +83,20 @@ public class UserController {
         if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null
                 || StringUtils.isBlank(user.getLastName()) || StringUtils.isBlank(user.getFirstName())) {
             model.addAttribute("message", "Необходимо заполнить все поля");
-            return "editProfile";
+            return "user/editProfile";
         }
         if (!Objects.equals(user.getPassword(), user.getPassword2())) {
             model.addAttribute("message", "Пароли не совпадают");
-            return "editProfile";
+            return "user/editProfile";
         }
         UserService.UserResult result = userService.updateUser(currentUser, user);
         if (result.result() == UserService.ResultType.USERNAME_FOUND) {
             model.addAttribute("message", "Пользователь с таким логином уже существует!");
-            return "editProfile";
+            return "user/editProfile";
         }
         if (result.result() == UserService.ResultType.EMAIL_FOUND) {
             model.addAttribute("message", "Пользователь с такой почтой уже существует!");
-            return "editProfile";
+            return "user/editProfile";
         }
         redirectAttributes.addFlashAttribute("successMessage", "Изменения успешно сохранены");
         return "redirect:/user";

@@ -1,5 +1,5 @@
-<#import "parts/common.ftlh" as c>
-<#include "parts/security.ftlh">
+<#import "../parts/common.ftlh" as c>
+<#include "../parts/security.ftlh">
 <@c.page>
     <h3 class="mb-3">Список опросников</h3>
     <table class="table table-striped">

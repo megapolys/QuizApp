@@ -154,7 +154,7 @@ public class QuizTaskController {
         model.addAttribute("path", "/quiz/task/update/fiveVariant");
         model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
         model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
-        return "taskUpdate";
+        return "quiz/taskUpdate";
     }
 
     private TaskForm taskFormFromFiveVariantTask(QuizTask task) {

@@ -34,7 +34,7 @@ public class RegistrationController {
 
     @GetMapping("/registration")
     public String registration() {
-        return "registration";
+        return "authorization/registration";
     }
 
     @PostMapping("/registration")
@@ -48,21 +48,21 @@ public class RegistrationController {
         model.addAttribute("user", user);
         if (response != null && !response.isSuccess()) {
             model.addAttribute("message", "Ошибка капчи");
-            return "registration";
+            return "authorization/registration";
         }
         if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getPassword()) || StringUtils.isBlank(user.getPassword2())
                 || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null || StringUtils.isBlank(user.getLastName())
                 || StringUtils.isBlank(user.getFirstName())) {
             model.addAttribute("message", "Необходимо заполнить все поля");
-            return "registration";
+            return "authorization/registration";
         }
         if (user.getMale() == null) {
             model.addAttribute("message", "Вам необходимо определиться с гендером");
-            return "registration";
+            return "authorization/registration";
         }
         if (!Objects.equals(user.getPassword(), user.getPassword2())) {
             model.addAttribute("message", "Пароли не совпадают");
-            return "registration";
+            return "authorization/registration";
         }
         UserService.UserResult result = userService.addUser(user);
         if (result.result() == UserService.ResultType.USERNAME_FOUND) {
@@ -74,7 +74,7 @@ public class RegistrationController {
         if (result.result() == UserService.ResultType.SUCCESS) {
             return "redirect:/activate/activation";
         } else {
-            return "registration";
+            return "authorization/registration";
         }
     }
 
@@ -91,7 +91,7 @@ public class RegistrationController {
             message = "Вы покинули нас...";
         }
         model.addAttribute("message", message);
-        return "login";
+        return "authorization/login";
     }
 
 
@@ -105,17 +105,17 @@ public class RegistrationController {
             model.addAttribute("message", "Код активации не найден");
         }
 
-        return "login";
+        return "authorization/login";
     }
 
     @GetMapping("/activate/activation")
     public String activate() {
-        return "activation";
+        return "authorization/activation";
     }
 
     @GetMapping("/repairPassword")
     public String repairPassword(Model model) {
-        return "repairPassword";
+        return "authorization/repairPassword";
     }
 
     @PostMapping("/repairPassword")
@@ -141,11 +141,11 @@ public class RegistrationController {
         final UserService.UserResult result = userService.findByRepairPasswordCode(repairPasswordCode);
         if (result.result() == UserService.ResultType.SUCCESS) {
             model.addAttribute("validCode", repairPasswordCode);
-            return "repairPassword";
+            return "authorization/repairPassword";
         } else {
             model.addAttribute("message", "Невалидная ссылка на восстановление пароля");
         }
-        return "login";
+        return "authorization/login";
     }
 
     @PostMapping("/repairPassword/{repairPasswordCode}")

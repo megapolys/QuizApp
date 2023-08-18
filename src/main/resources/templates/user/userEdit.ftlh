@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 <@c.page>
     <h3>Изменение пользователя ${user.username}</h3>
     <form action="/user" method="post">

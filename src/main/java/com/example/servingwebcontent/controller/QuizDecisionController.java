@@ -13,11 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Controller
 @RequestMapping("/decisions")
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -33,7 +28,7 @@ public class QuizDecisionController {
     public String getDecisions(Model model) {
         model.addAttribute("decisions", quizDecisionService.decisions());
         model.addAttribute("groups", quizDecisionService.groups());
-        return "decisions";
+        return "decisions/decisions";
     }
 
     @GetMapping("/group/add")

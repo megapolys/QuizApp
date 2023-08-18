@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 <@c.page>
     <h3 class="mb-3">Профиль</h3>
     <dl class="row mb-3">

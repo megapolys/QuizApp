@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 <@c.page>
     <div class="text-success">Регистрация почти закончена, вы молодец, осталось совсем немного.
         Найдите письмо на почте (которую вы указывали при регистрации) от моего ассистента authorization.bot@gmail.com.

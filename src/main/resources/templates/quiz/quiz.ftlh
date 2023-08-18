@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="task" type="com.example.servingwebcontent.domain.quiz.QuizTask" -->
-<#import "parts/common.ftlh" as c>
-<#import "parts/taskForm.ftlh" as task>
-<#import "parts/decisions.ftlh" as d>
+<#import "../parts/common.ftlh" as c>
+<#import "../parts/taskForm.ftlh" as task>
+<#import "../parts/decisions.ftlh" as d>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/quiz/list">Назад</a>
     <h3 class="mb-3">Страница редактирования теста "${quiz.name}"</h3>

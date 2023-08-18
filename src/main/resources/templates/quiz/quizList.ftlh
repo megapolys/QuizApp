@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 <@c.page>
     <h3 class="mb-3">Список тестов</h3>
     <form class="mb-3" action="/quiz/add" method="get">

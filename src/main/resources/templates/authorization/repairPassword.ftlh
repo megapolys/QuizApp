@@ -1,5 +1,5 @@
-<#import "parts/common.ftlh" as c>
-<#import "parts/login.ftlh" as l>
+<#import "../parts/common.ftlh" as c>
+<#import "../parts/login.ftlh" as l>
 <@c.page>
     <h3 class="mb-3">Восстановление пароля</h3>
     <#if validCode??>
