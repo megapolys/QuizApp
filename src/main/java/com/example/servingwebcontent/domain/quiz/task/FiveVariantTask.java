@@ -11,7 +11,9 @@ public class FiveVariantTask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 1000)
     private String preQuestionText;
+    @Column(length = 1000)
     private String questionText;
     private String fileName;
 

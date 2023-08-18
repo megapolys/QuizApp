@@ -1,9 +1,6 @@
 package com.example.servingwebcontent.domain.quiz.task;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class YesOrNoTask {
@@ -11,7 +8,9 @@ public class YesOrNoTask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length = 1000)
     private String preQuestionText;
+    @Column(length = 1000)
     private String questionText;
     private String fileName;
 
