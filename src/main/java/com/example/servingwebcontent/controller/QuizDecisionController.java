@@ -28,6 +28,7 @@ public class QuizDecisionController {
     public String getDecisions(Model model) {
         model.addAttribute("decisions", quizDecisionService.decisions());
         model.addAttribute("groups", quizDecisionService.groups());
+        model.addAttribute("decisionTab", "active");
         return "decisions/decisions";
     }
 

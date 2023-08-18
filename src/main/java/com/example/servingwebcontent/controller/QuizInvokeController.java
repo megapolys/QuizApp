@@ -33,6 +33,7 @@ public class QuizInvokeController {
             Model model
     ) {
         model.addAttribute("quizzes", quizInvokeService.getQuizzes(user.getId()));
+        model.addAttribute("invokeTab", "active");
         return "invoke/quizList";
     }
 
@@ -69,6 +70,7 @@ public class QuizInvokeController {
         model.addAttribute("lastTask", countCompleted == taskCount - 1);
         model.addAttribute("pagination", countCompleted + "/" + taskCount);
         model.addAttribute("progress", countCompleted * 100f / taskCount);
+        model.addAttribute("invokeTab", "active");
         return "invoke/quiz";
     }
 

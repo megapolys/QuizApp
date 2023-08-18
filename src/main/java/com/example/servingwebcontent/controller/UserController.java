@@ -38,6 +38,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String userList(Model model) {
         model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("userTab", "active");
         return "user/userList";
     }
 
@@ -47,6 +48,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("roles", Arrays.asList(Role.values()));
         model.addAttribute("quizzes", quizRepository.findAll());
+        model.addAttribute("userTab", "active");
         return "user/userEdit";
     }
 

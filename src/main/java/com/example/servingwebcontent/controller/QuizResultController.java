@@ -30,6 +30,7 @@ public class QuizResultController {
     ) {
         model.addAttribute("quizzes", quizResultService.getResults(userId));
         model.addAttribute("userId", userId);
+        model.addAttribute("userTab", "active");
         return "result/quizList";
     }
 
@@ -52,6 +53,7 @@ public class QuizResultController {
     ) {
         model.addAttribute("result", quizResultService.getResult(quizResult));
         model.addAttribute("userId", userId);
+        model.addAttribute("userTab", "active");
         return "result/quizResult";
     }
 
@@ -66,6 +68,7 @@ public class QuizResultController {
         model.addAttribute("score", quizResultService.getWeight(quizTaskResult));
         model.addAttribute("userId", userId);
         model.addAttribute("quizResultId", quizResultId);
+        model.addAttribute("userTab", "active");
         return "result/quizTask";
     }
 

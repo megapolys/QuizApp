@@ -39,6 +39,7 @@ public class QuizController {
     @GetMapping("/list")
     public String getQuizList(Model model) {
         model.addAttribute("quizList", quizRepository.findAllByOrderByShortName());
+        model.addAttribute("quizTab", "active");
         return "quiz/quizList";
     }
 
@@ -108,6 +109,7 @@ public class QuizController {
         model.addAttribute("taskForm", this.taskForm);
         model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
         model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
+        model.addAttribute("quizTab", "active");
         return "quiz/quiz";
     }
 
