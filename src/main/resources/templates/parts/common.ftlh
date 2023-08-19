@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="/static/style.css">
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/static/decisions.js"></script>
     </head>
     <body>
     <#include "navbar.ftlh">

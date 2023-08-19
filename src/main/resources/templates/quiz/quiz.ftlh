@@ -25,7 +25,8 @@
         <tr>
             <th style="width: 5%"></th>
             <th style="width: 55%"></th>
-            <th style="width: 20%"></th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
             <th style="width: 20%"></th>
         </tr>
         </thead>
@@ -37,6 +38,7 @@
                 <#assign type = task.fiveVariantTask?has_content?string("fiveVariant", "yesOrNo")>
                 <td><a href="/quiz/task/update/${type}/${task.id?c}">Изменить</a></td>
                 <td><a href="/quiz/task/delete/${task.id?c}">Удалить</a></td>
+                <td><#if !task.decisions?has_content><div style="color: red">Решений не назначено</div></#if></td>
             </tr>
         <#else>
             <tr>
@@ -47,15 +49,3 @@
     </table>
 
 </@c.page>
-
-<script type="text/javascript">
-    function switchTab(el, tab_id, path) {
-        $("#taskTabs").children('li').children('a').removeClass("active");
-        $("#taskTypeTabs").children().hide();
-
-        $(el).addClass("active");
-        $(tab_id).show();
-
-        $("#taskForm").attr("action", path);
-    }
-</script>

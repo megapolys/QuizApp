@@ -17,9 +17,10 @@
 </#macro>
 
 <#macro accordionGroup id name decisions checkbox checkedDecisions>
+<#-- @ftlvariable name="decisions" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}">
+            <button id="group-${id}" class="accordion-button <#if checkbox>collapsed</#if>" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}">
                 ${name}
             </button>
         </h2>
@@ -28,7 +29,7 @@
                 <div class="col-2">
                     <#if id != "nonGroup" && !checkbox>
                         <div class="m-3">
-                            <a href="/decisions/group/updateAction/${id}">Изменить группу</a>
+                            <a href="/decisions/group/updateAction/${id?c}">Изменить группу</a>
                         </div>
                     </#if>
                 </div>
@@ -50,13 +51,19 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="decisions"
                                                        value="${decision.id}"
-                                                       id="decision-${decision.id}" ${checkedDecisions?map(d -> d.id)?seq_contains(decision.id)?string("checked", "")}>
+                                                       id="decision-${decision.id?c}" ${checkedDecisions?map(d -> d.id)?seq_contains(decision.id)?string("checked", "")}
+                                                       onclick="chooseDecision('decision-chosen-${decision.id}', '${(decision.group.name)!""}', '${decision.name}', 'group-${(decision.group.id)!"nonGroup"}', 'decision-${decision.id}')"
+                                                >
                                                 <label class="form-check-label" for="decision-${decision.id}">
                                                     ${decision.name}
                                                 </label>
                                             </div>
                                         </td>
-                                        <td colspan="2"><a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>Описание</a></td>
+                                        <td colspan="2">
+                                            <#if decision.description?has_content>
+                                                <a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>Описание</a>
+                                            </#if>
+                                        </td>
                                     <#else>
                                         <td><@decisionWithDescription decision/></td>
                                         <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
@@ -76,14 +83,17 @@
 </#macro>
 
 <#macro listOfChosenDecisions decisions_>
-    <#if decisions_?has_content>
-        <div class="mb-3">
-            Выбранные решения:
+<#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
+    <div class="mb-3">
+        Выбранные решения:
+        <div id="chosen-decisions">
             <#list decisions_ as decision>
-                ${decision.group?has_content?string(decision.group.name + ".", "")}<@decisionWithDescription decision/><#sep>, </#sep>
+                <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}',"decision-${decision.id}") id="decision-chosen-${decision.id}">${(decision?counter > 1)?string(", ", "")}<#if decision.group??>${decision.group.name}.</#if>${decision.name}</a>
+            <#else>
+                Нет выбранных решений
             </#list>
         </div>
-    </#if>
+    </div>
 </#macro>
 
 <#macro decisionWithDescription decision>

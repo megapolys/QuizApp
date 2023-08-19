@@ -205,8 +205,6 @@ public class QuizTaskController {
             redirectAttributes.addFlashAttribute("message", "Необходимо ввести текст вопроса.");
         } else if (position == null) {
             redirectAttributes.addFlashAttribute("message", "Необходимо ввести номер.");
-        } else if (decisions == null || decisions.length == 0) {
-            redirectAttributes.addFlashAttribute("message", "Нужно выбрать хотя бы одно решение по вопросу.");
         } else {
             return true;
         }
