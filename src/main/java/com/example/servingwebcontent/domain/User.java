@@ -36,9 +36,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Quiz> quizzes;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<QuizResult> results;
 
@@ -127,14 +124,6 @@ public class User implements UserDetails {
 
     public void setActivationCode(String activationCode) {
         this.activationCode = activationCode;
-    }
-
-    public Set<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public void setQuizzes(Set<Quiz> quizzes) {
-        this.quizzes = quizzes;
     }
 
     public Set<QuizResult> getResults() {

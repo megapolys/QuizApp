@@ -25,12 +25,10 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final QuizRepository quizRepository;
     private final UserService userService;
 
-    public UserController(UserRepository userRepository, QuizRepository quizRepository, UserService userService) {
+    public UserController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
-        this.quizRepository = quizRepository;
         this.userService = userService;
     }
 
@@ -40,16 +38,6 @@ public class UserController {
         model.addAttribute("users", userRepository.findAll());
         model.addAttribute("userTab", "active");
         return "user/userList";
-    }
-
-    @GetMapping("/{user}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String editUser(@PathVariable User user, Model model) {
-        model.addAttribute("user", user);
-        model.addAttribute("roles", Arrays.asList(Role.values()));
-        model.addAttribute("quizzes", quizRepository.findAll());
-        model.addAttribute("userTab", "active");
-        return "user/userEdit";
     }
 
     @GetMapping
@@ -102,25 +90,5 @@ public class UserController {
         }
         redirectAttributes.addFlashAttribute("successMessage", "Изменения успешно сохранены");
         return "redirect:/user";
-    }
-
-    @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String updateUser(
-            @RequestParam(name = "roles", required = false) String[] roles,
-            @RequestParam(name = "quizzes", required = false) Quiz[] quizzes,
-            @RequestParam("userId") User user
-    ) {
-        final List<String> staticRoles = Arrays.stream(Role.values()).map(Role::name).toList();
-        if (roles != null) {
-            user.setRoles(Arrays.stream(roles).filter(staticRoles::contains).map(Role::valueOf).collect(Collectors.toSet()));
-        }
-        if (quizzes != null) {
-            user.setQuizzes(Arrays.stream(quizzes).collect(Collectors.toSet()));
-        } else {
-            user.setQuizzes(new LinkedHashSet<>());
-        }
-        userRepository.save(user);
-        return "redirect:/user/list";
     }
 }

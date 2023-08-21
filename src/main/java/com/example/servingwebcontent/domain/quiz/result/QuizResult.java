@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain.quiz.result;
 
+import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import jakarta.persistence.*;
@@ -18,12 +19,23 @@ public class QuizResult {
     @ManyToOne(fetch = FetchType.LAZY)
     private Quiz quiz;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
+
     private boolean complete;
     @Column(name = "complete_date")
     private Date completeDate;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<QuizTaskResult> taskList;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public void setId(Long id) {
         this.id = id;

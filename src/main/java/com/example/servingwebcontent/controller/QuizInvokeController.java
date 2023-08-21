@@ -32,7 +32,7 @@ public class QuizInvokeController {
             @AuthenticationPrincipal User user,
             Model model
     ) {
-        model.addAttribute("quizzes", quizInvokeService.getQuizzes(user.getId()));
+        model.addAttribute("quizzes", quizInvokeService.getQuizResults(user.getId()));
         model.addAttribute("invokeTab", "active");
         return "invoke/quizList";
     }

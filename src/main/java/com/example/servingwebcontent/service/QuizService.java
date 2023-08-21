@@ -3,15 +3,14 @@ package com.example.servingwebcontent.service;
 import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
+import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.repositories.QuizRepository;
 import com.example.servingwebcontent.repositories.QuizResultRepository;
 import com.example.servingwebcontent.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class QuizService {
@@ -26,6 +25,25 @@ public class QuizService {
         this.userRepository = userRepository;
         this.quizResultRepository = quizResultRepository;
         this.quizTaskService = quizTaskService;
+    }
+    
+    public List<QuizBean> getQuizzes(User user) {
+        final Set<com.example.servingwebcontent.domain.quiz.result.QuizResult> results = user.getResults();
+        final List<QuizBean> quizList = new ArrayList<>();
+        for (Quiz quiz : quizRepository.findAllByOrderByShortName()) {
+            boolean inProgress = false;
+            boolean exists = false;
+            for (com.example.servingwebcontent.domain.quiz.result.QuizResult result : results) {
+                if (Objects.equals(quiz.getId(), result.getQuiz().getId())) {
+                    exists = true;
+                    if (!result.isComplete()) {
+                        inProgress = true;
+                    }
+                }
+            }
+            quizList.add(new QuizBean(quiz, inProgress, exists));
+        }
+        return quizList;
     }
 
     public QuizResult save(Quiz quiz) {
@@ -46,7 +64,6 @@ public class QuizService {
             quizTaskService.delete(quizTask);
         }
         for (User user : userRepository.findAll()) {
-            user.getQuizzes().remove(quiz);
             user.getResults().removeIf(result -> Objects.equals(result.getQuiz().getId(), quiz.getId()));
             userRepository.save(user);
         }
@@ -67,6 +84,9 @@ public class QuizService {
             }
         }
         return max;
+    }
+    
+    public record QuizBean(Quiz quiz, boolean inProgress, boolean exists) {
     }
 
     public enum ResultType {

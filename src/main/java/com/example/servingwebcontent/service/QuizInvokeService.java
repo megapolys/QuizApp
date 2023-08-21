@@ -4,6 +4,7 @@ import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.repositories.QuizRepository;
 import com.example.servingwebcontent.repositories.QuizResultRepository;
 import com.example.servingwebcontent.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,28 +16,26 @@ import java.util.stream.Collectors;
 public class QuizInvokeService {
 
     private final UserRepository userRepository;
-    public final QuizResultRepository quizResultRepository;
+    private final QuizResultRepository quizResultRepository;
+    private final QuizRepository quizRepository;
 
-    public QuizInvokeService(UserRepository userRepository, QuizResultRepository quizResultRepository) {
+    public QuizInvokeService(UserRepository userRepository, QuizResultRepository quizResultRepository, QuizRepository quizRepository) {
         this.userRepository = userRepository;
         this.quizResultRepository = quizResultRepository;
+        this.quizRepository = quizRepository;
     }
 
-    public List<QuizBean> getQuizzes(long userId) {
-        final User user = userRepository.findById(userId).get();
-        final Set<QuizResult> results = user.getResults();
-        final List<QuizBean> quizzes = new ArrayList<>();
-        for (Quiz quiz : user.getQuizzes()) {
-            final Optional<QuizResult> quizResultOptional = results.stream().filter(r -> Objects.equals(r.getQuiz().getId(), quiz.getId())).findFirst();
-            if (quizResultOptional.isPresent()) {
-                final QuizResult quizResult = quizResultOptional.get();
-                quizzes.add(new QuizBean(quiz.getName(), true, quizResult.isComplete(), quizResult.getId(), getProgress(quizResult)));
-            } else {
-                quizzes.add(new QuizBean(quiz.getName(), false, false, quiz.getId(), null));
-            }
+    public List<QuizResultBean> getQuizResults(long userId) {
+        final User user = userRepository.findById(userId).orElseThrow();
+        final List<QuizResultBean> quizzes = new ArrayList<>();
+        for (QuizResult result : user.getResults()) {
+            final boolean inProgress = result.getTaskList().stream().anyMatch(QuizTaskResult::isComplete);
+            quizzes.add(new QuizResultBean(result.getQuiz().getName(), inProgress, result.isComplete(), result.getId(), getProgress(result), result.getCompleteDate()));
         }
+        quizzes.sort(Comparator.comparing(QuizResultBean::completeDate, Comparator.nullsFirst(Comparator.reverseOrder())));
         return quizzes;
     }
+
 
     public String getProgress(QuizResult quizResult) {
         final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
@@ -81,7 +80,7 @@ public class QuizInvokeService {
     }
 
 
-    public record QuizBean(String name, boolean inProgress, boolean complete, Long quizId, String progress) {
+    public record QuizResultBean(String name, boolean inProgress, boolean complete, Long quizId, String progress, Date completeDate) {
     }
 
 }

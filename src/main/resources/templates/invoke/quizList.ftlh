@@ -6,7 +6,8 @@
         <thead>
         <tr>
             <th style="width: 60%"></th>
-            <th style="width: 40%"></th>
+            <th style="width: 20%"></th>
+            <th style="width: 20%"></th>
         </tr>
         </thead>
         <tbody>
@@ -17,13 +18,16 @@
                     <#if quiz.complete()>
                         <span>Тест пройден</span>
                     <#else>
-                        <#if quiz.inProgress()>
-                            <a href="/invokeQuiz/${quiz.quizId()?c}">Продолжить ${quiz.progress()}</a>
-                        <#else>
-                            <a href="/startQuiz/${quiz.quizId()?c}">Начать</a>
-                        </#if>
+                        <a href="/invokeQuiz/${quiz.quizId()?c}">
+                            <#if quiz.inProgress()>
+                                Продолжить ${quiz.progress()}
+                            <#else>
+                                Начать
+                            </#if>
+                        </a>
                     </#if>
                 </td>
+                <td>${quiz.complete()?then(quiz.completeDate()?string, "")}</td>
             </tr>
         </#list>
         </tbody>

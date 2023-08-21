@@ -1,6 +1,7 @@
 package com.example.servingwebcontent.service;
 
 import com.example.servingwebcontent.domain.User;
+import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
@@ -49,15 +50,15 @@ public class QuizResultService {
         this.quizResultRepository = quizResultRepository;
     }
 
-    public List<ResultBean> getResults(Long userId) {
-        final Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException(String.format("User by userId(%s) is not found", userId));
-        }
-        final User user = optionalUser.get();
-        final List<ResultBean> resultBeans = new ArrayList<>(user.getResults().stream().map(this::getResult).toList());
-        resultBeans.sort(Comparator.comparing(bean -> bean.quizResult.getCompleteDate(), Comparator.nullsLast(Comparator.reverseOrder())));
-        return resultBeans;
+    public List<QuizResultBean> getResults(User user) {
+        final Set<QuizResult> results = user.getResults();
+        return results.stream().collect(Collectors.groupingBy(QuizResult::getQuiz)).entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getKey().getShortName()))
+                .map(entry -> new QuizResultBean(entry.getKey(), entry.getValue().stream()
+                        .sorted(Comparator.comparing(QuizResult::getCompleteDate, Comparator.nullsFirst(Comparator.reverseOrder())))
+                        .map(this::getResult)
+                        .toList()
+                )).toList();
     }
 
     public ResultBean getResult(QuizResult result) {
@@ -87,8 +88,7 @@ public class QuizResultService {
         result.setTaskList(result.getTaskList().stream()
                 .sorted(Comparator.comparing(taskResult -> taskResult.getTask().getPosition()))
                 .collect(Collectors.toCollection(LinkedHashSet::new)));
-        return new ResultBean(result, decisionsList,
-                score, score > yellowRatio, score > redRatio, progress);
+        return new ResultBean(result, decisionsList, score, score > yellowRatio, score > redRatio, progress);
     }
 
     public float getWeight(QuizTaskResult taskResult) {
@@ -127,6 +127,8 @@ public class QuizResultService {
         userRepository.save(user);
         quizResultRepository.delete(quizResult);
     }
+
+    public record QuizResultBean(Quiz quiz, List<ResultBean> results){}
 
     public record ResultBean(QuizResult quizResult, List<DecisionBean> decisions,
                              float score, boolean yellow, boolean red, String progress) {

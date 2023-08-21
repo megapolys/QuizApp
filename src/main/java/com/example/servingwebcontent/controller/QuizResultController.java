@@ -1,9 +1,12 @@
 package com.example.servingwebcontent.controller;
 
+import com.example.servingwebcontent.domain.User;
+import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.service.QuizInvokeService;
 import com.example.servingwebcontent.service.QuizResultService;
+import com.example.servingwebcontent.service.QuizService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,21 +20,35 @@ public class QuizResultController {
 
     private final QuizResultService quizResultService;
     private final QuizInvokeService quizInvokeService;
+    private final QuizService quizService;
 
-    public QuizResultController(QuizResultService quizResultService, QuizInvokeService quizInvokeService) {
+    public QuizResultController(QuizResultService quizResultService, QuizInvokeService quizInvokeService, QuizService quizService) {
         this.quizResultService = quizResultService;
         this.quizInvokeService = quizInvokeService;
+        this.quizService = quizService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{user}")
     public String getQuizzes(
-            @PathVariable Long userId,
+            @PathVariable User user,
             Model model
     ) {
-        model.addAttribute("quizzes", quizResultService.getResults(userId));
-        model.addAttribute("userId", userId);
+        model.addAttribute("quizResults", quizResultService.getResults(user));
+        model.addAttribute("quizList", quizService.getQuizzes(user));
+        model.addAttribute("user", user);
         model.addAttribute("userTab", "active");
         return "result/quizList";
+    }
+
+    @GetMapping("/{userId}/newQuiz/{quiz}")
+    public String newQuiz(
+            @PathVariable Long userId,
+            @PathVariable Quiz quiz,
+            RedirectAttributes redirectAttributes
+    ) {
+        quizInvokeService.startQuiz(userId, quiz);
+        redirectAttributes.addAttribute("userId", userId);
+        return "redirect:/result/quiz/{userId}";
     }
 
     @GetMapping("/{userId}/delete/{quizResultId}")
