@@ -11,31 +11,30 @@ function switchTab(el, tab_id, path) {
 function chooseDecision(id, group, name, groupId, decisionId) {
     let exist = false;
     let decisions = $("#chosen-decisions");
-    let list = decisions.children('a');
+    let list = decisions.children('div');
     let size = list.length;
     if (size === 0) {
         decisions.html("");
     }
-    let cur = -1;
     let i = 0;
     list.each(function () {
         if ($(this).attr('id') === id) {
             $(this).remove();
             exist = true;
             size--;
-            cur = i;
         }
         i++;
     });
-    let delimiter = size === 0 ? "" : ", ";
     group = group ? group + "." : "";
     if (!exist) {
-        let newElement = $("<a id=" + id + " onclick=decisionFocus('" + groupId + "','" + decisionId + "')>" + delimiter + group + name + "</a>");
+        let newElement = $("<div class=\"col-md-6\" id=" + id + ">\n" +
+            "                    <div class=\"p-2 mb-2 rounded-3 position-relative\" style=\"background-color: #efadce\">\n" +
+            "                       <a onclick=decisionFocus('" + groupId + "','" + decisionId + "')>" + group + name + "</a>\n" +
+            "                       <button onclick=\"$('#" + decisionId + "')[0].click()\" type=\"button\" class=\"btn-close position-absolute top-50 end-0 translate-middle-y\" aria-label=\"Close\"></button>\n" +
+            "                    </div>\n" +
+            "               </div>");
         newElement.appendTo("#chosen-decisions");
         size++;
-    }
-    if (cur === 0 && size > 0) {
-        $(list.get(1)).html($(list.get(1)).html().substring(1))
     }
     if (size === 0) {
         decisions.html("Нет выбранных решений");

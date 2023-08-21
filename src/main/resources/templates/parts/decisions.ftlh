@@ -85,10 +85,17 @@
 <#macro listOfChosenDecisions decisions_>
 <#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
     <div class="mb-3">
-        Выбранные решения:
-        <div id="chosen-decisions">
+        <div class="mb-2">
+            Выбранные решения:
+        </div>
+        <div id="chosen-decisions" class="row">
             <#list decisions_ as decision>
-                <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}',"decision-${decision.id}") id="decision-chosen-${decision.id}">${(decision?counter > 1)?string(", ", "")}<#if decision.group??>${decision.group.name}.</#if>${decision.name}</a>
+                <div class="col-md-6" id="decision-chosen-${decision.id}">
+                    <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
+                        <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}',"decision-${decision.id}")><#if decision.group??>${decision.group.name}.</#if>${decision.name}</a>
+                        <button onclick="$('#decision-${decision.id}')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
+                    </div>
+                </div>
             <#else>
                 Нет выбранных решений
             </#list>
