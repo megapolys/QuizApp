@@ -25,7 +25,7 @@ function chooseDecision(id, group, name, groupId, decisionId) {
         }
         i++;
     });
-    group = group ? group + "." : "";
+    group = group ? group + " _ " : "";
     if (!exist) {
         let newElement = $("<div class=\"col-md-6\" id=" + id + ">\n" +
             "                    <div class=\"p-2 mb-2 rounded-3 position-relative\" style=\"background-color: #efadce\">\n" +

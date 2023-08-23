@@ -57,7 +57,7 @@ public class QuizTaskService {
         fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
         fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
         fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
-        if (!taskForm.isDeleteFile()) {
+        if (quizTask.getFiveVariantTask() != null && !taskForm.isDeleteFile()) {
             fiveVariantTask.setFileName(quizTask.getFiveVariantTask().getFileName());
         }
         return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
@@ -89,7 +89,7 @@ public class QuizTaskService {
         yesOrNoTask.setQuestionText(taskForm.getQuestionText());
         yesOrNoTask.setYesWeight(taskForm.getYesWeight());
         yesOrNoTask.setNoWeight(taskForm.getNoWeight());
-        if (!taskForm.isDeleteFile()) {
+        if (quizTask.getYesOrNoTask() != null && !taskForm.isDeleteFile()) {
             yesOrNoTask.setFileName(quizTask.getYesOrNoTask().getFileName());
         }
         return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
