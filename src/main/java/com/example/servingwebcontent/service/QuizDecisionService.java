@@ -31,7 +31,7 @@ public class QuizDecisionService {
         return decisions().stream().filter((d) -> d.getGroup() == null).toList();
     }
 
-    public List<QuizDecision> decisions() {
+    private List<QuizDecision> decisions() {
         return quizDecisionRepository.findAllByOrderByName();
     }
 

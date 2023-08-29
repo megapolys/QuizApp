@@ -26,7 +26,7 @@ public class QuizDecisionController {
 
     @GetMapping
     public String getDecisions(Model model) {
-        model.addAttribute("decisions", quizDecisionService.decisions());
+        model.addAttribute("decisions", quizDecisionService.decisionsWithoutGroups());
         model.addAttribute("groups", quizDecisionService.groups());
         model.addAttribute("decisionTab", "active");
         return "decisions/decisions";
