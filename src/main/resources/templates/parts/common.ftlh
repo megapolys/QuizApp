@@ -27,13 +27,19 @@
     </div>
     <footer class="py-3 my-4">
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+            <li class="nav-item"><a href="/main" class="nav-link px-2 text-muted">Главная</a></li>
+            <li class="nav-item"><a href="/userQuizList" class="nav-link px-2 text-muted">Опросники</a></li>
+            <#if isAdmin>
+                <li class="nav-item"><a href="/user/list" class="nav-link px-2 text-muted">Пользователи</a></li>
+                <li class="nav-item"><a href="/quiz/list" class="nav-link px-2 text-muted">Тесты</a></li>
+                <li class="nav-item"><a href="/decisions" class="nav-link px-2 text-muted">Решения</a></li>
+            </#if>
         </ul>
-        <p class="text-center text-muted">Это будет футер</p>
+        <p class="text-center text-muted">Телеграм разработчика для жалоб и предложений
+            <a class="icon-link" href="https://t.me/dlosev">
+                <i class="bi bi-telegram"></i>
+            </a>
+        </p>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
             integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
@@ -42,7 +48,7 @@
             integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
             crossorigin="anonymous"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         });

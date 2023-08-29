@@ -12,18 +12,14 @@ function chooseDecision(id, group, name, groupId, decisionId) {
     let exist = false;
     let decisions = $("#chosen-decisions");
     let list = decisions.children('div');
-    let size = list.length;
-    if (size === 0) {
+    if (list.length === 0) {
         decisions.html("");
     }
-    let i = 0;
     list.each(function () {
         if ($(this).attr('id') === id) {
             $(this).remove();
             exist = true;
-            size--;
         }
-        i++;
     });
     group = group ? group + " _ " : "";
     if (!exist) {
@@ -34,10 +30,6 @@ function chooseDecision(id, group, name, groupId, decisionId) {
             "                    </div>\n" +
             "               </div>");
         newElement.appendTo("#chosen-decisions");
-        size++;
-    }
-    if (size === 0) {
-        decisions.html("Нет выбранных решений");
     }
 }
 

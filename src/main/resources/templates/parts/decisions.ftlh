@@ -96,8 +96,6 @@
                         <button onclick="$('#decision-${decision.id}')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
                     </div>
                 </div>
-            <#else>
-                Нет выбранных решений
             </#list>
         </div>
     </div>
