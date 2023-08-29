@@ -104,5 +104,10 @@
 </#macro>
 
 <#macro decisionWithDescription decision>
+    <#if decision.description?has_content>
+        <a class="icon-link" href="#" onclick="copyToClipboard('${decision.description}')">
+            <i class="bi bi-save"></i>
+        </a>
+    </#if>
     <a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a>
 </#macro>

@@ -63,3 +63,7 @@ function goToDecision(decisionId) {
     decisionLink[0].click(); // click() work with dom model, not with jquery
     decisionLink.remove();
 }
+
+function copyToClipboard(content) {
+    navigator.clipboard.writeText(content);
+}

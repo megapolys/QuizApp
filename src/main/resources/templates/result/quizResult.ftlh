@@ -6,7 +6,7 @@
     <table class="table mb-5">
         <thead>
         <tr>
-            <th>Решение</th>
+            <th style="width: 60%">Решение</th>
             <th>Баллы</th>
             <th>Баллы/Вопросы</th>
             <th>Вопросы</th>
