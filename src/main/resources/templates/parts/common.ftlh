@@ -29,9 +29,11 @@
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="/main" class="nav-link px-2 text-muted">Главная</a></li>
             <li class="nav-item"><a href="/userQuizList" class="nav-link px-2 text-muted">Опросники</a></li>
+            <li class="nav-item"><a href="/userTopicList" class="nav-link px-2 text-muted">Анализы</a></li>
             <#if isAdmin>
                 <li class="nav-item"><a href="/user/list" class="nav-link px-2 text-muted">Пользователи</a></li>
                 <li class="nav-item"><a href="/quiz/list" class="nav-link px-2 text-muted">Тесты</a></li>
+                <li class="nav-item"><a href="/medical/list" class="nav-link px-2 text-muted">Мед токены</a></li>
                 <li class="nav-item"><a href="/decisions" class="nav-link px-2 text-muted">Решения</a></li>
             </#if>
         </ul>

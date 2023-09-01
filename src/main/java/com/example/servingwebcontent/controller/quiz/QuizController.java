@@ -1,12 +1,12 @@
-package com.example.servingwebcontent.controller;
+package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.validation.TaskForm;
 import com.example.servingwebcontent.domain.validation.TaskType;
-import com.example.servingwebcontent.repositories.*;
-import com.example.servingwebcontent.service.QuizDecisionService;
-import com.example.servingwebcontent.service.QuizService;
+import com.example.servingwebcontent.repositories.quiz.QuizRepository;
+import com.example.servingwebcontent.service.DecisionService;
+import com.example.servingwebcontent.service.quiz.QuizService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,10 +26,10 @@ public class QuizController {
 
     private final QuizRepository quizRepository;
     private final QuizService quizService;
-    private final QuizDecisionService decisionService;
+    private final DecisionService decisionService;
     private final TaskForm taskForm;
 
-    public QuizController(QuizRepository quizRepository, QuizService quizService, QuizDecisionService decisionService, TaskForm taskForm) {
+    public QuizController(QuizRepository quizRepository, QuizService quizService, DecisionService decisionService, TaskForm taskForm) {
         this.quizRepository = quizRepository;
         this.quizService = quizService;
         this.decisionService = decisionService;

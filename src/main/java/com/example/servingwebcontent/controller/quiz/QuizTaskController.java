@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.controller;
+package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
@@ -7,8 +7,8 @@ import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
 import com.example.servingwebcontent.domain.validation.TaskForm;
 import com.example.servingwebcontent.domain.validation.TaskType;
-import com.example.servingwebcontent.service.QuizDecisionService;
-import com.example.servingwebcontent.service.QuizTaskService;
+import com.example.servingwebcontent.service.DecisionService;
+import com.example.servingwebcontent.service.quiz.QuizTaskService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,9 +25,9 @@ import java.util.Set;
 public class QuizTaskController {
 
     private final QuizTaskService quizTaskService;
-    private final QuizDecisionService decisionService;
+    private final DecisionService decisionService;
 
-    public QuizTaskController(QuizTaskService quizTaskService,QuizDecisionService decisionService) {
+    public QuizTaskController(QuizTaskService quizTaskService, DecisionService decisionService) {
         this.quizTaskService = quizTaskService;
         this.decisionService = decisionService;
     }

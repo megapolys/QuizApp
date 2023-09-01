@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.service;
+package com.example.servingwebcontent.service.quiz;
 
 import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.quiz.Quiz;
@@ -8,8 +8,9 @@ import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
-import com.example.servingwebcontent.repositories.QuizResultRepository;
+import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
 import com.example.servingwebcontent.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -120,9 +121,10 @@ public class QuizResultService {
         return weight == null ? defaultWeight : weight;
     }
 
+    @Transactional
     public void deleteResult(Long userId, Long quizResultId) {
-        final QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow();
-        final User user = userRepository.findById(userId).orElseThrow();
+        final QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow(); // нужно для актуализации данных из бд
+        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд
         user.getResults().remove(quizResult);
         userRepository.save(user);
         quizResultRepository.delete(quizResult);
@@ -131,10 +133,8 @@ public class QuizResultService {
     public record QuizResultBean(Quiz quiz, List<ResultBean> results){}
 
     public record ResultBean(QuizResult quizResult, List<DecisionBean> decisions,
-                             float score, boolean yellow, boolean red, String progress) {
-    }
+                             float score, boolean yellow, boolean red, String progress) {}
 
-    public record DecisionBean(QuizDecision decision, float score, float altScore, int count) {
-    }
+    public record DecisionBean(QuizDecision decision, float score, float altScore, int count) {}
 
 }

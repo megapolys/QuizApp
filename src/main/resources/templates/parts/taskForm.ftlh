@@ -66,8 +66,8 @@
         </#if>
         <div class="mb-3">
             <h5 class="mb-3">Решения</h5>
-            <@d.listOfChosenDecisions decisions_=(taskForm.decisions)!/>
-            <@d.decisionsCheckbox groups=groups decisions_=decisions checkedDecisions=(taskForm.decisions)!/>
+            <@d.listOfChosenDecisions decisionsName="decisions" decisions_=(taskForm.decisions)!/>
+            <@d.decisionsCheckbox decisionsName="decisions" groups=groups decisions_=decisions checkedDecisions=(taskForm.decisions)!/>
         </div>
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         <input type="hidden" name="quiz" value="${quiz.id?c}"/>

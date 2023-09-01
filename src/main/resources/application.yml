@@ -24,3 +24,8 @@ default:
   ratio:
     yellow: 2
     red: 3
+  medical:
+    leftLeft: 4
+    leftMid: 2
+    rightMid: 2
+    rightRight: 4

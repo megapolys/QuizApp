@@ -8,11 +8,13 @@ function switchTab(el, tab_id, path) {
     $("#taskForm").attr("action", path);
 }
 
-function chooseDecision(id, group, name, groupId, decisionId) {
+function chooseDecision(chosenDecisions, id, group, name, groupId, decisionId) {
+    console.log("start chooseDecision");
     let exist = false;
-    let decisions = $("#chosen-decisions");
+    let decisions = $(chosenDecisions);
     let list = decisions.children('div');
     if (list.length === 0) {
+        console.log("empty list of chosenDecisions");
         decisions.html("");
     }
     list.each(function () {
@@ -29,7 +31,7 @@ function chooseDecision(id, group, name, groupId, decisionId) {
             "                       <button onclick=\"$('#" + decisionId + "')[0].click()\" type=\"button\" class=\"btn-close position-absolute top-50 end-0 translate-middle-y\" aria-label=\"Close\"></button>\n" +
             "                    </div>\n" +
             "               </div>");
-        newElement.appendTo("#chosen-decisions");
+        newElement.appendTo(chosenDecisions);
     }
 }
 

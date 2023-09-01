@@ -2,7 +2,7 @@ package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.service.QuizDecisionService;
+import com.example.servingwebcontent.service.DecisionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,18 +16,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/decisions")
 @PreAuthorize("hasAuthority('ADMIN')")
-public class QuizDecisionController {
+public class DecisionController {
 
-    private final QuizDecisionService quizDecisionService;
+    private final DecisionService decisionService;
 
-    public QuizDecisionController(QuizDecisionService quizDecisionService) {
-        this.quizDecisionService = quizDecisionService;
+    public DecisionController(DecisionService decisionService) {
+        this.decisionService = decisionService;
     }
 
     @GetMapping
     public String getDecisions(Model model) {
-        model.addAttribute("decisions", quizDecisionService.decisionsWithoutGroups());
-        model.addAttribute("groups", quizDecisionService.groups());
+        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
+        model.addAttribute("groups", decisionService.groups());
         model.addAttribute("decisionTab", "active");
         return "decisions/decisions";
     }
@@ -42,8 +42,8 @@ public class QuizDecisionController {
         } else {
             final DecisionGroup group = new DecisionGroup();
             group.setName(name.trim());
-            final QuizDecisionService.ResultType result = quizDecisionService.add(group);
-            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+            final DecisionService.ResultType result = decisionService.add(group);
+            if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
             }
         }
@@ -62,8 +62,8 @@ public class QuizDecisionController {
             redirectAttributes.addFlashAttribute("changeGroup", group);
         } else {
             group.setName(name.trim());
-            final QuizDecisionService.ResultType result = quizDecisionService.updateGroup(group);
-            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+            final DecisionService.ResultType result = decisionService.updateGroup(group);
+            if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
                 redirectAttributes.addFlashAttribute("changeGroup", group);
             }
@@ -86,7 +86,7 @@ public class QuizDecisionController {
             @PathVariable DecisionGroup group,
             RedirectAttributes redirectAttributes
     ) {
-        quizDecisionService.delete(group);
+        decisionService.delete(group);
         redirectAttributes.addFlashAttribute("successMessage", "Группа удалена");
         return "redirect:/decisions";
     }
@@ -105,12 +105,13 @@ public class QuizDecisionController {
             decision.setName(name.trim());
             decision.setDescription(description != null ? description.trim() : null);
             decision.setGroup(group);
-            final QuizDecisionService.ResultType result = quizDecisionService.add(decision);
-            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+            final DecisionService.ResultType result = decisionService.add(decision);
+            if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
+            } else {
+                redirectAttributes.addFlashAttribute("successMessage", "Решение добавлено");
             }
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Решение добавлено");
         return "redirect:/decisions";
     }
 
@@ -130,8 +131,8 @@ public class QuizDecisionController {
             decision.setName(name.trim());
             decision.setDescription(description != null ? description.trim() : null);
             decision.setGroup(group);
-            final QuizDecisionService.ResultType result = quizDecisionService.updateDecision(decision, oldGroup);
-            if (result == QuizDecisionService.ResultType.NAME_FOUND) {
+            final DecisionService.ResultType result = decisionService.updateDecision(decision, oldGroup);
+            if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
                 redirectAttributes.addFlashAttribute("changeDecision", decision);
             }
@@ -154,7 +155,7 @@ public class QuizDecisionController {
             @PathVariable QuizDecision decision,
             RedirectAttributes redirectAttributes
     ) {
-        quizDecisionService.delete(decision);
+        decisionService.delete(decision);
         redirectAttributes.addFlashAttribute("successMessage", "Решение удалено");
         return "redirect:/decisions";
     }

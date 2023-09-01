@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface QuizDecisionRepository extends CrudRepository<QuizDecision, Long> {
+public interface DecisionRepository extends CrudRepository<QuizDecision, Long> {
     QuizDecision findByName(String name);
 
     List<QuizDecision> findAllByOrderByName();

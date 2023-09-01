@@ -1,30 +1,31 @@
 <#macro decisions groups decisions_>
     <div class="accordion" id="accordion_groups">
         <#list groups as group>
-            <@accordionGroup group.id?c group.name group.decisions false ""/>
+            <@accordionGroup "decisions" group.id?c group.name group.decisions false ""/>
         </#list>
-        <@accordionGroup "nonGroup" "Не в группе" decisions_ false ""/>
+        <@accordionGroup "decisions" "nonGroup" "Не в группе" decisions_ false ""/>
     </div>
 </#macro>
 
-<#macro decisionsCheckbox groups decisions_ checkedDecisions>
+
+<#macro decisionsCheckbox groups decisions_ checkedDecisions decisionsName>
     <div class="accordion" id="accordion_groups">
         <#list groups as group>
-            <@accordionGroup group.id?c group.name group.decisions true checkedDecisions/>
+            <@accordionGroup decisionsName group.id?c group.name group.decisions true checkedDecisions/>
         </#list>
-        <@accordionGroup "nonGroup" "Не в группе" decisions_ true checkedDecisions/>
+        <@accordionGroup decisionsName "nonGroup" "Не в группе" decisions_ true checkedDecisions/>
     </div>
 </#macro>
 
-<#macro accordionGroup id name decisions checkbox checkedDecisions>
+<#macro accordionGroup decisionsName id groupName decisions checkbox checkedDecisions>
 <#-- @ftlvariable name="decisions" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button id="group-${id}" class="accordion-button <#if checkbox>collapsed</#if>" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}">
-                ${name}
+            <button id="group-${id}-${decisionsName}" class="accordion-button <#if checkbox>collapsed</#if>" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}-${decisionsName}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}-${decisionsName}">
+                ${groupName}
             </button>
         </h2>
-        <div id="panelsStayOpen-group-${id}" class="accordion-collapse collapse <#if !checkbox>show</#if>">
+        <div id="panelsStayOpen-group-${id}-${decisionsName}" class="accordion-collapse collapse <#if !checkbox>show</#if>">
             <div class="row">
                 <div class="col-2">
                     <#if id != "nonGroup" && !checkbox>
@@ -49,10 +50,16 @@
                                     <#if checkbox>
                                         <td>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="decisions"
+                                                <input class="form-check-input" type="checkbox" name="${decisionsName}"
                                                        value="${decision.id}"
-                                                       id="decision-${decision.id?c}" ${checkedDecisions?map(d -> d.id)?seq_contains(decision.id)?string("checked", "")}
-                                                       onclick="chooseDecision('decision-chosen-${decision.id}', '${(decision.group.name)!""}', '${decision.name}', 'group-${(decision.group.id)!"nonGroup"}', 'decision-${decision.id}')"
+                                                       id="${decisionsName}-${decision.id?c}" ${checkedDecisions?map(d -> d.id)?seq_contains(decision.id)?string("checked", "")}
+                                                       onclick="chooseDecision(
+                                                               '#chosen-${decisionsName}',
+                                                               'decision-chosen-${decision.id}-${decisionsName}',
+                                                               '${(decision.group.name)!""}', '${decision.name}',
+                                                               'group-${(decision.group.id)!"nonGroup"}-${decisionsName}',
+                                                               '${decisionsName}-${decision.id}'
+                                                               )"
                                                 >
                                                 <label class="form-check-label" for="decision-${decision.id}">
                                                     ${decision.name}
@@ -82,23 +89,47 @@
     </div>
 </#macro>
 
-<#macro listOfChosenDecisions decisions_>
+<#macro listOfChosenDecisions decisionsName decisions_>
 <#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
     <div class="mb-3">
         <div class="mb-2">
             Выбранные решения:
         </div>
-        <div id="chosen-decisions" class="row">
+        <div id="chosen-${decisionsName}" class="row">
             <#list decisions_ as decision>
-                <div class="col-md-6" id="decision-chosen-${decision.id}">
+                <div class="col-md-6" id="decision-chosen-${decision.id}-${decisionsName}">
                     <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
-                        <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}',"decision-${decision.id}")><#if decision.group??>${decision.group.name} _ </#if>${decision.name}</a>
-                        <button onclick="$('#decision-${decision.id}')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
+                        <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}-${decisionsName}',"${decisionsName}-${decision.id}")><#if decision.group??>${decision.group.name} _ </#if>${decision.name}</a>
+                        <button onclick="$('#${decisionsName}-${decision.id}')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
                     </div>
                 </div>
             </#list>
         </div>
     </div>
+</#macro>
+
+<#macro resultDecisionsTable decisions>
+    <h4 class="mb-3">Сводная таблица решений</h4>
+    <table class="table mb-5">
+        <thead>
+        <tr>
+            <th style="width: 60%">Решение</th>
+            <th>Баллы</th>
+            <th>Баллы/Вопросы</th>
+            <th>Вопросы</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#list decisions as decision>
+            <tr>
+                <td><@decisionWithDescription decision.decision()/></td>
+                <td>${decision.score()?string["0.##"]}</td>
+                <td>${decision.altScore()?string["0.##"]}</td>
+                <td>${decision.count()?c}</td>
+            </tr>
+        </#list>
+        </tbody>
+    </table>
 </#macro>
 
 <#macro decisionWithDescription decision>

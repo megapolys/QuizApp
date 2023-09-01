@@ -1,12 +1,12 @@
-package com.example.servingwebcontent.controller;
+package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
-import com.example.servingwebcontent.service.QuizInvokeService;
-import com.example.servingwebcontent.service.QuizResultService;
-import com.example.servingwebcontent.service.QuizService;
+import com.example.servingwebcontent.service.quiz.QuizInvokeService;
+import com.example.servingwebcontent.service.quiz.QuizResultService;
+import com.example.servingwebcontent.service.quiz.QuizService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +36,7 @@ public class QuizResultController {
         model.addAttribute("quizResults", quizResultService.getResults(user));
         model.addAttribute("quizList", quizService.getQuizzes(user));
         model.addAttribute("user", user);
-        model.addAttribute("userTab", "active");
+        model.addAttribute("usersTab", "active");
         return "result/quizList";
     }
 
@@ -70,7 +70,7 @@ public class QuizResultController {
     ) {
         model.addAttribute("result", quizResultService.getResult(quizResult));
         model.addAttribute("userId", userId);
-        model.addAttribute("userTab", "active");
+        model.addAttribute("usersTab", "active");
         return "result/quizResult";
     }
 
@@ -85,7 +85,7 @@ public class QuizResultController {
         model.addAttribute("score", quizResultService.getWeight(quizTaskResult));
         model.addAttribute("userId", userId);
         model.addAttribute("quizResultId", quizResultId);
-        model.addAttribute("userTab", "active");
+        model.addAttribute("usersTab", "active");
         return "result/quizTask";
     }
 

@@ -1,10 +1,9 @@
-package com.example.servingwebcontent.controller;
+package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
-import com.example.servingwebcontent.service.QuizInvokeService;
+import com.example.servingwebcontent.service.quiz.QuizInvokeService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,18 +32,8 @@ public class QuizInvokeController {
             Model model
     ) {
         model.addAttribute("quizzes", quizInvokeService.getQuizResults(user.getId()));
-        model.addAttribute("invokeTab", "active");
+        model.addAttribute("invokeQuizTab", "active");
         return "invoke/quizList";
-    }
-
-    @GetMapping("/startQuiz/{quiz}")
-    public String startQuiz(
-            @AuthenticationPrincipal User user,
-            @PathVariable Quiz quiz,
-            RedirectAttributes redirectAttributes
-    ) {
-        redirectAttributes.addAttribute("quizResult", quizInvokeService.startQuiz(user.getId(), quiz));
-        return "redirect:/invokeQuiz/{quizResult}";
     }
 
     @GetMapping("/invokeQuiz/{quizResult}")
@@ -53,7 +42,7 @@ public class QuizInvokeController {
             @PathVariable QuizResult quizResult,
             Model model
     ) {
-        if (!quizInvokeService.isUserContainsQuiz(user.getId(), quizResult.getId())) {
+        if (quizInvokeService.userNotContainsQuiz(user.getId(), quizResult.getId())) {
             throw new RuntimeException("Access denied!");
         }
         final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
@@ -70,7 +59,7 @@ public class QuizInvokeController {
         model.addAttribute("lastTask", countCompleted == taskCount - 1);
         model.addAttribute("pagination", countCompleted + "/" + taskCount);
         model.addAttribute("progress", countCompleted * 100f / taskCount);
-        model.addAttribute("invokeTab", "active");
+        model.addAttribute("invokeQuizTab", "active");
         return "invoke/quiz";
     }
 
@@ -83,7 +72,7 @@ public class QuizInvokeController {
             @RequestParam QuizTaskResult task,
             RedirectAttributes redirectAttributes
     ) {
-        if (!quizInvokeService.isUserContainsQuiz(user.getId(), quizResult)) {
+        if (quizInvokeService.userNotContainsQuiz(user.getId(), quizResult)) {
             throw new RuntimeException("Access denied!");
         }
         if (StringUtils.hasText(variant)) {

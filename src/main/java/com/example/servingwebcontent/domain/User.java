@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain;
 
+import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import jakarta.persistence.*;
@@ -38,6 +39,9 @@ public class User implements UserDetails {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<QuizResult> results;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<MedicalTopicResult> medicalResults;
 
     private boolean active;
 
@@ -180,5 +184,13 @@ public class User implements UserDetails {
 
     public void setRepairPasswordCode(String repairPasswordCode) {
         this.repairPasswordCode = repairPasswordCode;
+    }
+
+    public Set<MedicalTopicResult> getMedicalResults() {
+        return medicalResults;
+    }
+
+    public void setMedicalResults(Set<MedicalTopicResult> medicalResults) {
+        this.medicalResults = medicalResults;
     }
 }

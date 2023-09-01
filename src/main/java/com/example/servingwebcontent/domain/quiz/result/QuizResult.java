@@ -16,7 +16,7 @@ public class QuizResult {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Quiz quiz;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -26,7 +26,7 @@ public class QuizResult {
     @Column(name = "complete_date")
     private Date completeDate;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<QuizTaskResult> taskList;
 
     public User getUser() {

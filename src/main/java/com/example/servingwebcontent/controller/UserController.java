@@ -1,10 +1,7 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.repositories.QuizRepository;
 import com.example.servingwebcontent.repositories.UserRepository;
-import com.example.servingwebcontent.domain.Role;
 import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,11 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
@@ -36,7 +29,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String userList(Model model) {
         model.addAttribute("users", userRepository.findAll());
-        model.addAttribute("userTab", "active");
+        model.addAttribute("usersTab", "active");
         return "user/userList";
     }
 

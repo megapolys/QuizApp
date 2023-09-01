@@ -14,14 +14,20 @@
                     <a class="nav-link ${mainTab!}" href="/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${invokeTab!}" href="/userQuizList">Опросники</a>
+                    <a class="nav-link ${invokeQuizTab!}" href="/userQuizList">Опросники</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ${invokeTopicTab!}" href="/userTopicList">Анализы</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">
-                        <a class="nav-link ${userTab!}" href="/user/list">Пользователи</a>
+                        <a class="nav-link ${usersTab!}" href="/user/list">Пользователи</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link ${quizTab!}" href="/quiz/list">Тесты</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ${medicalAdminTab!}" href="/medical/list">Мед токены</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link ${decisionTab!}" href="/decisions">Решения</a>

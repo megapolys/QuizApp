@@ -1,11 +1,14 @@
 package com.example.servingwebcontent.service;
 
+import com.example.servingwebcontent.domain.medical.MedicalTask;
 import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.repositories.DecisionGroupRepository;
-import com.example.servingwebcontent.repositories.QuizDecisionRepository;
-import com.example.servingwebcontent.repositories.QuizTaskRepository;
+import com.example.servingwebcontent.repositories.DecisionRepository;
+import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;
+import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -15,16 +18,18 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class QuizDecisionService {
+public class DecisionService {
 
-    private final QuizDecisionRepository quizDecisionRepository;
+    private final DecisionRepository decisionRepository;
     private final DecisionGroupRepository decisionGroupRepository;
     private final QuizTaskRepository quizTaskRepository;
+    private final MedicalTaskRepository medicalTaskRepository;
 
-    public QuizDecisionService(QuizDecisionRepository quizDecisionRepository, DecisionGroupRepository decisionGroupRepository, QuizTaskRepository quizTaskRepository) {
-        this.quizDecisionRepository = quizDecisionRepository;
+    public DecisionService(DecisionRepository decisionRepository, DecisionGroupRepository decisionGroupRepository, QuizTaskRepository quizTaskRepository, MedicalTaskRepository medicalTaskRepository) {
+        this.decisionRepository = decisionRepository;
         this.decisionGroupRepository = decisionGroupRepository;
         this.quizTaskRepository = quizTaskRepository;
+        this.medicalTaskRepository = medicalTaskRepository;
     }
 
     public List<QuizDecision> decisionsWithoutGroups() {
@@ -32,7 +37,7 @@ public class QuizDecisionService {
     }
 
     private List<QuizDecision> decisions() {
-        return quizDecisionRepository.findAllByOrderByName();
+        return decisionRepository.findAllByOrderByName();
     }
 
     public List<DecisionGroup> groups() {
@@ -44,15 +49,15 @@ public class QuizDecisionService {
     }
 
     public ResultType add(QuizDecision decision) {
-        final QuizDecision byName = quizDecisionRepository.findByName(decision.getName());
+        final QuizDecision byName = decisionRepository.findByName(decision.getName());
         if (byName != null) {
             return ResultType.NAME_FOUND;
         }
         if (decision.getGroup() != null) {
-            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow();
+            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow(); // нужно для актуализации данных из бд
             group.getDecisions().add(decision);
         }
-        quizDecisionRepository.save(decision);
+        decisionRepository.save(decision);
         return ResultType.SUCCESS;
     }
 
@@ -65,31 +70,37 @@ public class QuizDecisionService {
         return ResultType.SUCCESS;
     }
 
+    @Transactional
     public void delete(QuizDecision decision) {
         for (QuizTask task : quizTaskRepository.findAll()) {
             if (task.getDecisions().remove(decision)) {
                 quizTaskRepository.save(task);
             }
         }
+        for (MedicalTask task : medicalTaskRepository.findAll()) {
+            if (task.getLeftDecisions().remove(decision) | task.getRightDecisions().remove(decision)) {
+                medicalTaskRepository.save(task);
+            }
+        }
         if (decision.getGroup() != null) {
             decision.getGroup().getDecisions().remove(decision);
             decisionGroupRepository.save(decision.getGroup());
         }
-        quizDecisionRepository.delete(decision);
+        decisionRepository.delete(decision);
     }
 
     public void delete(DecisionGroup group) {
-        for (QuizDecision decision : quizDecisionRepository.findAll()) {
+        for (QuizDecision decision : decisionRepository.findAll()) {
             if (decision.getGroup() != null && Objects.equals(decision.getGroup().getId(), group.getId())) {
                 decision.setGroup(null);
-                quizDecisionRepository.save(decision);
+                decisionRepository.save(decision);
             }
         }
         decisionGroupRepository.delete(group);
     }
 
     public ResultType updateDecision(QuizDecision decision, DecisionGroup oldGroup) {
-        final QuizDecision byName = quizDecisionRepository.findByName(decision.getName());
+        final QuizDecision byName = decisionRepository.findByName(decision.getName());
         if (byName != null && byName != decision) {
             return ResultType.NAME_FOUND;
         }
@@ -101,13 +112,13 @@ public class QuizDecisionService {
             oldGroup.getDecisions().removeIf(d -> Objects.equals(d.getId(), decision.getId()));
             decisionGroupRepository.save(oldGroup);
         }
-        quizDecisionRepository.save(decision);
+        decisionRepository.save(decision);
         return ResultType.SUCCESS;
     }
 
     private void updateGroup(QuizDecision decision) {
         if (decision.getGroup() != null) {
-            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow();
+            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow(); // нужно для актуализации данных из бд
             group.getDecisions().add(decision);
             decisionGroupRepository.save(group);
         }

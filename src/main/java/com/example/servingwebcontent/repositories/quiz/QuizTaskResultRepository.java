@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.repositories;
+package com.example.servingwebcontent.repositories.quiz;
 
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;

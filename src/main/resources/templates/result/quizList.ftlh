@@ -22,7 +22,7 @@
         <tbody>
         <#list quizResults as quizResult>
             <tr>
-                <td colspan="5">${quizResult.quiz().shortName}. ${quizResult.quiz().name}</td>
+                <td colspan="5"><h3>${quizResult.quiz().shortName}. ${quizResult.quiz().name}</h3></td>
             </tr>
             <#list quizResult.results() as quiz>
                 <#assign color=quiz.quizResult().complete?then(quiz.red()?then("table-danger", quiz.yellow()?then("table-warning", "table-success")), "")>

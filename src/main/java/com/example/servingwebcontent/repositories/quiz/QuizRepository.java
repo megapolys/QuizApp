@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.repositories;
+package com.example.servingwebcontent.repositories.quiz;
 
 import com.example.servingwebcontent.domain.quiz.Quiz;
 import org.springframework.data.repository.CrudRepository;
