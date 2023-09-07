@@ -47,7 +47,7 @@ public class MedicalInvokeController {
             throw new RuntimeException("Access denied!");
         }
         topicResult.setResults(topicResult.getResults().stream()
-                .sorted(Comparator.comparing(r -> r.getMedicalTask().getName()))
+                .sorted(Comparator.comparing(r -> r.getMedicalTask().getId()))
                 .collect(Collectors.toCollection(LinkedHashSet::new)));
         model.addAttribute("topicResult", topicResult);
         return "medical/invoke/topicInvoke";

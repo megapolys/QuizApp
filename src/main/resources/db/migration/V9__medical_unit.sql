@@ -1,0 +1,1 @@
+alter table if exists medical_task add column unit varchar(255);

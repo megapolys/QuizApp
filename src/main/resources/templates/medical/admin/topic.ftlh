@@ -14,9 +14,19 @@
     </div>
     <div class="mb-3 p-3 text-bg-light">
         <form method="post" class="row" action="/medical/${topic.id?c}/task/${update!"add"}">
-            <div class="input-group mb-3">
-                <span class="input-group-text">Название анализа</span>
-                <input id="inputText" class="form-control" name="name" value="${(task.name)!}">
+            <div class="row mb-3">
+                <div class="col-10">
+                    <div class="input-group">
+                        <span class="input-group-text">Название анализа</span>
+                        <input id="inputText" class="form-control" name="name" value="${(task.name)!}">
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-screwdriver"></i></span>
+                        <input id="inputText" class="form-control" name="unit" value="${(task.unit)!}">
+                    </div>
+                </div>
             </div>
             <#setting locale="en_US">
             <div class="input-group mb-3">

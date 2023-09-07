@@ -4,7 +4,6 @@ import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.medical.MedicalTask;
 import com.example.servingwebcontent.domain.medical.MedicalTopic;
 import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
-import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicRepository;
@@ -60,6 +59,7 @@ public class MedicalTopicService {
             return false;
         } else {
             task.setName(task.getName().trim());
+            task.setUnit(task.getUnit().trim());
             topic.getMedicalTasks().add(task);
             medicalTopicRepository.save(topic);
             return true;

@@ -28,7 +28,7 @@
                 <#assign color=task.altScore()?has_content?then("table-success", "")>
                 <tr class="${color}">
                     <td>${task.name()}</td>
-                    <td>${task.value()?string["0.##"]}</td>
+                    <td>${task.value()?string["0.##"]} ${task.unit()}</td>
                     <td>
                         <div class="progress-stacked">
                             <div class="progress" role="progressbar"

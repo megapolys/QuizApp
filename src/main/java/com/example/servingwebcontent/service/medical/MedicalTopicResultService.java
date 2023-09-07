@@ -108,7 +108,7 @@ public class MedicalTopicResultService {
                 decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
                 decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
             }
-            tasks.add(new TaskResultBean(taskResult.getId(), taskResult.getValue(), taskResult.getAltScore(), task.getName(), weight, getAnalyse(taskResult)));
+            tasks.add(new TaskResultBean(taskResult.getId(), taskResult.getValue(), taskResult.getMedicalTask().getUnit(), taskResult.getAltScore(), task.getName(), weight, getAnalyse(taskResult)));
             weightSum += weight;
             filledCount++;
         }
@@ -163,7 +163,7 @@ public class MedicalTopicResultService {
                              float score, boolean yellow, boolean red, String progress) {
     }
 
-    public record TaskResultBean(Long taskResultId, Float value, Float altScore, String name, Float resultScore, AnalyseForm analyseForm){}
+    public record TaskResultBean(Long taskResultId, Float value, String unit, Float altScore, String name, Float resultScore, AnalyseForm analyseForm){}
 
     public record AnalyseForm(List<Float> values, float marker){}
 

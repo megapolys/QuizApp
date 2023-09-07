@@ -2,7 +2,6 @@ package com.example.servingwebcontent.controller.medical;
 
 import com.example.servingwebcontent.domain.medical.MedicalTask;
 import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.service.DecisionService;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Comparator;
-import java.util.List;
 
 @Controller
 @RequestMapping("/medical")
@@ -85,7 +83,7 @@ public class MedicalController {
     ) {
         model.addAttribute("topic", topic);
         model.addAttribute("taskList", topic.getMedicalTasks().stream()
-                .sorted(Comparator.comparing(MedicalTask::getName)).toList());
+                .sorted(Comparator.comparing(MedicalTask::getId)).toList());
         model.addAttribute("groups", decisionService.groups());
         model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
         return "/medical/admin/topic";

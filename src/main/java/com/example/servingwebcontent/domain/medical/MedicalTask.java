@@ -13,6 +13,8 @@ public class MedicalTask {
 
     private String name;
 
+    private String unit;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<QuizDecision> leftDecisions;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -85,5 +87,13 @@ public class MedicalTask {
 
     public void setRightDecisions(Set<QuizDecision> rightDecisions) {
         this.rightDecisions = rightDecisions;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }
