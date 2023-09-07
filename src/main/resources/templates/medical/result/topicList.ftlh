@@ -8,11 +8,11 @@
             </div>
         </div>
     </#if>
-    <h3 class="mb-3">Активные топики</h3>
+    <h3 class="mb-3">Активные списки</h3>
     <table class="table">
         <thead>
         <tr>
-            <th style="width: 10%">Дата завержения</th>
+            <th style="width: 10%">Дата завершения</th>
             <th style="width: 10%">Дата последнего обновления</th>
             <th style="width: 10%">Балл</th>
             <th style="width: 10%">Статус</th>
@@ -54,7 +54,7 @@
         </tbody>
     </table>
 
-    <h3 class="mb-3">Список медицинских топиков</h3>
+    <h3 class="mb-3">Список анализов</h3>
     <table class="table">
         <thead>
         <tr>

@@ -33,7 +33,7 @@
             <#if isAdmin>
                 <li class="nav-item"><a href="/user/list" class="nav-link px-2 text-muted">Пользователи</a></li>
                 <li class="nav-item"><a href="/quiz/list" class="nav-link px-2 text-muted">Тесты</a></li>
-                <li class="nav-item"><a href="/medical/list" class="nav-link px-2 text-muted">Мед токены</a></li>
+                <li class="nav-item"><a href="/medical/list" class="nav-link px-2 text-muted">Создать анализ</a></li>
                 <li class="nav-item"><a href="/decisions" class="nav-link px-2 text-muted">Решения</a></li>
             </#if>
         </ul>

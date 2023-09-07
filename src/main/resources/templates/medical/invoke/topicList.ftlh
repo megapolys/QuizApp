@@ -8,8 +8,8 @@
             <th style="width: 30%">Наименование</th>
             <th style="width: 10%">Действие</th>
             <th style="width: 10%">Заполнено</th>
-            <th style="width: 10%">Дата завершение</th>
-            <th style="width: 10%">Дата последнего изменения</th>
+            <th style="width: 10%">Дата завершения</th>
+            <th style="width: 10%">Изменение</th>
         </tr>
         </thead>
         <tbody>

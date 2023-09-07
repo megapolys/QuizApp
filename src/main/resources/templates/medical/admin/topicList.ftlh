@@ -1,10 +1,10 @@
 <#import "../../parts/common.ftlh" as c>
 <@c.page>
-    <h3 class="mb-3">Список тестов</h3>
+    <h3 class="mb-3">Список анализов</h3>
     <form class="mb-3" action="/medical/add" method="get">
         <div class="row">
             <div class="col-8">
-                <input class="form-control" type="text" name="name" placeholder="Наименование теста"/>
+                <input class="form-control" type="text" name="name" placeholder="Наименование анализа"/>
             </div>
             <div class="col-2">
                 <button class="btn btn-primary" type="submit">Добавить</button>

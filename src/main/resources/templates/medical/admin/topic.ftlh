@@ -3,7 +3,7 @@
 <#import "../../parts/decisions.ftlh" as d>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/medical/list">Назад</a>
-    <h3 class="mb-3">Страница редактирования медицинского топика "${topic.name}"</h3>
+    <h3 class="mb-3">Страница редактирования "${topic.name}"</h3>
     <div class="row mb-5">
         <form action="/medical/rename/${topic.id?c}" method="get">
             <div class="input-group">
@@ -20,13 +20,13 @@
             </div>
             <#setting locale="en_US">
             <div class="input-group mb-3">
-                <span class="input-group-text">Левая</span>
+                <span class="input-group-text">Левый референс</span>
                 <input type="number" name="leftLeft" class="form-control" step="0.01" value="${(task.leftLeft?string("0.##"))!}">
-                <span class="input-group-text">Левая норма</span>
+                <span class="input-group-text">Левый оптимум</span>
                 <input type="number" name="leftMid" class="form-control" step="0.01" value="${(task.leftMid?string("0.##"))!}">
-                <span class="input-group-text">Правая норма</span>
+                <span class="input-group-text">Правый оптимум</span>
                 <input type="number" name="rightMid" class="form-control" step="0.01" value="${(task.rightMid?string("0.##"))!}">
-                <span class="input-group-text">Правая</span>
+                <span class="input-group-text">Правый референс</span>
                 <input type="number" name="rightRight" class="form-control" step="0.01" value="${(task.rightRight?string("0.##"))!}">
             </div>
             <div class="col-6 p-2 mb-3">

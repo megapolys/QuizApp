@@ -7,7 +7,7 @@
         <#list topicResult.results as result>
             <div class="row mb-1">
                 <div class="col-4">
-                    <label for="colFormLabel" class="col-sm-2 col-form-label">${result.medicalTask.name}</label>
+                    <label for="colFormLabel" class="col-form-label">${result.medicalTask.name}</label>
                 </div>
                 <div class="col-2">
                     <input name="${result.id?c}" type="number" class="form-control" step="0.01" value="${(result.value?string("0.##"))!}">

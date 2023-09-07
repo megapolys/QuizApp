@@ -27,7 +27,7 @@
                         <a class="nav-link ${quizTab!}" href="/quiz/list">Тесты</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link ${medicalAdminTab!}" href="/medical/list">Мед токены</a>
+                        <a class="nav-link ${medicalAdminTab!}" href="/medical/list">Создать анализ</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link ${decisionTab!}" href="/decisions">Решения</a>
