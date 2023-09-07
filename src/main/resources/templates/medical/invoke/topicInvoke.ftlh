@@ -12,9 +12,11 @@
                 <div class="col-2">
                     <input id="colFormLabel-${result.id?c}" name="${result.id?c}" type="number" class="form-control" step="0.01" value="${(result.value?string("0.##"))!}">
                 </div>
-                <div class="col-1">
-                    <label class="col-form-label">${result.medicalTask.unit}</label>
-                </div>
+                <#if result.medicalTask.unit?has_content>
+                    <div class="col-1">
+                        <label class="col-form-label">${result.medicalTask.unit}</label>
+                    </div>
+                </#if>
             </div>
         </#list>
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
