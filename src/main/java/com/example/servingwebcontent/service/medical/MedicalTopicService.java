@@ -11,10 +11,7 @@ import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepo
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class MedicalTopicService {
@@ -105,6 +102,44 @@ public class MedicalTopicService {
             topicBeans.add(new TopicBean(topic, inProgress, exists));
         }
         return topicBeans;
+    }
+
+    public boolean copy(MedicalTopic topic) {
+        int i = 1;
+        String finalName;
+        for (;;) {
+            final String name = topic.getName() + " - копия " + i;
+            if (name.length() > 254) {
+                return false;
+            }
+            if (medicalTopicRepository.findByName(name) != null) {
+                i++;
+            } else {
+                finalName = name;
+                break;
+            }
+        }
+        medicalTopicRepository.save(clone(topic, finalName));
+        return true;
+    }
+
+    private MedicalTopic clone(MedicalTopic oldTopic, String name) {
+        final MedicalTopic topic = new MedicalTopic();
+        topic.setName(name);
+        topic.setMedicalTasks(new LinkedHashSet<>());
+        for (MedicalTask oldTask : oldTopic.getMedicalTasks()) {
+            final MedicalTask task = new MedicalTask();
+            task.setName(oldTask.getName());
+            task.setUnit(oldTask.getUnit());
+            task.setLeftLeft(oldTask.getLeftLeft());
+            task.setLeftMid(oldTask.getLeftMid());
+            task.setRightMid(oldTask.getRightMid());
+            task.setRightRight(oldTask.getRightRight());
+            task.setLeftDecisions(new LinkedHashSet<>(oldTask.getLeftDecisions()));
+            task.setRightDecisions(new LinkedHashSet<>(oldTask.getRightDecisions()));
+            topic.getMedicalTasks().add(task);
+        }
+        return topic;
     }
 
     public record TopicBean(MedicalTopic topic, boolean inProgress, boolean exists) {}

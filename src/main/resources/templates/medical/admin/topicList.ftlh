@@ -14,7 +14,8 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 80%">Наименование</th>
+            <th style="width: 70%">Наименование</th>
+            <th style="width: 10%"></th>
             <th style="width: 10%"></th>
             <th style="width: 10%"></th>
         </tr>
@@ -23,6 +24,7 @@
         <#list topics as topic>
             <tr>
                 <td>${topic.name}</td>
+                <td><a href="/medical/copy/${topic.id?c}">Скопировать</a></td>
                 <td><a href="/medical/${topic.id?c}">Редактировать</a></td>
                 <td>
                     <!-- Button trigger modal -->

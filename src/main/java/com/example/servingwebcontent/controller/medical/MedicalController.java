@@ -44,6 +44,19 @@ public class MedicalController {
         return "redirect:/medical/list";
     }
 
+    @GetMapping("/copy/{topic}")
+    public String copyTopic(
+            @PathVariable MedicalTopic topic,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (medicalTopicService.copy(topic)) {
+            redirectAttributes.addFlashAttribute("successMessage", "Анализы скопированы успешно");
+        } else {
+            redirectAttributes.addFlashAttribute("message", "Имя анализа слишком длинное для копирования!");
+        }
+        return "redirect:/medical/list";
+    }
+
     @GetMapping("/rename/{topic}")
     public String renameTopic(
             @PathVariable MedicalTopic topic,
