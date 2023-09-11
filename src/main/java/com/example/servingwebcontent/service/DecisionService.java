@@ -99,6 +99,7 @@ public class DecisionService {
         decisionGroupRepository.delete(group);
     }
 
+    @Transactional
     public ResultType updateDecision(QuizDecision decision, DecisionGroup oldGroup) {
         final QuizDecision byName = decisionRepository.findByName(decision.getName());
         if (byName != null && byName != decision) {
@@ -107,7 +108,10 @@ public class DecisionService {
         if (oldGroup == null) {
             updateGroup(decision);
         }
-        if (oldGroup != null && !Objects.equals(decision.getGroup().getId(), oldGroup.getId())) {
+        if (oldGroup != null && decision.getGroup() == null) {
+            oldGroup.getDecisions().removeIf(d -> Objects.equals(d.getId(), decision.getId()));
+            decisionGroupRepository.save(oldGroup);
+        } else if (oldGroup != null && !Objects.equals(decision.getGroup().getId(), oldGroup.getId())) {
             updateGroup(decision);
             oldGroup.getDecisions().removeIf(d -> Objects.equals(d.getId(), decision.getId()));
             decisionGroupRepository.save(oldGroup);

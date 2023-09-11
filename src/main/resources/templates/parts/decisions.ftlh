@@ -134,7 +134,7 @@
 
 <#macro decisionWithDescription decision>
     <#if decision.description?has_content>
-        <a class="icon-link" href="#" onclick="copyToClipboard('${decision.description}')">
+        <a class="icon-link" href="##" onclick="copyToClipboard('${decision.description}')">
             <i class="bi bi-save"></i>
         </a>
     </#if>
