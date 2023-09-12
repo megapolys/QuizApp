@@ -25,7 +25,7 @@ function chooseDecision(chosenDecisions, id, group, name, groupId, decisionId) {
     });
     group = group ? group + " _ " : "";
     if (!exist) {
-        let newElement = $("<div class=\"col-md-6\" id=" + id + ">\n" +
+        let newElement = $("<div id=" + id + ">\n" +
             "                    <div class=\"p-2 mb-2 rounded-3 position-relative\" style=\"background-color: #efadce\">\n" +
             "                       <a onclick=decisionFocus('" + groupId + "','" + decisionId + "')>" + group + name + "</a>\n" +
             "                       <button onclick=\"$('#" + decisionId + "')[0].click()\" type=\"button\" class=\"btn-close position-absolute top-50 end-0 translate-middle-y\" aria-label=\"Close\"></button>\n" +
@@ -63,6 +63,7 @@ function clickByChosen(inputFieldId, listId) {
     $('#' + listId).children('option').each(function () {
         if ($(this).attr('value') === decisionValue) {
             $($(this).attr('for'))[0].click();
+            $('#' + inputFieldId).val('');
             return
         }
     })

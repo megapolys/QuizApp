@@ -113,9 +113,9 @@
                 <button type="button" class="btn btn-primary" onclick="clickByChosen('${decisionsName}-list', '${decisionsName}-decisionList')">Клик</button>
             </div>
         </div>
-        <div id="chosen-${decisionsName}" class="row">
+        <div id="chosen-${decisionsName}">
             <#list decisions_ as decision>
-                <div class="col-md-6" id="decision-chosen-${decision.id}-${decisionsName}">
+                <div id="decision-chosen-${decision.id}-${decisionsName}">
                     <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
                         <a onclick=decisionFocus('group-${(decision.group.id)!"nonGroup"}-${decisionsName}',"${decisionsName}-${decision.id}")><#if decision.group??>${decision.group.name} _ </#if>${decision.name}</a>
                         <button onclick="$('#${decisionsName}-${decision.id}')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
