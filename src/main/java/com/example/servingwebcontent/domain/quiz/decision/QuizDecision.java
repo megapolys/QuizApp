@@ -10,7 +10,7 @@ public class QuizDecision {
 
     @Column(unique = true, nullable = false)
     private String name;
-    @Column(length = 1000)
+    @Column(length = 2000)
     private String description;
     @ManyToOne
     private DecisionGroup group;
