@@ -89,11 +89,29 @@
     </div>
 </#macro>
 
-<#macro listOfChosenDecisions decisionsName decisions_>
+<#macro listOfChosenDecisions decisionsName decisions_ groups noGroupDecisions>
 <#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
     <div class="mb-3">
-        <div class="mb-2">
-            Выбранные решения:
+        <div class="row mb-2">
+            <div class="col-4">
+                Выбранные решения:
+            </div>
+            <div class="col-4">
+                <input class="form-control" list="${decisionsName}-decisionList" id="${decisionsName}-list" placeholder="Вводи решение">
+                <datalist id="${decisionsName}-decisionList">
+                    <#list groups as group>
+                        <#list group.decisions as decision>
+                            <option for="#${decisionsName}-${decision.id}" value="${group.name} _ ${decision.name}">
+                        </#list>
+                    </#list>
+                    <#list noGroupDecisions as decision>
+                        <option for="#${decisionsName}-${decision.id}" value="${decision.name}">
+                    </#list>
+                </datalist>
+            </div>
+            <div class="col-4">
+                <button type="button" class="btn btn-primary" onclick="clickByChosen('${decisionsName}-list', '${decisionsName}-decisionList')">Клик</button>
+            </div>
         </div>
         <div id="chosen-${decisionsName}" class="row">
             <#list decisions_ as decision>

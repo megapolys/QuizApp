@@ -128,13 +128,15 @@ public class DecisionController {
             redirectAttributes.addFlashAttribute("changeDecision", decision);
         } else {
             final DecisionGroup oldGroup = decision.getGroup();
-            decision.setName(name.trim());
-            decision.setDescription(description != null ? description.trim() : null);
-            decision.setGroup(group);
-            final DecisionService.ResultType result = decisionService.updateDecision(decision, oldGroup);
+            final QuizDecision newDecision = new QuizDecision();
+            newDecision.setName(name.trim());
+            newDecision.setDescription(description != null ? description.trim() : null);
+            newDecision.setGroup(group);
+            final DecisionService.ResultType result = decisionService.updateDecision(newDecision, oldGroup);
             if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
                 redirectAttributes.addFlashAttribute("changeDecision", decision);
+                return "redirect:/decisions";
             }
         }
         redirectAttributes.addFlashAttribute("successMessage", "Решение обновлено");

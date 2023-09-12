@@ -40,11 +40,11 @@
                 <input type="number" name="rightRight" class="form-control" step="0.01" value="${(task.rightRight?string("0.##"))!}">
             </div>
             <div class="col-6 p-2 mb-3">
-                <@d.listOfChosenDecisions decisionsName="leftDecisions" decisions_=(task.leftDecisions)!/>
+                <@d.listOfChosenDecisions decisionsName="leftDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.leftDecisions)!/>
                 <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="leftDecisions" checkedDecisions=(task.leftDecisions)!/>
             </div>
             <div class="col-6 p-2 mb-3">
-                <@d.listOfChosenDecisions decisionsName="rightDecisions" decisions_=(task.rightDecisions)!/>
+                <@d.listOfChosenDecisions decisionsName="rightDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.rightDecisions)!/>
                 <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="rightDecisions" checkedDecisions=(task.rightDecisions)!/>
             </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>

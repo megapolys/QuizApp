@@ -57,3 +57,13 @@ function goToDecision(decisionId) {
     decisionLink[0].click(); // click() work with dom model, not with jquery
     decisionLink.remove();
 }
+
+function clickByChosen(inputFieldId, listId) {
+    let decisionValue = $('#' + inputFieldId).val();
+    $('#' + listId).children('option').each(function () {
+        if ($(this).attr('value') === decisionValue) {
+            $($(this).attr('for'))[0].click();
+            return
+        }
+    })
+}
