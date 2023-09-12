@@ -61,18 +61,18 @@
                                                                '${decisionsName}-${decision.id}'
                                                                )"
                                                 >
-                                                <label class="form-check-label" for="decision-${decision.id}">
+                                                <label class="form-check-label" for="${decisionsName}-${decision.id}">
                                                     ${decision.name}
                                                 </label>
                                             </div>
                                         </td>
                                         <td colspan="2">
                                             <#if decision.description?has_content>
-                                                <a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>Описание</a>
+                                                <@decisionWithDescription decision "Описание" '${decisionsName}-${decision.id}'/>
                                             </#if>
                                         </td>
                                     <#else>
-                                        <td><@decisionWithDescription decision/></td>
+                                        <td><@decisionWithDescription decision decision.name/></td>
                                         <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
                                         <td><a href="/decisions/delete/${decision.id?c}">Удалить</a></td>
                                     </#if>
@@ -122,7 +122,7 @@
         <tbody>
         <#list decisions as decision>
             <tr>
-                <td><@decisionWithDescription decision.decision()/></td>
+                <td><@decisionWithDescription decision.decision() decision.decision().name()/></td>
                 <td>${decision.score()?string["0.##"]}</td>
                 <td>${decision.altScore()?string["0.##"]}</td>
                 <td>${decision.count()?c}</td>
@@ -132,11 +132,27 @@
     </table>
 </#macro>
 
-<#macro decisionWithDescription decision>
+<#macro decisionWithDescription decision name id='${decision.id}'>
+<#-- @ftlvariable name="decision" type="com.example.servingwebcontent.domain.quiz.decision.QuizDecision" -->
     <#if decision.description?has_content>
-        <a class="icon-link" href="##" onclick="copyToClipboard('${decision.description}')">
-            <i class="bi bi-save"></i>
+        <a href="##" type="button" class="icon-link icon-link-hover text-decoration-none p-0" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);"
+           data-bs-toggle="modal" data-bs-target="#decision-modal-${id}" >
+            <i class="bi bi-clipboard me-1"></i>
+            ${name}
         </a>
+        <div class="modal fade" id="decision-modal-${id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${decision.description}
+                    </div>
+                </div>
+            </div>
+        </div>
+    <#else>
+        <a href="##" class="text-decoration-none" aria-disabled="true">${name}</a>
     </#if>
-    <a href="##" class="text-decoration-none" <#if decision.description?has_content>data-bs-toggle="tooltip" data-bs-title="${decision.description}"</#if>>${decision.name}</a>
 </#macro>

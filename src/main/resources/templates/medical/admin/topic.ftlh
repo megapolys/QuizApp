@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-2">
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-screwdriver"></i></span>
+                        <span class="input-group-text"><i class="bi bi-speedometer"></i></span>
                         <input id="inputText" class="form-control" name="unit" value="${(task.unit)!}">
                     </div>
                 </div>
