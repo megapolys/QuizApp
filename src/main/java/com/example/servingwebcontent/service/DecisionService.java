@@ -102,7 +102,7 @@ public class DecisionService {
     @Transactional
     public ResultType updateDecision(QuizDecision decision, DecisionGroup oldGroup) {
         final QuizDecision byName = decisionRepository.findByName(decision.getName());
-        if (byName != null && byName != decision) {
+        if (byName != null && !Objects.equals(byName.getId(), decision.getId())) {
             return ResultType.NAME_FOUND;
         }
         if (oldGroup == null) {

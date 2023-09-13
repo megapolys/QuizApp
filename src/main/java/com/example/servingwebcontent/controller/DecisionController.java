@@ -129,6 +129,7 @@ public class DecisionController {
         } else {
             final DecisionGroup oldGroup = decision.getGroup();
             final QuizDecision newDecision = new QuizDecision();
+            newDecision.setId(decision.getId());
             newDecision.setName(name.trim());
             newDecision.setDescription(description != null ? description.trim() : null);
             newDecision.setGroup(group);
