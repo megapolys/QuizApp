@@ -14,6 +14,9 @@
     </div>
     <div class="mb-3 p-3 text-bg-light">
         <form method="post" class="row" action="/medical/${topic.id?c}/task/${update!"add"}">
+            <div class="row mb-3 justify-content-md-center">
+                <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
+            </div>
             <div class="row mb-3">
                 <div class="col-10">
                     <div class="input-group">

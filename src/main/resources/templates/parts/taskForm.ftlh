@@ -6,6 +6,9 @@
     <#-- @ftlvariable name="taskForm" type="com.example.servingwebcontent.domain.validation.TaskForm" -->
     <form id="taskForm" class="row g-3" action="${path}" method="post"
           enctype="multipart/form-data">
+        <div class="row mb-3 justify-content-md-center">
+            <button class="btn btn-primary col-3" type="submit"><#if update>Обновить вопрос<#else>Добавить вопрос</#if></button>
+        </div>
         <div class="col-2 mb-3">
             <div class="input-group">
                 <span class="input-group-text">№</span>
@@ -73,8 +76,7 @@
         <input type="hidden" name="quiz" value="${quiz.id?c}"/>
         <input type="hidden" name="quizTask" value="${(quizTask.id)!?c}"/>
         <div class="row mb-2 justify-content-md-center">
-            <button class="btn btn-primary col-3"
-                    type="submit"><#if update>Обновить вопрос<#else>Добавить вопрос</#if></button>
+            <button class="btn btn-primary col-3" type="submit"><#if update>Обновить вопрос<#else>Добавить вопрос</#if></button>
         </div>
     </form>
 </#macro>
