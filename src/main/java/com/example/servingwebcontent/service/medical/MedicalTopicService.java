@@ -127,7 +127,7 @@ public class MedicalTopicService {
         final MedicalTopic topic = new MedicalTopic();
         topic.setName(name);
         topic.setMedicalTasks(new LinkedHashSet<>());
-        for (MedicalTask oldTask : oldTopic.getMedicalTasks()) {
+        for (MedicalTask oldTask : oldTopic.getMedicalTasks().stream().sorted(Comparator.comparing(MedicalTask::getId)).toList()) {
             final MedicalTask task = new MedicalTask();
             task.setName(oldTask.getName());
             task.setUnit(oldTask.getUnit());

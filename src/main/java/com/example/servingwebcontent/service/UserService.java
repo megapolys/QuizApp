@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
         if (StringUtils.hasText(user.getEmail())) {
             final String message = String.format(
                     "Здравствуйте, %s \n" +
-                            "Добро пожаловать на Health-3800. Пожалуйста перейдите по ссылки для подтверждения регистрации: %s/activate/%s",
+                            "Добро пожаловать на Bodymind State. Пожалуйста перейдите по ссылки для подтверждения регистрации: %s/activate/%s",
                     user.getUsername(), domainName, user.getActivationCode()
             );
             final SimpleMailMessage simpleMessage = new SimpleMailMessage();
@@ -130,7 +130,7 @@ public class UserService implements UserDetailsService {
             }
             final String message = String.format(
                     "Здравствуйте, %s \n" +
-                            "Ссылка на восстановление пароля для Health-3800: %s/repairPassword/%s",
+                            "Ссылка на восстановление пароля для Bodymind State: %s/repairPassword/%s",
                     user.getUsername(), domainName, user.getRepairPasswordCode()
             );
             final SimpleMailMessage simpleMessage = new SimpleMailMessage();
