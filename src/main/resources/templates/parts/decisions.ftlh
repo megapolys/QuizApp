@@ -140,7 +140,7 @@
         <tbody>
         <#list decisions as decision>
             <tr>
-                <td><@decisionWithDescription decision.decision() decision.decision().name()/></td>
+                <td><@decisionWithDescription decision=decision.decision() name=decision.decision().name/></td>
                 <td>${decision.score()?string["0.##"]}</td>
                 <td>${decision.altScore()?string["0.##"]}</td>
                 <td>${decision.count()?c}</td>
