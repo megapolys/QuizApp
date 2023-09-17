@@ -70,7 +70,7 @@
         <tbody>
         <#list taskList as task>
             <tr>
-                <td>${(task.name)?truncate(50, "...")}</td>
+                <td>${(task.name)?truncate(50, "...") + task.unit?has_content?then(" - " + task.unit, "")}</td>
                 <td><a href="/medical/${topic.id?c}/task/update/${task.id?c}">Изменить</a></td>
                 <td><a href="/medical/${topic.id?c}/task/delete/${task.id?c}">Удалить</a></td>
                 <td><#if !task.leftDecisions?has_content><div style="color: red">Левых решений не назначено</div></#if></td>

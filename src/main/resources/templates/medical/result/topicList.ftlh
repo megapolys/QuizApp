@@ -58,14 +58,16 @@
     <table class="table">
         <thead>
         <tr>
-            <th style="width: 60%"></th>
-            <th style="width: 40%"></th>
+            <th style="width: 60%">Наименование</th>
+            <th style="width: 10%">Размер</th>
+            <th style="width: 30%">Действие</th>
         </tr>
         </thead>
         <tbody>
         <#list topicList as topic>
             <tr>
                 <td>${topic.topic().name}</td>
+                <td>${(topic.topic().medicalTasks)?has_content?then(topic.topic().medicalTasks?size?c, "пусто")}</td>
                 <td>
                     <#if !topic.exists()>
                         <a href="/result/topic/${user.id?c}/newTopic/${topic.topic().id?c}">Назначить</a>

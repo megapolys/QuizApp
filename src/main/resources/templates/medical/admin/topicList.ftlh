@@ -14,7 +14,8 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 70%">Наименование</th>
+            <th style="width: 60%">Наименование</th>
+            <th style="width: 10%">Размер</th>
             <th style="width: 10%"></th>
             <th style="width: 10%"></th>
             <th style="width: 10%"></th>
@@ -24,6 +25,7 @@
         <#list topics as topic>
             <tr>
                 <td>${topic.name}</td>
+                <td>${(topic.medicalTasks)?has_content?then(topic.medicalTasks?size?c, "пусто")}</td>
                 <td><a href="/medical/copy/${topic.id?c}">Скопировать</a></td>
                 <td><a href="/medical/${topic.id?c}">Редактировать</a></td>
                 <td>
