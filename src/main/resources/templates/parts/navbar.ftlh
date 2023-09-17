@@ -34,7 +34,9 @@
                     </li>
                 </#if>
             </ul>
-            <a href="/user" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
+            <#if name??>
+                <a href="/user" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
+            </#if>
             <#if user??>
                 <@l.logout true/>
             <#else>

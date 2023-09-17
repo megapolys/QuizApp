@@ -5,6 +5,5 @@
     <#assign name = user.getUsername()>
     <#assign isAdmin = user.isAdmin()>
 <#else>
-    <#assign name = "unknown">
     <#assign isAdmin = false>
 </#if>
