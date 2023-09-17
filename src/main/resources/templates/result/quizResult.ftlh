@@ -9,7 +9,27 @@
             <h3>${result.quizResult().quiz.name}</h3>
         </div>
     </div>
-    <@d.resultDecisionsTable result.decisions()!/>
+    <h4 class="mb-3">Сводная таблица решений</h4>
+    <table class="table mb-5">
+        <thead>
+        <tr>
+            <th style="width: 60%">Решение</th>
+            <th>Баллы</th>
+            <th>Баллы/Вопросы</th>
+            <th>Вопросы</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#list result.decisions() as decision>
+            <tr>
+                <td><@d.decisionWithDescription decision=decision.decision() name=decision.decision().name/></td>
+                <td>${decision.score()?string["0.##"]}</td>
+                <td>${decision.altScore()?string["0.##"]}</td>
+                <td>${decision.count()?c}</td>
+            </tr>
+        </#list>
+        </tbody>
+    </table>
     <h4 class="mb-3">Список заданий с текстом</h4>
     <table class="table mb-5">
         <thead>

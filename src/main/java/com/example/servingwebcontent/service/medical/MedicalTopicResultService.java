@@ -78,23 +78,27 @@ public class MedicalTopicResultService {
             }
 
             Set<QuizDecision> decisions = Set.of();
+            boolean left = false;
+            boolean right = false;
             if (taskResult.getValue() <= task.getLeftMid()) {
                 decisions = task.getLeftDecisions();
+                left = true;
             }
             if (taskResult.getValue() >= task.getRightMid()) {
                 decisions = task.getRightDecisions();
+                right = true;
             }
 
             final float weight;
             if (taskResult.getAltScore() != null) {
                 weight = taskResult.getAltScore();
-            } else if (taskResult.getValue() <= task.getLeftMid()) {
+            } else if (left) {
                 if (taskResult.getValue() <= task.getLeftLeft()) {
                     weight = leftLeft;
                 } else {
                     weight = leftMid;
                 }
-            } else if (taskResult.getValue() >= task.getRightMid()) {
+            } else if (right) {
                 if (taskResult.getValue() >= task.getRightRight()) {
                     weight = rightRight;
                 } else {
@@ -108,19 +112,20 @@ public class MedicalTopicResultService {
                 decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
                 decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
             }
-            tasks.add(new TaskResultBean(taskResult.getId(), taskResult.getValue(), taskResult.getMedicalTask().getUnit(), taskResult.getAltScore(), task.getName(), weight, getAnalyse(taskResult)));
+            tasks.add(new TaskResultBean(taskResult, weight, getAnalyse(taskResult), decisions.stream().sorted(Comparator.comparing(QuizDecision::getName)).toList()));
             weightSum += weight;
             filledCount++;
         }
         final float score = weightSum / filledCount;
         final List<DecisionBean> decisionsList = decisionBeans.entrySet().stream()
                 .map(entry -> new DecisionBean(entry.getKey(), entry.getValue(), entry.getValue() / decisionsCount.get(entry.getKey()), decisionsCount.get(entry.getKey())))
-                .sorted(Comparator.comparing(bean -> bean.score, Comparator.reverseOrder()))
+                .sorted(Comparator.comparing(DecisionBean::score).reversed()
+                        .thenComparing(bean -> bean.decision().getName()))
                 .toList();
         result.setResults(result.getResults().stream()
                 .sorted(Comparator.comparing(taskResult -> taskResult.getMedicalTask().getName()))
                 .collect(Collectors.toCollection(LinkedHashSet::new)));
-        tasks.sort(Comparator.comparing(TaskResultBean::name));
+        tasks.sort(Comparator.comparing(t -> t.taskResult.getMedicalTask().getName()));
         return new ResultBean(result, tasks, decisionsList, score, score >= yellowRatio, score >= redRatio, progress);
     }
 
@@ -163,7 +168,7 @@ public class MedicalTopicResultService {
                              float score, boolean yellow, boolean red, String progress) {
     }
 
-    public record TaskResultBean(Long taskResultId, Float value, String unit, Float altScore, String name, Float resultScore, AnalyseForm analyseForm){}
+    public record TaskResultBean(MedicalTaskResult taskResult, Float resultScore, AnalyseForm analyseForm, List<QuizDecision> decisions){}
 
     public record AnalyseForm(List<Float> values, float marker){}
 

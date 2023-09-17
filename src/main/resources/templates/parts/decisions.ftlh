@@ -126,30 +126,6 @@
     </div>
 </#macro>
 
-<#macro resultDecisionsTable decisions>
-    <h4 class="mb-3">Сводная таблица решений</h4>
-    <table class="table mb-5">
-        <thead>
-        <tr>
-            <th style="width: 60%">Решение</th>
-            <th>Баллы</th>
-            <th>Баллы/Вопросы</th>
-            <th>Вопросы</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list decisions as decision>
-            <tr>
-                <td><@decisionWithDescription decision=decision.decision() name=decision.decision().name/></td>
-                <td>${decision.score()?string["0.##"]}</td>
-                <td>${decision.altScore()?string["0.##"]}</td>
-                <td>${decision.count()?c}</td>
-            </tr>
-        </#list>
-        </tbody>
-    </table>
-</#macro>
-
 <#macro decisionWithDescription decision name id='${decision.id}'>
 <#-- @ftlvariable name="decision" type="com.example.servingwebcontent.domain.quiz.decision.QuizDecision" -->
     <#if decision.description?has_content>
