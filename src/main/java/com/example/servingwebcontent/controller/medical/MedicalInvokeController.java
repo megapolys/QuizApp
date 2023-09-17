@@ -62,15 +62,25 @@ public class MedicalInvokeController {
         if (topicInvokeService.userNotContainsQuiz(user.getId(), topicResult.getId())) {
             throw new RuntimeException("Access denied!");
         }
+        boolean changed = false;
         for (MedicalTaskResult result : topicResult.getResults()) {
             final String newVal = params.get(result.getId().toString());
             if (StringUtils.isNotBlank(newVal)) {
-                result.setValue(Float.parseFloat(newVal));
+                final float value = Float.parseFloat(newVal);
+                if (result.getValue() == null || value != result.getValue()) {
+                    changed = true;
+                    result.setValue(value);
+                }
             } else {
-                result.setValue(null);
+                if (result.getValue() != null) {
+                    changed = true;
+                    result.setValue(null);
+                }
             }
         }
-        topicInvokeService.save(topicResult);
+        if (changed) {
+            topicInvokeService.save(topicResult);
+        }
         return "redirect:/userTopicList";
     }
 }
