@@ -2,6 +2,7 @@
 <#import "../parts/common.ftlh" as c>
 <#import "../parts/taskForm.ftlh" as task>
 <#import "../parts/decisions.ftlh" as d>
+<#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/quiz/list">Назад</a>
     <h3 class="mb-3">Страница редактирования теста "${quiz.name}"</h3>
@@ -37,7 +38,11 @@
                 <td>${(task.fiveVariantTask.questionText)!(task.yesOrNoTask.questionText)?truncate(50, "...")}</td>
                 <#assign type = task.fiveVariantTask?has_content?string("fiveVariant", "yesOrNo")>
                 <td><a href="/quiz/task/update/${type}/${task.id?c}">Изменить</a></td>
-                <td><a href="/quiz/task/delete/${task.id?c}">Удалить</a></td>
+                <td>
+                    <@modal.deleteConfirm path="/quiz/task/delete/${task.id?c}"
+                    id="confirm-delete-task-${task.id}"
+                    text="Точно удалить задание?"/>
+                </td>
                 <td><#if !task.decisions?has_content><div style="color: red">Решений не назначено</div></#if></td>
             </tr>
         <#else>

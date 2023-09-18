@@ -1,3 +1,5 @@
+<#import "../parts/modal.ftlh" as modal>
+
 <#macro decisions groups decisions_>
     <div class="accordion" id="accordion_groups">
         <#list groups as group>
@@ -74,7 +76,11 @@
                                     <#else>
                                         <td><@decisionWithDescription decision decision.name/></td>
                                         <td><a href="/decisions/updateAction/${decision.id?c}">Изменить</a></td>
-                                        <td><a href="/decisions/delete/${decision.id?c}">Удалить</a></td>
+                                        <td>
+                                            <@modal.deleteConfirm path="/decisions/delete/${decision.id?c}"
+                                            id="confirm-delete-decision-${decision.id}"
+                                            text="Точно удалить решение?"/>
+                                        </td>
                                     </#if>
                                 </tr>
                             </#list>

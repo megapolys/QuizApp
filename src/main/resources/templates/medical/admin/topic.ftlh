@@ -1,6 +1,7 @@
 <#-- @ftlvariable name="task" type="com.example.servingwebcontent.domain.medical.MedicalTask" -->
 <#import "../../parts/common.ftlh" as c>
 <#import "../../parts/decisions.ftlh" as d>
+<#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/medical/list">Назад</a>
     <h3 class="mb-3">Страница редактирования "${topic.name}"</h3>
@@ -72,7 +73,11 @@
             <tr>
                 <td>${(task.name)?truncate(50, "...") + task.unit?has_content?then(" - " + task.unit, "")}</td>
                 <td><a href="/medical/${topic.id?c}/task/update/${task.id?c}">Изменить</a></td>
-                <td><a href="/medical/${topic.id?c}/task/delete/${task.id?c}">Удалить</a></td>
+                <td>
+                    <@modal.deleteConfirm path="/medical/${topic.id?c}/task/delete/${task.id?c}"
+                    id="confirm-delete-medicalTask-${task.id}"
+                    text="Точно удалить анализ?"/>
+                </td>
                 <td><#if !task.leftDecisions?has_content><div style="color: red">Левых решений не назначено</div></#if></td>
                 <td><#if !task.rightDecisions?has_content><div style="color: red">Правых решений не назначено</div></#if></td>
             </tr>

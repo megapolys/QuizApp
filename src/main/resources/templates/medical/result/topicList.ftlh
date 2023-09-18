@@ -1,4 +1,5 @@
 <#import "../../parts/common.ftlh" as c>
+<#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
     <#if user.lastName?has_content && user.firstName?has_content>
@@ -46,7 +47,9 @@
                         </#if>
                     </td>
                     <td>
-                        <a href="/result/topic/${user.id?c}/delete/${topic.topicResult().id?c}">Удалить</a>
+                        <@modal.deleteConfirm path="/result/topic/${user.id?c}/delete/${topic.topicResult().id?c}"
+                        id="confirm-delete-topicResult-${topic.topicResult().id}"
+                        text="Точно удалить результаты анализов?"/>
                     </td>
                 </tr>
             </#list>

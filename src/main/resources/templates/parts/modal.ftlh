@@ -16,3 +16,25 @@
         </div>
     </div>
 </#macro>
+
+<#macro deleteConfirm text path id>
+    <a href="##" class="link-danger" data-bs-toggle="modal" data-bs-target="#${id}">
+        Удалить
+    </a>
+    <div class="modal fade" id="${id}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтверждение удаления</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ${text}
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-danger" href="${path}">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</#macro>

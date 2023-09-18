@@ -1,4 +1,5 @@
 <#import "../parts/common.ftlh" as c>
+<#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
     <#if user.lastName?has_content && user.firstName?has_content>
@@ -42,7 +43,9 @@
                         </#if>
                     </td>
                     <td>
-                        <a href="/result/quiz/${user.id?c}/delete/${quiz.quizResult().id?c}">Удалить</a>
+                        <@modal.deleteConfirm path="/result/quiz/${user.id?c}/delete/${quiz.quizResult().id?c}"
+                        id="confirm-delete-quizResult-${quiz.quizResult().id}"
+                        text="Точно удалить результаты теста?"/>
                     </td>
                 </tr>
             </#list>
