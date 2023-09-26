@@ -19,7 +19,8 @@
         <thead>
         <tr>
             <th style="width: 5%">Индекс</th>
-            <th style="width: 75%">Наименование</th>
+            <th style="width: 65%">Наименование</th>
+            <th style="width: 10%">Размер</th>
             <th style="width: 10%"></th>
             <th style="width: 10%"></th>
         </tr>
@@ -29,6 +30,7 @@
             <tr>
                 <td>${quiz.shortName}</td>
                 <td>${quiz.name}</td>
+                <td>${(quiz.taskList)?has_content?then(quiz.taskList?size?c, "пусто")}</td>
                 <td><a href="/quiz/${quiz.id?c}">Редактировать</a></td>
                 <td>
                     <@modal.deleteConfirm path="/quiz/delete/${quiz.id?c}" id="confirm-delete-quiz-${quiz.id}"
