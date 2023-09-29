@@ -116,7 +116,7 @@
                     </td>
                     <td>${task.resultScore()}</td>
                     <td>
-                        <form action="/result/topic/updateTaskResult/${userId}/${result.topicResult().id?c}/${task.taskResult().id?c}"
+                        <form style="visibility: hidden" action="/result/topic/updateTaskResult/${userId}/${result.topicResult().id?c}/${task.taskResult().id?c}"
                               method="post">
                             <div class="input-group">
                                 <input type="number" name="altScore" class="form-control" step="0.5"/>
