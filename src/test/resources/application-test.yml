@@ -1,0 +1,12 @@
+spring.jpa.show-sql: false
+spring.jpa.hibernate.ddl-auto: validate
+spring.datasource.url: jdbc:postgresql://localhost:5432/postgrestest
+spring.datasource.username: postgres
+spring.datasource.password: admin
+spring.datasource.driver-class-name: org.postgresql.Driver
+#spring.jpa.show-sql: true
+
+upload.path:
+  img: '/Users/i/IdeaProjects/QuizApp/img'
+  imgPrefix: 'C:'
+domain.name: 'localhost:8080'
