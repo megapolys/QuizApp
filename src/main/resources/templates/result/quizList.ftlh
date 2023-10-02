@@ -57,14 +57,16 @@
     <table class="table">
         <thead>
         <tr>
-            <th style="width: 60%"></th>
-            <th style="width: 40%"></th>
+            <th style="width: 60%">Наименование</th>
+            <th style="width: 10%">Размер</th>
+            <th style="width: 30%">Действие</th>
         </tr>
         </thead>
         <tbody>
         <#list quizList as quiz>
             <tr>
                 <td>${quiz.quiz().shortName}. ${quiz.quiz().name}</td>
+                <td>${(quiz.quiz().taskList)?has_content?then(quiz.quiz().taskList?size?c, "пусто")}</td>
                 <td>
                     <#if !quiz.exists()>
                         <a href="/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}">Назначить</a>
