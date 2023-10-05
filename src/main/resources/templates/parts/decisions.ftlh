@@ -48,7 +48,7 @@
                             </thead>
                             <tbody>
                             <#list decisions as decision>
-                                <tr>
+                                <tr data-id="${decision.name}">
                                     <#if checkbox>
                                         <td>
                                             <div class="form-check">

@@ -53,10 +53,6 @@ public class DecisionService {
         if (byName != null) {
             return ResultType.NAME_FOUND;
         }
-        if (decision.getGroup() != null) {
-            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow(); // нужно для актуализации данных из бд
-            group.getDecisions().add(decision);
-        }
         decisionRepository.save(decision);
         return ResultType.SUCCESS;
     }
@@ -81,10 +77,6 @@ public class DecisionService {
             if (task.getLeftDecisions().remove(decision) | task.getRightDecisions().remove(decision)) {
                 medicalTaskRepository.save(task);
             }
-        }
-        if (decision.getGroup() != null) {
-            decision.getGroup().getDecisions().remove(decision);
-            decisionGroupRepository.save(decision.getGroup());
         }
         decisionRepository.delete(decision);
     }
@@ -139,9 +131,6 @@ public class DecisionService {
 
     public enum ResultType {
         NAME_FOUND, SUCCESS
-    }
-
-    public record DecisionResult(ResultType result, QuizDecision decision) {
     }
 
 }

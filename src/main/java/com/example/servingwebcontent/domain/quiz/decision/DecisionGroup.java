@@ -13,7 +13,7 @@ public class DecisionGroup {
 
     @Column(unique = true, nullable = false)
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "group")
     private Set<QuizDecision> decisions;
 
     public Long getId() {

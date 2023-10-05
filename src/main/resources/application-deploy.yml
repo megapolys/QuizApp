@@ -9,4 +9,4 @@ spring.datasource.driver-class-name: org.postgresql.Driver
 upload.path:
   img: '/root/uploads'
   imgPrefix: ''
-domain.name: 'https://bodymindstate.space/'
+domain.name: https://bodymindstate.space/
