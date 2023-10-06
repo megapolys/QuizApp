@@ -26,7 +26,7 @@ public class QuizTask {
     @OneToOne(cascade = CascadeType.ALL)
     private YesOrNoTask yesOrNoTask;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<QuizDecision> decisions;
 
     public void setId(Long id) {

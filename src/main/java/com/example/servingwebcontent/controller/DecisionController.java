@@ -61,8 +61,11 @@ public class DecisionController {
             redirectAttributes.addFlashAttribute("message", "Пустое название группы!");
             redirectAttributes.addFlashAttribute("changeGroup", group);
         } else {
-            group.setName(name.trim());
-            final DecisionService.ResultType result = decisionService.updateGroup(group);
+            final DecisionGroup newGroup = new DecisionGroup();
+            newGroup.setId(group.getId());
+            newGroup.setDecisions(group.getDecisions());
+            newGroup.setName(name.trim());
+            final DecisionService.ResultType result = decisionService.update(newGroup);
             if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
                 redirectAttributes.addFlashAttribute("changeGroup", group);
@@ -127,13 +130,12 @@ public class DecisionController {
             redirectAttributes.addFlashAttribute("message", "Пустое имя!");
             redirectAttributes.addFlashAttribute("changeDecision", decision);
         } else {
-            final DecisionGroup oldGroup = decision.getGroup();
             final QuizDecision newDecision = new QuizDecision();
             newDecision.setId(decision.getId());
             newDecision.setName(name.trim());
             newDecision.setDescription(description != null ? description.trim() : null);
             newDecision.setGroup(group);
-            final DecisionService.ResultType result = decisionService.updateDecision(newDecision, oldGroup);
+            final DecisionService.ResultType result = decisionService.update(newDecision);
             if (result == DecisionService.ResultType.NAME_FOUND) {
                 redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
                 redirectAttributes.addFlashAttribute("changeDecision", decision);

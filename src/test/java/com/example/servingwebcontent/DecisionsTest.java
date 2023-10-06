@@ -1,7 +1,9 @@
 package com.example.servingwebcontent;
 
+import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -28,6 +32,9 @@ public class DecisionsTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private QuizTaskRepository quizTaskRepository;
 
     @Test
     public void decisionPageTest() throws Exception {
@@ -369,6 +376,29 @@ public class DecisionsTest {
     }
 
     @Test
+    @Sql(value = {"/create-user-before.sql", "/create-decisions-quiz-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/delete-decisions-quiz-after.sql", "/delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void decisionQuizDeleteTest() throws Exception {
+        this.mockMvc.perform(get("/decisions/delete/5"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/decisions"))
+                .andExpect(flash().attribute("successMessage", notNullValue()));
+        this.mockMvc.perform(get("/decisions"))
+                .andDo(print())
+                .andExpect(authenticated())
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-nonGroup-decisions']/div/div[2]/table/tbody/tr").nodeCount(3))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-1-decisions']/div/div[2]/table/tbody/tr").nodeCount(1))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-1-decisions']/div/div[2]/table/tbody/tr[@data-id='dec5']").doesNotExist())
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-2-decisions']/div/div[2]/table/tbody/tr").nodeCount(1))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-3-decisions']/div/div[2]/table/tbody/tr").nodeCount(0))
+        ;
+        quizTaskRepository.findAll().forEach(task -> {
+            assertTrue(task.getDecisions().stream().noneMatch(dec -> dec.getId() == 5));
+        });
+    }
+
+    @Test
     public void groupCountTest() throws Exception {
         this.mockMvc.perform(get("/decisions"))
                 .andDo(print())
@@ -582,6 +612,34 @@ public class DecisionsTest {
                 .andExpect(xpath("//*[@id='panelsStayOpen-group-2-decisions']/div/div[2]/table/tbody/tr").nodeCount(1))
                 .andExpect(xpath("//*[@id='group-3-decisions']").doesNotExist())
         ;
+    }
+
+    @Test
+    @Sql(value = {"/create-user-before.sql", "/create-decisions-quiz-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = {"/delete-decisions-quiz-after.sql", "/delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    public void groupQuizDeleteTest() throws Exception {
+        this.mockMvc.perform(get("/decisions/group/delete/1"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/decisions"))
+                .andExpect(flash().attribute("successMessage", notNullValue()));
+        this.mockMvc.perform(get("/decisions"))
+                .andDo(print())
+                .andExpect(authenticated())
+                .andExpect(xpath("//*[@id='accordion_groups']/div").nodeCount(3))
+                .andExpect(xpath("//*[@id='group-nonGroup-decisions']").string(containsString("Не в группе")))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-nonGroup-decisions']/div/div[2]/table/tbody/tr").nodeCount(5))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-nonGroup-decisions']/div/div[2]/table/tbody/tr[@data-id='dec4']").exists())
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-nonGroup-decisions']/div/div[2]/table/tbody/tr[@data-id='dec5']").exists())
+                .andExpect(xpath("//*[@id='group-1-decisions']").doesNotExist())
+                .andExpect(xpath("//*[@id='group-2-decisions']").string(containsString("group2")))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-2-decisions']/div/div[2]/table/tbody/tr").nodeCount(1))
+                .andExpect(xpath("//*[@id='group-3-decisions']").string(containsString("group3")))
+                .andExpect(xpath("//*[@id='panelsStayOpen-group-3-decisions']/div/div[2]/table/tbody/tr").nodeCount(0))
+        ;
+        quizTaskRepository.findAll().forEach(task -> {
+            assertTrue(task.getDecisions().stream().anyMatch(dec -> dec.getId() == 5 && dec.getGroup() == null));
+        });
     }
 
     @Test

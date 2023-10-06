@@ -81,48 +81,29 @@ public class DecisionService {
         decisionRepository.delete(decision);
     }
 
+    @Transactional
     public void delete(DecisionGroup group) {
-        for (QuizDecision decision : decisionRepository.findAll()) {
-            if (decision.getGroup() != null && Objects.equals(decision.getGroup().getId(), group.getId())) {
-                decision.setGroup(null);
-                decisionRepository.save(decision);
-            }
+        for (QuizDecision decision : decisionRepository.findAllByGroup(group)) {
+            decision.setGroup(null);
+            decisionRepository.save(decision);
         }
         decisionGroupRepository.delete(group);
     }
 
     @Transactional
-    public ResultType updateDecision(QuizDecision decision, DecisionGroup oldGroup) {
+    public ResultType update(QuizDecision decision) {
         final QuizDecision byName = decisionRepository.findByName(decision.getName());
         if (byName != null && !Objects.equals(byName.getId(), decision.getId())) {
             return ResultType.NAME_FOUND;
-        }
-        if (oldGroup == null) {
-            updateGroup(decision);
-        }
-        if (oldGroup != null && decision.getGroup() == null) {
-            oldGroup.getDecisions().removeIf(d -> Objects.equals(d.getId(), decision.getId()));
-            decisionGroupRepository.save(oldGroup);
-        } else if (oldGroup != null && !Objects.equals(decision.getGroup().getId(), oldGroup.getId())) {
-            updateGroup(decision);
-            oldGroup.getDecisions().removeIf(d -> Objects.equals(d.getId(), decision.getId()));
-            decisionGroupRepository.save(oldGroup);
         }
         decisionRepository.save(decision);
         return ResultType.SUCCESS;
     }
 
-    private void updateGroup(QuizDecision decision) {
-        if (decision.getGroup() != null) {
-            final DecisionGroup group = decisionGroupRepository.findById(decision.getGroup().getId()).orElseThrow(); // нужно для актуализации данных из бд
-            group.getDecisions().add(decision);
-            decisionGroupRepository.save(group);
-        }
-    }
-
-    public ResultType updateGroup(DecisionGroup group) {
+    @Transactional
+    public ResultType update(DecisionGroup group) {
         final DecisionGroup byName = decisionGroupRepository.findByName(group.getName());
-        if (byName != null && byName != group) {
+        if (byName != null && !Objects.equals(byName.getId(), group.getId())) {
             return ResultType.NAME_FOUND;
         }
         decisionGroupRepository.save(group);
