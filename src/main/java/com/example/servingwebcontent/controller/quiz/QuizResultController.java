@@ -57,7 +57,7 @@ public class QuizResultController {
             @PathVariable Long quizResultId,
             RedirectAttributes redirectAttributes
     ) {
-        quizResultService.deleteResult(userId, quizResultId);
+        quizResultService.deleteResult(quizResultId);
         redirectAttributes.addAttribute("userId", userId);
         return "redirect:/result/quiz/{userId}";
     }

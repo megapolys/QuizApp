@@ -19,7 +19,7 @@ public class QuizResult {
     @ManyToOne(fetch = FetchType.EAGER)
     private Quiz quiz;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     private boolean complete;

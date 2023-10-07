@@ -54,9 +54,8 @@ public class QuizInvokeService {
             return quizTaskResult;
         }).collect(Collectors.toSet());
         quizResult.setTaskList(quizTaskResults);
+        quizResult.setUser(user);
         quizResultRepository.save(quizResult);
-        user.getResults().add(quizResult);
-        userRepository.save(user);
     }
 
     public void completeQuiz(QuizResult quizResult) {

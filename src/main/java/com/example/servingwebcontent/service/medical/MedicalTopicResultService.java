@@ -130,13 +130,8 @@ public class MedicalTopicResultService {
     }
 
     @Transactional
-    public void deleteResult(Long userId, Long topicResultId) {
-        final MedicalTopicResult result = topicResultRepository.findById(topicResultId).orElseThrow(); // нужно для актуализации данных из бд
-        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд
-        user.getMedicalResults().remove(result);
-        userRepository.save(user);
-        taskResultRepository.deleteAll(result.getResults());
-        topicResultRepository.delete(result);
+    public void deleteResult(Long topicResultId) {
+        topicResultRepository.deleteById(topicResultId);
     }
 
     public void updateTaskResult(MedicalTaskResult taskResult) {

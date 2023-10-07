@@ -122,12 +122,8 @@ public class QuizResultService {
     }
 
     @Transactional
-    public void deleteResult(Long userId, Long quizResultId) {
-        final QuizResult quizResult = quizResultRepository.findById(quizResultId).orElseThrow(); // нужно для актуализации данных из бд
-        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд
-        user.getResults().remove(quizResult);
-        userRepository.save(user);
-        quizResultRepository.delete(quizResult);
+    public void deleteResult(Long quizResultId) {
+        quizResultRepository.deleteById(quizResultId);
     }
 
     public record QuizResultBean(Quiz quiz, List<ResultBean> results){}

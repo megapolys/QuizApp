@@ -56,9 +56,8 @@ public class MedicalTopicInvokeService {
             return taskResult;
         }).collect(Collectors.toSet());
         topicResult.setResults(topicTaskResults);
+        topicResult.setUser(user);
         topicResultRepository.save(topicResult);
-        user.getMedicalResults().add(topicResult);
-        userRepository.save(user);
     }
 
     public boolean userNotContainsQuiz(Long userId, Long topicResultId) {

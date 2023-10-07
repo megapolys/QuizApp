@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain.medical.result;
 
+import com.example.servingwebcontent.domain.User;
 import com.example.servingwebcontent.domain.medical.MedicalTopic;
 import jakarta.persistence.*;
 
@@ -14,6 +15,9 @@ public class MedicalTopicResult {
 
     @ManyToOne
     private MedicalTopic medicalTopic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MedicalTaskResult> results;
@@ -61,5 +65,13 @@ public class MedicalTopicResult {
 
     public void setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

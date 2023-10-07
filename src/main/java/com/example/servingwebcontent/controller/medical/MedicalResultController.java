@@ -57,7 +57,7 @@ public class MedicalResultController {
             @PathVariable Long topicResultId,
             RedirectAttributes redirectAttributes
     ) {
-        topicResultService.deleteResult(userId, topicResultId);
+        topicResultService.deleteResult(topicResultId);
         redirectAttributes.addAttribute("userId", userId);
         return "redirect:/result/topic/{userId}";
     }

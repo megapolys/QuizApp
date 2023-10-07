@@ -34,7 +34,7 @@
                 </div>
             </#if>
             <#if registration || edit || passwordOnly>
-                <div class="mb-3 col-3">
+                <div class="mb-3">
                     <label for="inputPassword2" class="form-label">Подтверждение пароля</label>
                     <input type="password" class="form-control" id="inputPassword2" name="password2"
                            placeholder="пароль">
