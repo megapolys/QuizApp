@@ -12,7 +12,7 @@
             </div>
         </div>
     </form>
-    <table class="table table-striped">
+    <table id="medical-topic-table" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 60%">Наименование</th>

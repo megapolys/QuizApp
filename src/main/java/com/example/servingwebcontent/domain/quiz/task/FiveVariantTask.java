@@ -23,9 +23,6 @@ public class FiveVariantTask {
     private Float fourthWeight;
     private Float fifthWeight;
 
-    @OneToMany
-    private Set<Quiz> quizzes;
-
     public Long getId() {
         return id;
     }
@@ -98,11 +95,4 @@ public class FiveVariantTask {
         this.fifthWeight = fifthWeight;
     }
 
-    public Set<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public void setQuizzes(Set<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
 }

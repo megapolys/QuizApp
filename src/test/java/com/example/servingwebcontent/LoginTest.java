@@ -57,6 +57,30 @@ public class LoginTest {
     }
 
     @Test
+    public void loginAdminFailed() throws Exception {
+        this.mockMvc.perform(formLogin().user("admin").password("wrongPass"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    public void loginKiril() throws Exception {
+        this.mockMvc.perform(formLogin().user("kiril").password("kirilPass"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    public void loginPetrFailed() throws Exception {
+        this.mockMvc.perform(formLogin().user("petr").password("petrPass"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
     @WithUserDetails("admin")
     public void adminTest() throws Exception {
         for (String url : List.of("/main", "/userQuizList", "/userTopicList", "/user/list", "/quiz/list", "/medical/list", "/decisions")) {

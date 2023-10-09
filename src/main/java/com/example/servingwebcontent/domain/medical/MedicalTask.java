@@ -6,14 +6,18 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+// При добавлении полей необходимо дорабатывать метод клонирование MedicalTopicService.clone()
 public class MedicalTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
-
     private String unit;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    private MedicalTopic topic;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<QuizDecision> leftDecisions;
@@ -95,5 +99,13 @@ public class MedicalTask {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public MedicalTopic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(MedicalTopic topic) {
+        this.topic = topic;
     }
 }

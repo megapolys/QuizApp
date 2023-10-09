@@ -71,7 +71,7 @@ public class MedicalController {
         name = name.trim();
         if (StringUtils.isBlank(name)) {
             redirectAttributes.addFlashAttribute("message", "Имя медицинского топика пустое!");
-        } if (medicalTopicService.contains(name)) {
+        } else if (medicalTopicService.contains(name)) {
             redirectAttributes.addFlashAttribute("message", "Топик с таким именем уже существует!");
         } else {
             topic.setName(name);

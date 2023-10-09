@@ -38,12 +38,7 @@ public class MedicalTopicService {
 
     @Transactional
     public void delete(MedicalTopic topic) {
-        final List<MedicalTopicResult> resultTopicList = medicalTopicResultRepository.findAllByMedicalTopic(topic);
-        for (MedicalTopicResult topicResult : resultTopicList) {
-            medicalTaskResultRepository.deleteAll(topicResult.getResults());
-        }
-        medicalTopicResultRepository.deleteAll(resultTopicList);
-        medicalTaskRepository.deleteAll(topic.getMedicalTasks());
+        medicalTopicResultRepository.deleteAllByMedicalTopic(topic);
         medicalTopicRepository.delete(topic);
     }
 
@@ -57,8 +52,8 @@ public class MedicalTopicService {
         } else {
             task.setName(task.getName().trim());
             task.setUnit(task.getUnit().trim());
-            topic.getMedicalTasks().add(task);
-            medicalTopicRepository.save(topic);
+            task.setTopic(topic);
+            medicalTaskRepository.save(task);
             return true;
         }
     }
@@ -71,8 +66,6 @@ public class MedicalTopicService {
             }
         }
         medicalTaskResultRepository.deleteAllByMedicalTask(task);
-        topic.getMedicalTasks().remove(task);
-        medicalTopicRepository.save(topic);
         medicalTaskRepository.delete(task);
     }
 
@@ -137,6 +130,7 @@ public class MedicalTopicService {
             task.setRightRight(oldTask.getRightRight());
             task.setLeftDecisions(new LinkedHashSet<>(oldTask.getLeftDecisions()));
             task.setRightDecisions(new LinkedHashSet<>(oldTask.getRightDecisions()));
+            task.setTopic(topic);
             topic.getMedicalTasks().add(task);
         }
         return topic;

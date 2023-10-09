@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
+// При добавлении полей необходимо дорабатывать метод клонирование MedicalTopicService.clone()
 public class MedicalTopic {
 
     @Id
@@ -14,7 +15,7 @@ public class MedicalTopic {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MedicalTask> medicalTasks;
 
     public void setId(Long id) {

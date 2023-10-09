@@ -1,0 +1,1 @@
+drop table five_variant_task_quizzes;
