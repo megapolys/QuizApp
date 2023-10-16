@@ -2,7 +2,7 @@ package com.example.servingwebcontent.domain.quiz.task;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "quiz_task_yes_or_no")
 public class YesOrNoTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -179,7 +179,7 @@ public class MedicalController {
             @PathVariable MedicalTask task,
             RedirectAttributes redirectAttributes
     ) {
-        medicalTopicService.deleteTask(topic, task);
+        medicalTopicService.deleteTask(task);
         return "redirect:/medical/{topic}";
     }
 

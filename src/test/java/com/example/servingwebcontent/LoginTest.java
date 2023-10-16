@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -106,9 +107,25 @@ public class LoginTest {
     }
 
     @Test
-    public void userLoginFailed() throws Exception {
-        this.mockMvc.perform(post("/login").param("username", "kiril"))
+    public void userLoginFailedNoPassword() throws Exception {
+        this.mockMvc.perform(post("/login").param("username", "kiril").with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    public void userLoginFailedNoToken() throws Exception {
+        this.mockMvc.perform(post("/login").param("username", "kiril").param("password", "kirilPass"))
                 .andDo(print())
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void userLoginSuccess() throws Exception {
+        this.mockMvc.perform(post("/login").param("username", "kiril").param("password", "kirilPass").with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
     }
 }

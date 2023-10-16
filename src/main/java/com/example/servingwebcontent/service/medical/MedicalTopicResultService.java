@@ -36,12 +36,10 @@ public class MedicalTopicResultService {
     private final MedicalTopicInvokeService topicInvokeService;
     private final MedicalTopicResultRepository topicResultRepository;
     private final MedicalTaskResultRepository taskResultRepository;
-    private final UserRepository userRepository;
 
-    public MedicalTopicResultService(MedicalTopicInvokeService topicInvokeService, MedicalTopicResultRepository topicResultRepository, UserRepository userRepository, MedicalTaskResultRepository taskResultRepository) {
+    public MedicalTopicResultService(MedicalTopicInvokeService topicInvokeService, MedicalTopicResultRepository topicResultRepository, MedicalTaskResultRepository taskResultRepository) {
         this.topicInvokeService = topicInvokeService;
         this.topicResultRepository = topicResultRepository;
-        this.userRepository = userRepository;
         this.taskResultRepository = taskResultRepository;
     }
 
@@ -129,7 +127,6 @@ public class MedicalTopicResultService {
         return new ResultBean(result, tasks, decisionsList, score, score >= yellowRatio, score >= redRatio, progress);
     }
 
-    @Transactional
     public void deleteResult(Long topicResultId) {
         topicResultRepository.deleteById(topicResultId);
     }

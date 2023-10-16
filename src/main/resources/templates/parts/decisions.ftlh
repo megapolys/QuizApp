@@ -62,7 +62,7 @@
                                                                'group-${(decision.group.id)!"nonGroup"}-${decisionsName}',
                                                                '${decisionsName}-${decision.id}'
                                                                )"
-                                                >
+                                                />
                                                 <label class="form-check-label" for="${decisionsName}-${decision.id}">
                                                     ${decision.name}
                                                 </label>
@@ -103,7 +103,7 @@
                 Выбранные решения:
             </div>
             <div class="col-4">
-                <input class="form-control" list="${decisionsName}-decisionList" id="${decisionsName}-list" placeholder="Вводи решение">
+                <input class="form-control" list="${decisionsName}-decisionList" id="${decisionsName}-list" placeholder="Вводи решение"/>
                 <datalist id="${decisionsName}-decisionList">
                     <#list groups as group>
                         <#list group.decisions as decision>

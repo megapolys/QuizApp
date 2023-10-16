@@ -9,8 +9,13 @@ public class MedicalTaskResult {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medical_task_id")
     private MedicalTask medicalTask;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_result_id")
+    private MedicalTopicResult topicResult;
 
     private Float value;
 
@@ -46,5 +51,13 @@ public class MedicalTaskResult {
 
     public void setAltScore(Float altScore) {
         this.altScore = altScore;
+    }
+
+    public MedicalTopicResult getTopicResult() {
+        return topicResult;
+    }
+
+    public void setTopicResult(MedicalTopicResult topicResult) {
+        this.topicResult = topicResult;
     }
 }

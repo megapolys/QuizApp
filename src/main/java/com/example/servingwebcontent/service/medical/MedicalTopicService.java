@@ -36,9 +36,7 @@ public class MedicalTopicService {
         medicalTopicRepository.save(topic);
     }
 
-    @Transactional
     public void delete(MedicalTopic topic) {
-        medicalTopicResultRepository.deleteAllByMedicalTopic(topic);
         medicalTopicRepository.delete(topic);
     }
 
@@ -58,14 +56,7 @@ public class MedicalTopicService {
         }
     }
 
-    @Transactional
-    public void deleteTask(MedicalTopic topic, MedicalTask task) {
-        for (MedicalTopicResult result : medicalTopicResultRepository.findAllByMedicalTopic(topic)) {
-            if (result.getResults().removeIf(t -> Objects.equals(t.getMedicalTask().getId(), task.getId()))) {
-                medicalTopicResultRepository.save(result);
-            }
-        }
-        medicalTaskResultRepository.deleteAllByMedicalTask(task);
+    public void deleteTask(MedicalTask task) {
         medicalTaskRepository.delete(task);
     }
 

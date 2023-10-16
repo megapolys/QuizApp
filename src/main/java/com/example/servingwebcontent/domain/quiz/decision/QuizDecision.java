@@ -2,7 +2,7 @@ package com.example.servingwebcontent.domain.quiz.decision;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "decision")
 public class QuizDecision {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

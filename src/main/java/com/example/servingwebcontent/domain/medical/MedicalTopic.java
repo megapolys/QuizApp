@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain.medical;
 
+import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -17,6 +18,9 @@ public class MedicalTopic {
 
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MedicalTask> medicalTasks;
+
+    @OneToMany(mappedBy = "medicalTopic", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<MedicalTopicResult> medicalTopicResults;
 
     public void setId(Long id) {
         this.id = id;
@@ -40,5 +44,13 @@ public class MedicalTopic {
 
     public void setMedicalTasks(Set<MedicalTask> medicalTasks) {
         this.medicalTasks = medicalTasks;
+    }
+
+    public Set<MedicalTopicResult> getMedicalTopicResults() {
+        return medicalTopicResults;
+    }
+
+    public void setMedicalTopicResults(Set<MedicalTopicResult> medicalTopicResults) {
+        this.medicalTopicResults = medicalTopicResults;
     }
 }

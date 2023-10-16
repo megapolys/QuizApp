@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
-@Entity
+@Entity(name = "quiz_task_five_variant")
 public class FiveVariantTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

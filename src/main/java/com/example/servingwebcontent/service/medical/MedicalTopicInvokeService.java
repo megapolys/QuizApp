@@ -53,6 +53,7 @@ public class MedicalTopicInvokeService {
         final Set<MedicalTaskResult> topicTaskResults = topic.getMedicalTasks().stream().map(task -> {
             final MedicalTaskResult taskResult = new MedicalTaskResult();
             taskResult.setMedicalTask(task);
+            taskResult.setTopicResult(topicResult);
             return taskResult;
         }).collect(Collectors.toSet());
         topicResult.setResults(topicTaskResults);

@@ -14,12 +14,13 @@ public class MedicalTopicResult {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "medical_topic_id")
     private MedicalTopic medicalTopic;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "topicResult", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MedicalTaskResult> results;
 
     @Column(name = "complete_date")

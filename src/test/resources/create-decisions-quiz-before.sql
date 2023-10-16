@@ -1,7 +1,7 @@
 delete from quiz_task_decisions;
 delete from quiz_task;
 delete from quiz;
-delete from quiz_decision;
+delete from decision;
 delete from decision_group;
 
 insert into decision_group(id, name) values
@@ -10,7 +10,7 @@ insert into decision_group(id, name) values
                                          (3, 'group3');
 alter sequence decision_group_seq restart with 4;
 
-insert into quiz_decision(id, name, description, group_id) values
+insert into decision(id, name, description, group_id) values
                                                             (1, 'dec1', 'description1', null),
                                                             (2, 'dec1-2', 'description1', null),
                                                             (3, 'dec3', 'description3', null),
@@ -19,7 +19,7 @@ insert into quiz_decision(id, name, description, group_id) values
                                                             (5, 'dec5', 'description5', 1),
 
                                                             (6, 'dec6', 'description6', 2);
-alter sequence quiz_decision_seq restart with 7;
+alter sequence decision_seq restart with 7;
 
 insert into quiz(id, name, short_name) values (1, 'quiz', 'short_name');
 

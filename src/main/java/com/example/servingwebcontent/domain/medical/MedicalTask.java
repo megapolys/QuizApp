@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.domain.medical;
 
+import com.example.servingwebcontent.domain.medical.result.MedicalTaskResult;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import jakarta.persistence.*;
 
@@ -18,6 +19,9 @@ public class MedicalTask {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private MedicalTopic topic;
+
+    @OneToMany(mappedBy = "medicalTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<MedicalTaskResult> medicalTaskResults;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<QuizDecision> leftDecisions;
@@ -107,5 +111,13 @@ public class MedicalTask {
 
     public void setTopic(MedicalTopic topic) {
         this.topic = topic;
+    }
+
+    public Set<MedicalTaskResult> getMedicalTaskResults() {
+        return medicalTaskResults;
+    }
+
+    public void setMedicalTaskResults(Set<MedicalTaskResult> medicalTaskResults) {
+        this.medicalTaskResults = medicalTaskResults;
     }
 }

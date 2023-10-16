@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         <#list topics as topic>
-            <tr>
+            <tr data-id="${topic.name}">
                 <td>${topic.name}</td>
                 <td>${(topic.medicalTasks)?has_content?then(topic.medicalTasks?size?c, "пусто")}</td>
                 <td><a href="/medical/copy/${topic.id?c}">Скопировать</a></td>
