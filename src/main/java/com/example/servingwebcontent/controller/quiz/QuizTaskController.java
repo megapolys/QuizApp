@@ -220,7 +220,7 @@ public class QuizTaskController {
         }
     }
 
-    @GetMapping("/delete/{task}")
+    @PostMapping("/delete/{task}")
     public String deleteQuizTask(
             @PathVariable QuizTask task,
             RedirectAttributes redirectAttributes

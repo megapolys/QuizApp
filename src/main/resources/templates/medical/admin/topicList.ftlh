@@ -2,7 +2,7 @@
 <#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <h3 class="mb-3">Список анализов</h3>
-    <form class="mb-3" action="/medical/add" method="get">
+    <form class="mb-3" action="/medical/add" method="post">
         <div class="row">
             <div class="col-8">
                 <input class="form-control" type="text" name="name" placeholder="Наименование анализа"/>
@@ -10,6 +10,7 @@
             <div class="col-2">
                 <button class="btn btn-primary" type="submit">Добавить</button>
             </div>
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         </div>
     </form>
     <table id="medical-topic-table" class="table table-striped">
@@ -27,7 +28,7 @@
             <tr data-id="${topic.name}">
                 <td>${topic.name}</td>
                 <td>${(topic.medicalTasks)?has_content?then(topic.medicalTasks?size?c, "пусто")}</td>
-                <td><a href="/medical/copy/${topic.id?c}">Скопировать</a></td>
+                <td><@modal.postButton "/medical/copy/${topic.id?c}" "Скопировать"/></td>
                 <td><a href="/medical/${topic.id?c}">Редактировать</a></td>
                 <td>
                     <@modal.deleteConfirm path="/medical/delete/${topic.id?c}"

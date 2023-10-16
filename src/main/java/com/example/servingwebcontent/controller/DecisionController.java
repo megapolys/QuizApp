@@ -7,10 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -32,7 +29,7 @@ public class DecisionController {
         return "decisions/decisions";
     }
 
-    @GetMapping("/group/add")
+    @PostMapping("/group/add")
     public String addGroup(
             @RequestParam String name,
             RedirectAttributes redirectAttributes
@@ -51,7 +48,7 @@ public class DecisionController {
         return "redirect:/decisions";
     }
 
-    @GetMapping("/group/update/{group}")
+    @PostMapping("/group/update/{group}")
     public String groupUpdate(
             @PathVariable DecisionGroup group,
             @RequestParam(required = false) String name,
@@ -84,7 +81,7 @@ public class DecisionController {
         return "redirect:/decisions";
     }
 
-    @GetMapping("/group/delete/{group}")
+    @PostMapping("/group/delete/{group}")
     public String groupDelete(
             @PathVariable DecisionGroup group,
             RedirectAttributes redirectAttributes
@@ -94,7 +91,7 @@ public class DecisionController {
         return "redirect:/decisions";
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public String addDecision(
             @RequestParam(required = false) DecisionGroup group,
             @RequestParam String name,
@@ -118,7 +115,7 @@ public class DecisionController {
         return "redirect:/decisions";
     }
 
-    @GetMapping("/update/{decision}")
+    @PostMapping("/update/{decision}")
     public String decisionUpdate(
             @PathVariable QuizDecision decision,
             @RequestParam String name,
@@ -155,7 +152,7 @@ public class DecisionController {
         return "redirect:/decisions";
     }
 
-    @GetMapping("/delete/{decision}")
+    @PostMapping("/delete/{decision}")
     public String deleteDecision(
             @PathVariable QuizDecision decision,
             RedirectAttributes redirectAttributes

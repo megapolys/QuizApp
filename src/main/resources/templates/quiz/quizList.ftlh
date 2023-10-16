@@ -2,7 +2,7 @@
 <#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <h3 class="mb-3">Список тестов</h3>
-    <form class="mb-3" action="/quiz/add" method="get">
+    <form class="mb-3" action="/quiz/add" method="post">
         <div class="row">
             <div class="col-2">
                 <input class="form-control" type="text" name="shortName" placeholder="Индекс"/>
@@ -11,6 +11,7 @@
                 <input class="form-control" type="text" name="name" placeholder="Наименование теста"/>
             </div>
             <div class="col-2">
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <button class="btn btn-primary" type="submit">Добавить</button>
             </div>
         </div>

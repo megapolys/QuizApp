@@ -35,7 +35,7 @@ public class MedicalController {
         return "medical/admin/topicList";
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public String addTopic(
             @RequestParam String name,
             RedirectAttributes redirectAttributes
@@ -44,7 +44,7 @@ public class MedicalController {
         return "redirect:/medical/list";
     }
 
-    @GetMapping("/copy/{topic}")
+    @PostMapping("/copy/{topic}")
     public String copyTopic(
             @PathVariable MedicalTopic topic,
             RedirectAttributes redirectAttributes
@@ -57,7 +57,7 @@ public class MedicalController {
         return "redirect:/medical/list";
     }
 
-    @GetMapping("/rename/{topic}")
+    @PostMapping("/rename/{topic}")
     public String renameTopic(
             @PathVariable MedicalTopic topic,
             @RequestParam String name,
@@ -81,7 +81,7 @@ public class MedicalController {
         }
     }
 
-    @GetMapping("/delete/{topic}")
+    @PostMapping("/delete/{topic}")
     public String delete(
             @PathVariable MedicalTopic topic
     ) {
@@ -173,7 +173,7 @@ public class MedicalController {
         return result;
     }
 
-    @GetMapping("/{topic}/task/delete/{task}")
+    @PostMapping("/{topic}/task/delete/{task}")
     public String deleteTask(
             @PathVariable MedicalTopic topic,
             @PathVariable MedicalTask task,

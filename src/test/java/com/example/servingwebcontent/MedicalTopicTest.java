@@ -95,7 +95,7 @@ public class MedicalTopicTest {
         final String topicName = "topic";
         final String topicName1 = "topic-1";
         final MedicalTopic medicalTopic = addTopicSuccess(topicName);
-        this.mockMvc.perform(get("/medical/rename/" + medicalTopic.getId()).param("name", topicName1))
+        this.mockMvc.perform(post("/medical/rename/" + medicalTopic.getId()).param("name", topicName1).with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/medical/" + medicalTopic.getId()))
@@ -113,7 +113,7 @@ public class MedicalTopicTest {
     public void renameTopicFailedEmptyName() throws Exception {
         final String topicName = "topic";
         final MedicalTopic medicalTopic = addTopicSuccess(topicName);
-        this.mockMvc.perform(get("/medical/rename/" + medicalTopic.getId()).param("name", ""))
+        this.mockMvc.perform(post("/medical/rename/" + medicalTopic.getId()).param("name", "").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/medical/" + medicalTopic.getId()))
@@ -132,7 +132,7 @@ public class MedicalTopicTest {
         final String topicName1 = "topic-1";
         final MedicalTopic medicalTopic = addTopicSuccess(topicName);
         addTopicSuccess(topicName1);
-        this.mockMvc.perform(get("/medical/rename/" + medicalTopic.getId()).param("name", topicName1))
+        this.mockMvc.perform(post("/medical/rename/" + medicalTopic.getId()).param("name", topicName1).with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/medical/" + medicalTopic.getId()))
@@ -157,7 +157,7 @@ public class MedicalTopicTest {
     }
 
     private MedicalTopic addTopicSuccess(String name) throws Exception {
-        this.mockMvc.perform(get("/medical/add").param("name", name))
+        this.mockMvc.perform(post("/medical/add").param("name", name).with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/medical/list"))
                 .andExpect(flash().attribute("successMessage", notNullValue()))
@@ -167,7 +167,7 @@ public class MedicalTopicTest {
     }
 
     private void addTopicFailed(String name) throws Exception {
-        this.mockMvc.perform(get("/medical/add").param("name", name))
+        this.mockMvc.perform(post("/medical/add").param("name", name).with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/medical/list"))
                 .andExpect(flash().attribute("message", notNullValue()))

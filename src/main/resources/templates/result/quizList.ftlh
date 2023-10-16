@@ -69,11 +69,11 @@
                 <td>${(quiz.quiz().taskList)?has_content?then(quiz.quiz().taskList?size?c, "пусто")}</td>
                 <td>
                     <#if !quiz.exists()>
-                        <a href="/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}">Назначить</a>
+                        <@modal.postButton "/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}" "Назначить"/>
                     <#elseif quiz.inProgress()>
                         <div>Уже назначено</div>
                     <#else>
-                        <a href="/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}">Назначить еще раз</a>
+                        <@modal.postButton "/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}" "Назначить еще раз"/>
                     </#if>
                 </td>
             </tr>

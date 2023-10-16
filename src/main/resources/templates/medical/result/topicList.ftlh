@@ -73,11 +73,11 @@
                 <td>${(topic.topic().medicalTasks)?has_content?then(topic.topic().medicalTasks?size?c, "пусто")}</td>
                 <td>
                     <#if !topic.exists()>
-                        <a href="/result/topic/${user.id?c}/newTopic/${topic.topic().id?c}">Назначить</a>
+                        <@modal.postButton "/result/topic/${user.id?c}/newTopic/${topic.topic().id?c}" "Назначить"/>
                     <#elseif topic.inProgress()>
                         <div>Уже назначено</div>
                     <#else>
-                        <a href="/result/topic/${user.id?c}/newTopic/${topic.topic().id?c}">Назначить еще раз</a>
+                        <@modal.postButton "/result/topic/${user.id?c}/newTopic/${topic.topic().id?c}" "Назначить еще раз"/>
                     </#if>
                 </td>
             </tr>

@@ -1,6 +1,5 @@
 package com.example.servingwebcontent;
 
-import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
 import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
@@ -15,10 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -71,7 +71,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionAddWithGroupTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/add")
+        this.mockMvc.perform(post("/decisions/add").with(csrf())
                         .param("group", "1")
                         .param("name", "dec001")
                         .param("description", "description")
@@ -95,7 +95,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionAddNoGroupNoDescriptionTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/add")
+        this.mockMvc.perform(post("/decisions/add").with(csrf())
                         .param("group", "")
                         .param("name", "dec001")
                         .param("description", "")
@@ -119,7 +119,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionAddInEmptyGroupTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/add")
+        this.mockMvc.perform(post("/decisions/add").with(csrf())
                         .param("group", "3")
                         .param("name", "dec001")
                         .param("description", "description")
@@ -141,7 +141,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionAddSameNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/add")
+        this.mockMvc.perform(post("/decisions/add").with(csrf())
                         .param("group", "1")
                         .param("name", "dec1")
                         .param("description", "description")
@@ -164,7 +164,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionAddEmptyNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/add")
+        this.mockMvc.perform(post("/decisions/add").with(csrf())
                         .param("group", "1")
                         .param("name", "")
                         .param("description", "description")
@@ -186,7 +186,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateGroupTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/1")
+        this.mockMvc.perform(post("/decisions/update/1").with(csrf())
                         .param("group", "3")
                         .param("name", "dec1")
                         .param("description", "description1")
@@ -211,7 +211,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/1")
+        this.mockMvc.perform(post("/decisions/update/1").with(csrf())
                         .param("group", "")
                         .param("name", "dec1-3")
                         .param("description", "description1")
@@ -235,7 +235,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateDescriptionTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/1")
+        this.mockMvc.perform(post("/decisions/update/1").with(csrf())
                         .param("group", "")
                         .param("name", "dec1")
                         .param("description", "description1-3")
@@ -259,7 +259,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateNoChangeTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/1")
+        this.mockMvc.perform(post("/decisions/update/1").with(csrf())
                         .param("group", "")
                         .param("name", "dec1")
                         .param("description", "description1")
@@ -283,7 +283,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateAll1Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/1")
+        this.mockMvc.perform(post("/decisions/update/1").with(csrf())
                         .param("group", "1")
                         .param("name", "dec2-2")
                         .param("description", "description2-2")
@@ -307,7 +307,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionUpdateAll6Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/update/6")
+        this.mockMvc.perform(post("/decisions/update/6").with(csrf())
                         .param("group", "")
                         .param("name", "dec1-3")
                         .param("description", "description1-3")
@@ -341,7 +341,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionDelete1Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/delete/1"))
+        this.mockMvc.perform(post("/decisions/delete/1").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -359,7 +359,7 @@ public class DecisionsTest {
 
     @Test
     public void decisionDelete4Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/delete/4"))
+        this.mockMvc.perform(post("/decisions/delete/4").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -379,7 +379,7 @@ public class DecisionsTest {
     @Sql(value = {"/create-user-before.sql", "/create-decisions-quiz-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/delete-decisions-quiz-after.sql", "/delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void decisionQuizDeleteTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/delete/5"))
+        this.mockMvc.perform(post("/decisions/delete/5").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -416,7 +416,7 @@ public class DecisionsTest {
 
     @Test
     public void groupAddTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/add")
+        this.mockMvc.perform(post("/decisions/group/add").with(csrf())
                         .param("name", "group")
                 )
                 .andDo(print())
@@ -442,7 +442,7 @@ public class DecisionsTest {
 
     @Test
     public void groupAddSameNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/add")
+        this.mockMvc.perform(post("/decisions/group/add").with(csrf())
                         .param("name", "group1")
                 )
                 .andDo(print())
@@ -466,7 +466,7 @@ public class DecisionsTest {
 
     @Test
     public void groupAddEmptyNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/add")
+        this.mockMvc.perform(post("/decisions/group/add").with(csrf())
                         .param("name", "")
                 )
                 .andDo(print())
@@ -490,7 +490,7 @@ public class DecisionsTest {
 
     @Test
     public void groupUpdateTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/update/1")
+        this.mockMvc.perform(post("/decisions/group/update/1").with(csrf())
                         .param("name", "group1-1")
                 )
                 .andDo(print())
@@ -514,7 +514,7 @@ public class DecisionsTest {
 
     @Test
     public void groupUpdateSameNameFailedTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/update/1")
+        this.mockMvc.perform(post("/decisions/group/update/1").with(csrf())
                         .param("name", "group2")
                 )
                 .andDo(print())
@@ -538,7 +538,7 @@ public class DecisionsTest {
 
     @Test
     public void groupUpdateSameNameTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/update/1")
+        this.mockMvc.perform(post("/decisions/group/update/1").with(csrf())
                         .param("name", "group1")
                 )
                 .andDo(print())
@@ -572,7 +572,7 @@ public class DecisionsTest {
 
     @Test
     public void groupDelete1Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/delete/1"))
+        this.mockMvc.perform(post("/decisions/group/delete/1").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -595,7 +595,7 @@ public class DecisionsTest {
 
     @Test
     public void groupDelete3Test() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/delete/3"))
+        this.mockMvc.perform(post("/decisions/group/delete/3").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -618,7 +618,7 @@ public class DecisionsTest {
     @Sql(value = {"/create-user-before.sql", "/create-decisions-quiz-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = {"/delete-decisions-quiz-after.sql", "/delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void groupQuizDeleteTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/delete/1"))
+        this.mockMvc.perform(post("/decisions/group/delete/1").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/decisions"))
@@ -644,7 +644,7 @@ public class DecisionsTest {
 
     @Test
     public void groupDeleteNotExistsTest() throws Exception {
-        this.mockMvc.perform(get("/decisions/group/delete/4"))
+        this.mockMvc.perform(post("/decisions/group/delete/4").with(csrf()))
                 .andDo(print())
                 .andExpect(status().is5xxServerError());
     }

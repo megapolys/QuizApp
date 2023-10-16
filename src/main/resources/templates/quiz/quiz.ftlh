@@ -7,11 +7,12 @@
     <a class="btn btn-primary mb-3" href="/quiz/list">Назад</a>
     <h3 class="mb-3">Страница редактирования теста "${quiz.name}"</h3>
     <div class="row mb-5">
-        <form action="/quiz/rename/${quiz.id?c}" method="get">
+        <form action="/quiz/rename/${quiz.id?c}" method="post">
             <div class="input-group">
                 <input class="form-control" style="width: 5%" type="text" value="${quiz.shortName}" name="shortName"/>
                 <input class="form-control" style="width: 75%" type="text" value="${quiz.name}" name="name"
                        placeholder="Неужели так сложно придумать название для теста"/>
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <button class="btn btn-primary" type="submit">Переименовать</button>
             </div>
         </form>

@@ -6,9 +6,10 @@
     <a class="btn btn-primary mb-3" href="/medical/list">Назад</a>
     <h3 class="mb-3">Страница редактирования "${topic.name}"</h3>
     <div class="row mb-5">
-        <form action="/medical/rename/${topic.id?c}" method="get">
+        <form action="/medical/rename/${topic.id?c}" method="post">
             <div class="input-group">
                 <input class="form-control" style="width: 75%" type="text" value="${topic.name}" name="name" placeholder="Название топика"/>
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <button class="btn btn-primary" type="submit">Переименовать</button>
             </div>
         </form>

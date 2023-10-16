@@ -40,7 +40,7 @@ public class QuizResultController {
         return "result/quizList";
     }
 
-    @GetMapping("/{userId}/newQuiz/{quiz}")
+    @PostMapping("/{userId}/newQuiz/{quiz}")
     public String newQuiz(
             @PathVariable Long userId,
             @PathVariable Quiz quiz,
@@ -51,7 +51,7 @@ public class QuizResultController {
         return "redirect:/result/quiz/{userId}";
     }
 
-    @GetMapping("/{userId}/delete/{quizResultId}")
+    @PostMapping("/{userId}/delete/{quizResultId}")
     public String deleteQuizResult(
             @PathVariable Long userId,
             @PathVariable Long quizResultId,

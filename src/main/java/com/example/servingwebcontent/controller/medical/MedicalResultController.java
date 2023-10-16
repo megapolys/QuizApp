@@ -40,7 +40,7 @@ public class MedicalResultController {
         return "medical/result/topicList";
     }
 
-    @GetMapping("/{userId}/newTopic/{topic}")
+    @PostMapping("/{userId}/newTopic/{topic}")
     public String newTopic(
             @PathVariable Long userId,
             @PathVariable MedicalTopic topic,
@@ -51,7 +51,7 @@ public class MedicalResultController {
         return "redirect:/result/topic/{userId}";
     }
 
-    @GetMapping("/{userId}/delete/{topicResultId}")
+    @PostMapping("/{userId}/delete/{topicResultId}")
     public String deleteTopicResult(
             @PathVariable Long userId,
             @PathVariable Long topicResultId,

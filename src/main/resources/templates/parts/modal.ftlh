@@ -32,9 +32,19 @@
                     ${text}
                 </div>
                 <div class="modal-footer">
-                    <a class="btn btn-danger" href="${path}">Удалить</a>
+                    <form action="${path}" method="post">
+                        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                        <button class="btn btn-danger" type="submit">Удалить</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</#macro>
+
+<#macro postButton path text>
+    <form action="${path}" method="post">
+        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+        <button class="btn btn-link" type="submit">${text}</button>
+    </form>
 </#macro>
