@@ -83,9 +83,11 @@ public class MedicalController {
 
     @PostMapping("/delete/{topic}")
     public String delete(
-            @PathVariable MedicalTopic topic
+            @PathVariable MedicalTopic topic,
+            RedirectAttributes redirectAttributes
     ) {
         medicalTopicService.delete(topic);
+        redirectAttributes.addFlashAttribute("successMessage", "Анализы успешно удалены");
         return "redirect:/medical/list";
     }
 
@@ -180,6 +182,7 @@ public class MedicalController {
             RedirectAttributes redirectAttributes
     ) {
         medicalTopicService.deleteTask(task);
+        redirectAttributes.addFlashAttribute("successMessage", "Анализ успешно удален");
         return "redirect:/medical/{topic}";
     }
 

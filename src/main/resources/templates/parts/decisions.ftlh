@@ -107,11 +107,11 @@
                 <datalist id="${decisionsName}-decisionList">
                     <#list groups as group>
                         <#list group.decisions as decision>
-                            <option for="#${decisionsName}-${decision.id}" value="${group.name} _ ${decision.name}">
+                            <option for="#${decisionsName}-${decision.id}" value="${group.name} _ ${decision.name}"/>
                         </#list>
                     </#list>
                     <#list noGroupDecisions as decision>
-                        <option for="#${decisionsName}-${decision.id}" value="${decision.name}">
+                        <option for="#${decisionsName}-${decision.id}" value="${decision.name}"/>
                     </#list>
                 </datalist>
             </div>

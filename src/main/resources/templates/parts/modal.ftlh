@@ -45,6 +45,6 @@
 <#macro postButton path text>
     <form action="${path}" method="post">
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <button class="btn btn-link" type="submit">${text}</button>
+        <button class="btn btn-link p-0 mb-1" type="submit">${text}</button>
     </form>
 </#macro>

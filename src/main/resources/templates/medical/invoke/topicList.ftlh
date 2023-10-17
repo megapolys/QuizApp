@@ -2,7 +2,7 @@
 <#include "../../parts/security.ftlh">
 <@c.page>
     <h3 class="mb-3">Список анализов</h3>
-    <table class="table table-striped">
+    <table id="topic-invoke-table" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 30%">Наименование</th>
@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         <#list topics as topic>
-            <tr>
+            <tr data-id="${topic.name()}">
                 <td>${topic.name()}</td>
                 <td>
                     <a href="/invokeTopic/${topic.topicResultId()?c}">

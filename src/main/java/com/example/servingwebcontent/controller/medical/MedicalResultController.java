@@ -48,6 +48,7 @@ public class MedicalResultController {
     ) {
         topicInvokeService.startTopic(userId, topic);
         redirectAttributes.addAttribute("userId", userId);
+        redirectAttributes.addFlashAttribute("successMessage", "Анализы назначены успешно.");
         return "redirect:/result/topic/{userId}";
     }
 
@@ -59,6 +60,7 @@ public class MedicalResultController {
     ) {
         topicResultService.deleteResult(topicResultId);
         redirectAttributes.addAttribute("userId", userId);
+        redirectAttributes.addFlashAttribute("successMessage", "Результаты анализов успешно удалены.");
         return "redirect:/result/topic/{userId}";
     }
 
