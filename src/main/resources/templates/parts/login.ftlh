@@ -1,7 +1,4 @@
 <#-- @ftlvariable name="user" type="com.example.servingwebcontent.domain.User" -->
-<#macro login path>
-    <@loginForm path false false false true/>
-</#macro>
 <#macro registration path>
     <@loginForm path true false false/>
 </#macro>
@@ -12,7 +9,7 @@
     <@loginForm path false false true/>
 </#macro>
 
-<#macro loginForm path registration edit passwordOnly regButton=false>
+<#macro loginForm path registration edit passwordOnly>
     <form <#if registration>id="recaptcha-form"</#if> action="${path}" method="post">
         <div class="col-5 mb-3">
             <#if !passwordOnly>
@@ -71,7 +68,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="inputYearBorn" class="form-label">Год рождения</label>
-                    <input id="inputYearBorn" class="form-control" type="number" min="1900" max="2023" name="yearBorn"
+                    <input id="inputYearBorn" class="form-control" type="number" min="1900" max="2100" name="yearBorn"
                            value="${(user.yearBorn)!?c}">
                 </div>
             </#if>
@@ -84,9 +81,6 @@
                 </button>
             <#else>
                 <button type="submit" class="btn btn-primary">Жмяк</button>
-                <#if regButton>
-                    <a href="/registration" class="btn btn-primary ms-4">Регистрация</a>
-                </#if>
             </#if>
         </div>
     </form>

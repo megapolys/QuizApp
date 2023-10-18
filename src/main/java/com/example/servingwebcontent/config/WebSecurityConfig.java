@@ -34,8 +34,8 @@ public class WebSecurityConfig {
                         .permitAll()
                 )
                 .rememberMe((remember) -> remember.rememberMeServices(rememberMeServices))
-                .logout(LogoutConfigurer::permitAll);
-
+                .logout(LogoutConfigurer::permitAll)
+        ;
         return http.build();
     }
 
