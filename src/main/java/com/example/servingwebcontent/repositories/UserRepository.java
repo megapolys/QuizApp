@@ -4,17 +4,19 @@ import com.example.servingwebcontent.model.entities.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long> {
-    List<User> findByUsernameContaining(String name);
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
-    User findByUsername(String name);
+    List<UserEntity> findAll();
 
-    User findByEmail(String email);
+    Optional<UserEntity> findByUsername(String name);
 
-    User findByActivationCode(String code);
+    Optional<UserEntity> findByEmail(String email);
 
-    User findByUsernameOrEmail(String username, String email);
+    Optional<UserEntity> findByActivationCode(String code);
 
-    User findByRepairPasswordCode(String repairPasswordCode);
+    boolean existsByRepairPasswordCode(String repairPasswordCode);
+
+    Optional<UserEntity> findByRepairPasswordCode(String repairPasswordCode);
 }

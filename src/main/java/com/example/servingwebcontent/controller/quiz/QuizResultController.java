@@ -1,9 +1,9 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.result.QuizResult;
-import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.service.quiz.QuizInvokeService;
 import com.example.servingwebcontent.service.quiz.QuizResultService;
 import com.example.servingwebcontent.service.quiz.QuizService;

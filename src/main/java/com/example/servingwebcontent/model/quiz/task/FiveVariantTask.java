@@ -1,11 +1,10 @@
 package com.example.servingwebcontent.model.quiz.task;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-import java.util.Set;
-
-@Entity(name = "quiz_task_five_variant")
 public class FiveVariantTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,16 +1,17 @@
 package com.example.servingwebcontent.service.medical;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.MedicalTask;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.medical.MedicalTask;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 @Service
 public class MedicalTopicService {
@@ -32,11 +33,11 @@ public class MedicalTopicService {
     }
 
     public void save(MedicalTopic topic) {
-        medicalTopicRepository.save(topic);
+//        medicalTopicRepository.save(topic);
     }
 
     public void delete(MedicalTopic topic) {
-        medicalTopicRepository.delete(topic);
+//        medicalTopicRepository.delete(topic);
     }
 
     public boolean contains(String name) {
@@ -56,7 +57,7 @@ public class MedicalTopicService {
     }
 
     public void deleteTask(MedicalTask task) {
-        medicalTaskRepository.delete(task);
+//        medicalTaskRepository.delete(task);
     }
 
     public boolean updateTask(MedicalTopic topic, MedicalTask task) {

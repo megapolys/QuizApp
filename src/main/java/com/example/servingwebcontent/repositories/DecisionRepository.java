@@ -1,15 +1,14 @@
 package com.example.servingwebcontent.repositories;
 
-import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.entities.quiz.decision.DecisionEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface DecisionRepository extends CrudRepository<QuizDecision, Long> {
-    QuizDecision findByName(String name);
+public interface DecisionRepository extends CrudRepository<DecisionEntity, Long> {
+	DecisionEntity findByName(String name);
 
-    List<QuizDecision> findAllByOrderByName();
+	List<DecisionEntity> findAllByOrderByName();
 
-    List<QuizDecision> findAllByGroup(DecisionGroup group);
+//    List<DecisionEntity> findAllByGroup(DecisionGroup group);
 }

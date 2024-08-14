@@ -3,7 +3,6 @@ package com.example.servingwebcontent.model.quiz.result;
 import com.example.servingwebcontent.model.quiz.QuizTask;
 import jakarta.persistence.*;
 
-@Entity
 public class QuizTaskResult {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

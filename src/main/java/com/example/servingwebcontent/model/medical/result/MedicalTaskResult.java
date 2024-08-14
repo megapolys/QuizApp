@@ -3,7 +3,6 @@ package com.example.servingwebcontent.model.medical.result;
 import com.example.servingwebcontent.model.medical.MedicalTask;
 import jakarta.persistence.*;
 
-@Entity
 public class MedicalTaskResult {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

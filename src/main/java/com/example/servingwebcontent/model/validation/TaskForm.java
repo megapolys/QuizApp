@@ -1,13 +1,12 @@
 package com.example.servingwebcontent.model.validation;
 
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import org.springframework.context.annotation.Scope;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
 @Component
-@Scope("session")
+//@Scope("session")
 public class TaskForm {
 
     private int taskId;

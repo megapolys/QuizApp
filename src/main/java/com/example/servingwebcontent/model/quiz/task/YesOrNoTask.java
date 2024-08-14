@@ -1,8 +1,10 @@
 package com.example.servingwebcontent.model.quiz.task;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Entity(name = "quiz_task_yes_or_no")
 public class YesOrNoTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

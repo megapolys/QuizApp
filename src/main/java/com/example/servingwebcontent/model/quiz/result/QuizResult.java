@@ -1,14 +1,12 @@
 package com.example.servingwebcontent.model.quiz.result;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.user.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.Set;
 
-@Entity
 public class QuizResult {
 
     @Id

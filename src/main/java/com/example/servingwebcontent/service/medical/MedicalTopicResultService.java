@@ -1,12 +1,11 @@
 package com.example.servingwebcontent.service.medical;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.MedicalTask;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTaskResult;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.repositories.UserRepository;
+import com.example.servingwebcontent.model.medical.MedicalTask;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -131,7 +130,7 @@ public class MedicalTopicResultService {
     }
 
     public void updateTaskResult(MedicalTaskResult taskResult) {
-        taskResultRepository.save(taskResult);
+//        taskResultRepository.save(taskResult);
     }
 
     public AnalyseForm getAnalyse(MedicalTaskResult result) {

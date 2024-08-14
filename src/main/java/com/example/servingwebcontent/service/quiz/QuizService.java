@@ -1,14 +1,16 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.user.User;
+import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class QuizService {

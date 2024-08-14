@@ -1,0 +1,31 @@
+spring.freemarker:
+  expose-request-attributes: true
+  expose-session-attributes: true
+
+
+spring.servlet.multipart.max-file-size: 1MB
+spring.main.allow-bean-definition-overriding: true
+
+spring.profiles.include:
+  - mail
+  - secret
+  - test
+
+default:
+  fiveVariant:
+    firstWeight: 0
+    secondWeight: 0
+    thirdWeight: 2
+    fourthWeight: 3
+    fifthWeight: 4
+  yesOrNo:
+    noWeight: 0
+    yesWeight: 4
+  ratio:
+    yellow: 2
+    red: 3
+  medical:
+    leftLeft: 4
+    leftMid: 2
+    rightMid: 2
+    rightRight: 4

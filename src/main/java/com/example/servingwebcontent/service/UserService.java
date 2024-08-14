@@ -1,167 +1,81 @@
 package com.example.servingwebcontent.service;
 
-import com.example.servingwebcontent.domain.Role;
-import com.example.servingwebcontent.repositories.UserRepository;
-import com.example.servingwebcontent.domain.User;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.NonNull;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import com.example.servingwebcontent.model.UserResult;
+import com.example.servingwebcontent.model.user.UserSimple;
+import com.example.servingwebcontent.model.user.UserSimpleWithPassword;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.List;
 
-@Service
-public class UserService implements UserDetailsService {
-    @Value("${spring.mail.from}")
-    private String from;
-    @Value("${domain.name}")
-    private String domainName;
+public interface UserService {
 
-    private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
-    private final PasswordEncoder passwordEncoder;
+	/**
+	 * Получение списка пользователей
+	 *
+	 * @return Список пользователей
+	 */
+	List<UserSimple> findAll();
 
-    public UserService(UserRepository userRepository, JavaMailSender mailSender, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.mailSender = mailSender;
-        this.passwordEncoder = passwordEncoder;
-    }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User userByName = userRepository.findByUsername(username);
-        if (userByName != null) {
-            return userByName;
-        }
-        User userByEmail = userRepository.findByEmail(username);
-        if (userByEmail != null) {
-            return userByEmail;
-        }
-        throw new UsernameNotFoundException("Пользователь не найден");
-    }
+	/**
+	 * Получение своего профиля
+	 *
+	 * @param userId - Идентификатор автора запроса
+	 *
+	 * @return Профиль пользователя
+	 */
+	UserSimple getSimpleUserById(Long userId);
 
-    @NonNull
-    public UserResult addUser(User user) {
-        UserResult result = checkUser(user);
-        if (result != null) {
-            return result;
-        }
-        user.setActive(false);
-        user.setRoles(Set.of(Role.USER));
-        user.setActivationCode(UUID.randomUUID().toString());
-        user.setRepairPasswordCode(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        final User savedUser = userRepository.save(user);
-        if (StringUtils.hasText(user.getEmail())) {
-            final String message = String.format(
-                    "Здравствуйте, %s \n" +
-                            "Добро пожаловать на Bodymind State. Пожалуйста перейдите по ссылки для подтверждения регистрации: %s/activate/%s",
-                    user.getUsername(), domainName, user.getActivationCode()
-            );
-            final SimpleMailMessage simpleMessage = new SimpleMailMessage();
-            simpleMessage.setFrom(from);
-            simpleMessage.setTo(user.getEmail());
-            simpleMessage.setSubject("Код активации");
-            simpleMessage.setText(message);
-            mailSender.send(simpleMessage);
-        }
-        return new UserResult(ResultType.SUCCESS, savedUser);
-    }
+	/**
+	 * Изменение своего профиля
+	 *
+	 * @param userId  - Идентификатор автора запроса
+	 * @param newUser - Новые данные профиля
+	 *
+	 * @return Результат изменения
+	 */
+	UserResult updateUser(Long userId, UserSimple newUser);
 
-    @NonNull
-    public UserResult updateUser(User currentUser, User newUser) {
-        currentUser.setUsername(newUser.getUsername());
-        currentUser.setPassword(newUser.getPassword());
-        currentUser.setLastName(newUser.getLastName());
-        currentUser.setFirstName(newUser.getFirstName());
-        currentUser.setEmail(newUser.getEmail());
-        currentUser.setMale(newUser.getMale());
-        if (StringUtils.hasText(newUser.getPassword())) {
-            currentUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        }
-        UserResult result = checkUser(currentUser);
-        if (result != null) {
-            return result;
-        }
-        return new UserResult(ResultType.SUCCESS, userRepository.save(currentUser));
-    }
+	/**
+	 * Регистрация нового пользователя
+	 *
+	 * @param user - Данные профиля
+	 *
+	 * @return Результат регистрации
+	 */
+	UserResult register(UserSimpleWithPassword user);
 
-    private UserResult checkUser(User user) {
-        User byUsername = userRepository.findByUsername(user.getUsername());
-        if (byUsername != null && !Objects.equals(byUsername.getId(), user.getId())) {
-            return new UserResult(ResultType.USERNAME_FOUND, null);
-        }
-        User byEmail = userRepository.findByEmail(user.getEmail());
-        if (byEmail != null && !Objects.equals(byEmail.getId(), user.getId())) {
-            return new UserResult(ResultType.EMAIL_FOUND, null);
-        }
-        return null;
-    }
+	/**
+	 * Активация профиля
+	 *
+	 * @param code - Код активации
+	 *
+	 * @return true - если активация успешна, иначе false
+	 */
+	boolean activateUser(String code);
 
-    public boolean activateUser(String code) {
-        final User user = userRepository.findByActivationCode(code);
+	/**
+	 * Получение ссылки на восстановление пароля
+	 *
+	 * @param email - Почта
+	 *
+	 * @return true - если ссылка отправлена на почту, false - почта не найдена
+	 */
+	boolean repairPassword(String email);
 
-        if (user == null) {
-            return false;
-        }
+	/**
+	 * Поиск профиля по коду восстановления пароля
+	 *
+	 * @param repairPasswordCode - Код восстановления пароля
+	 *
+	 * @return true - если код найден, иначе false
+	 */
+	boolean existsByRepairPasswordCode(String repairPasswordCode);
 
-        user.setActivationCode(null);
-        user.setActive(true);
 
-        userRepository.save(user);
-
-        return true;
-    }
-
-    public UserResult repairPassword(String email) {
-        final User user = userRepository.findByEmail(email);
-        if (user != null) {
-            if (user.getRepairPasswordCode() == null) {
-                user.setRepairPasswordCode(UUID.randomUUID().toString());
-                userRepository.save(user);
-            }
-            final String message = String.format(
-                    "Здравствуйте, %s \n" +
-                            "Ссылка на восстановление пароля для Bodymind State: %s/repairPassword/%s",
-                    user.getUsername(), domainName, user.getRepairPasswordCode()
-            );
-            final SimpleMailMessage simpleMessage = new SimpleMailMessage();
-            simpleMessage.setFrom(from);
-            simpleMessage.setTo(user.getEmail());
-            simpleMessage.setSubject("Восстановление пароля");
-            simpleMessage.setText(message);
-            mailSender.send(simpleMessage);
-            return new UserResult(ResultType.EMAIL_FOUND, user);
-        }
-        return new UserResult(ResultType.FAILED, null);
-    }
-
-    public UserResult findByRepairPasswordCode(String repairPasswordCode) {
-        User user = userRepository.findByRepairPasswordCode(repairPasswordCode);
-        if (user == null) {
-            return new UserResult(ResultType.FAILED, null);
-        }
-        return new UserResult(ResultType.SUCCESS, user);
-    }
-
-    public void updatePassword(User currentUser, User newUser) {
-        currentUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        currentUser.setRepairPasswordCode(null);
-        userRepository.save(currentUser);
-    }
-
-    public enum ResultType {
-        USERNAME_FOUND, EMAIL_FOUND, SUCCESS, FAILED
-    }
-
-    public record UserResult(ResultType result, User user) {
-    }
+	/**
+	 * Изменение пароля
+	 *
+	 * @param repairPasswordCode - Код восстановления пароля
+	 */
+	void updatePassword(String repairPasswordCode, String password);
 }

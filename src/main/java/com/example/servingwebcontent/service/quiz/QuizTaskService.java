@@ -1,12 +1,11 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.quiz.result.QuizResult;
-import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
-import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
-import com.example.servingwebcontent.domain.validation.TaskForm;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
+import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.model.validation.TaskForm;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 

@@ -5,8 +5,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface DecisionGroupRepository extends CrudRepository<DecisionGroup, Long> {
-    List<DecisionGroup> findAllByOrderByName();
+public interface DecisionGroupRepository extends CrudRepository<DecisionGroupEntity, Long> {
+	List<DecisionGroupEntity> findAllByOrderByName();
 
-    DecisionGroup findByName(String name);
+	DecisionGroupEntity findByName(String name);
 }

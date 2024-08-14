@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
-@Entity
 // При добавлении полей необходимо дорабатывать метод клонирование MedicalTopicService.clone()
 public class MedicalTask {
     @Id

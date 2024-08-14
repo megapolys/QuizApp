@@ -2,7 +2,6 @@ package com.example.servingwebcontent.model.quiz.decision;
 
 import jakarta.persistence.*;
 
-@Entity(name = "decision")
 public class QuizDecision {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

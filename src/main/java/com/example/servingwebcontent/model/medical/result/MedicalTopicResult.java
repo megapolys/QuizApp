@@ -1,13 +1,12 @@
 package com.example.servingwebcontent.model.medical.result;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.user.User;
 import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.Set;
 
-@Entity
 public class MedicalTopicResult {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

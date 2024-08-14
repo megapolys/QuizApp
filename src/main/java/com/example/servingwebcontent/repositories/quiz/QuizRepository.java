@@ -5,10 +5,10 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface QuizRepository extends CrudRepository<Quiz, Long> {
+public interface QuizRepository extends CrudRepository<QuizEntity, Long> {
 
-    Quiz findByName(String name);
-    Quiz findByShortName(String quizShortName);
+	QuizEntity findByName(String name);
+	QuizEntity findByShortName(String quizShortName);
 
-    List<Quiz> findAllByOrderByShortName();
+	List<QuizEntity> findAllByOrderByShortName();
 }

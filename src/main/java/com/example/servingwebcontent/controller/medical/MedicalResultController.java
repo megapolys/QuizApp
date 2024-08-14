@@ -1,9 +1,9 @@
 package com.example.servingwebcontent.controller.medical;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTaskResult;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.service.medical.MedicalTopicInvokeService;
 import com.example.servingwebcontent.service.medical.MedicalTopicResultService;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;

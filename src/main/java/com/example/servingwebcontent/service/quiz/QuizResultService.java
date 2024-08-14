@@ -1,13 +1,14 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.quiz.result.QuizResult;
-import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
-import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
-import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
+import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.model.user.User;
+import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
