@@ -1,12 +1,12 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
-import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
-import com.example.servingwebcontent.domain.validation.TaskForm;
-import com.example.servingwebcontent.domain.validation.TaskType;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
+import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
+import com.example.servingwebcontent.model.validation.TaskForm;
+import com.example.servingwebcontent.model.validation.TaskType;
 import com.example.servingwebcontent.service.DecisionService;
 import com.example.servingwebcontent.service.quiz.QuizTaskService;
 import org.springframework.security.access.prepost.PreAuthorize;

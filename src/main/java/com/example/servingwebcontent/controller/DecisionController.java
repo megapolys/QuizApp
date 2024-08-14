@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.decision.DecisionGroup;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.service.DecisionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

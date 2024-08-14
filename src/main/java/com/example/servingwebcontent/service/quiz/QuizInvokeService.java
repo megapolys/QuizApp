@@ -6,7 +6,6 @@ import com.example.servingwebcontent.domain.quiz.result.QuizResult;
 import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
-import com.example.servingwebcontent.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

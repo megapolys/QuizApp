@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="changeDecision" type="com.example.servingwebcontent.domain.quiz.decision.QuizDecision" -->
-<#-- @ftlvariable name="changeGroup" type="com.example.servingwebcontent.domain.quiz.decision.DecisionGroup" -->
+<#-- @ftlvariable name="changeDecision" type="com.example.servingwebcontent.model.quiz.decision.QuizDecision" -->
+<#-- @ftlvariable name="changeGroup" type="com.example.servingwebcontent.model.quiz.decision.DecisionGroup" -->
 <#import "../parts/common.ftlh" as c>
 <#import "../parts/decisions.ftlh" as d>
 <@c.page>

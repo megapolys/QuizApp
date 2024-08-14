@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.repositories.medical;
 
-import com.example.servingwebcontent.domain.medical.MedicalTask;
-import com.example.servingwebcontent.domain.medical.result.MedicalTaskResult;
+import com.example.servingwebcontent.model.entities.medical.result.MedicalTaskResultEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface MedicalTaskResultRepository extends CrudRepository<MedicalTaskResult, Long> {

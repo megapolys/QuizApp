@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller.medical;
 
-import com.example.servingwebcontent.domain.medical.MedicalTask;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTask;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.service.DecisionService;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
 import org.apache.commons.lang3.StringUtils;

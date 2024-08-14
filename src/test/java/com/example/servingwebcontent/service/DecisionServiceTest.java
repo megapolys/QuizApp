@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.service;
 
-import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.decision.DecisionGroup;
+import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.repositories.DecisionGroupRepository;
 import com.example.servingwebcontent.repositories.DecisionRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;

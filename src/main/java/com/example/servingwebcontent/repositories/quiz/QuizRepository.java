@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.repositories.quiz;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
+import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

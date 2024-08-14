@@ -1,9 +1,9 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.validation.TaskForm;
-import com.example.servingwebcontent.domain.validation.TaskType;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.validation.TaskForm;
+import com.example.servingwebcontent.model.validation.TaskType;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import com.example.servingwebcontent.service.DecisionService;
 import com.example.servingwebcontent.service.quiz.QuizService;

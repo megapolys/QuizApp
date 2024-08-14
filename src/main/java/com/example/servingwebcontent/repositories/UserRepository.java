@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.repositories;
 
-import com.example.servingwebcontent.domain.User;
+import com.example.servingwebcontent.model.entities.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

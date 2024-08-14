@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.repositories.medical;
 
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.entities.medical.result.MedicalTopicResultEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

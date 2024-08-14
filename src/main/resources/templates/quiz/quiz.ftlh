@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="task" type="com.example.servingwebcontent.domain.quiz.QuizTask" -->
+<#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.quiz.QuizTask" -->
 <#import "../parts/common.ftlh" as c>
 <#import "../parts/taskForm.ftlh" as task>
 <#import "../parts/decisions.ftlh" as d>

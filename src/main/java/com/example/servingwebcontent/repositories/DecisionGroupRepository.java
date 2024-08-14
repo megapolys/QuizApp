@@ -1,7 +1,6 @@
 package com.example.servingwebcontent.repositories;
 
-import com.example.servingwebcontent.domain.quiz.decision.DecisionGroup;
-import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.entities.quiz.decision.DecisionGroupEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

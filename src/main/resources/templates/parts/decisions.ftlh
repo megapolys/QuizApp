@@ -20,7 +20,7 @@
 </#macro>
 
 <#macro accordionGroup decisionsName id groupName decisions checkbox checkedDecisions>
-<#-- @ftlvariable name="decisions" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
+<#-- @ftlvariable name="decisions" type="java.util.Collection<com.example.servingwebcontent.model.quiz.decision.QuizDecision>" -->
     <div class="accordion-item">
         <h2 class="accordion-header">
             <button id="group-${id}-${decisionsName}" class="accordion-button <#if checkbox>collapsed</#if>" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-group-${id}-${decisionsName}" aria-expanded="true" aria-controls="panelsStayOpen-group-${id}-${decisionsName}">
@@ -96,7 +96,7 @@
 </#macro>
 
 <#macro listOfChosenDecisions decisionsName decisions_ groups noGroupDecisions>
-<#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.domain.quiz.decision.QuizDecision>" -->
+<#-- @ftlvariable name="decisions_" type="java.util.Collection<com.example.servingwebcontent.model.quiz.decision.QuizDecision>" -->
     <div class="mb-3">
         <div class="row mb-2">
             <div class="col-4">
@@ -133,7 +133,7 @@
 </#macro>
 
 <#macro decisionWithDescription decision name id='${decision.id}'>
-<#-- @ftlvariable name="decision" type="com.example.servingwebcontent.domain.quiz.decision.QuizDecision" -->
+<#-- @ftlvariable name="decision" type="com.example.servingwebcontent.model.quiz.decision.QuizDecision" -->
     <#if decision.description?has_content>
         <a href="##" type="button" class="icon-link icon-link-hover text-decoration-none p-0" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);"
            data-bs-toggle="modal" data-bs-target="#decision-modal-${id}" >

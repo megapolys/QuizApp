@@ -8,7 +8,6 @@ import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

@@ -9,7 +9,6 @@ import com.example.servingwebcontent.domain.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

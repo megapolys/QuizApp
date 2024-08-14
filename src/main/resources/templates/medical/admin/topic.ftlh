@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="task" type="com.example.servingwebcontent.domain.medical.MedicalTask" -->
+<#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.medical.MedicalTask" -->
 <#import "../../parts/common.ftlh" as c>
 <#import "../../parts/decisions.ftlh" as d>
 <#import "../../parts/modal.ftlh" as modal>

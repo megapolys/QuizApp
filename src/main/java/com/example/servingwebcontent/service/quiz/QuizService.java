@@ -5,7 +5,6 @@ import com.example.servingwebcontent.domain.quiz.Quiz;
 import com.example.servingwebcontent.domain.quiz.QuizTask;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
-import com.example.servingwebcontent.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

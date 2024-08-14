@@ -1,13 +1,14 @@
-<#-- @ftlvariable name="fiveVariantTask" type="com.example.servingwebcontent.domain.quiz.task.FiveVariantTask" -->
-<#-- @ftlvariable name="yesOrNoTask" type="com.example.servingwebcontent.domain.quiz.task.YesOrNoTask" -->
-<#-- @ftlvariable name="quizTask" type="com.example.servingwebcontent.domain.quiz.QuizTask" -->
+<#-- @ftlvariable name="fiveVariantTask" type="com.example.servingwebcontent.model.quiz.task.FiveVariantTask" -->
+<#-- @ftlvariable name="yesOrNoTask" type="com.example.servingwebcontent.model.quiz.task.YesOrNoTask" -->
+<#-- @ftlvariable name="quizTask" type="com.example.servingwebcontent.model.quiz.QuizTask" -->
 <#import "decisions.ftlh" as d>
 <#macro task path taskForm groups decisions update>
-    <#-- @ftlvariable name="taskForm" type="com.example.servingwebcontent.domain.validation.TaskForm" -->
+<#-- @ftlvariable name="taskForm" type="com.example.servingwebcontent.model.validation.TaskForm" -->
     <form id="taskForm" class="row g-3" action="${path}" method="post"
           enctype="multipart/form-data">
         <div class="row mb-3 justify-content-md-center">
-            <button class="btn btn-primary col-3" type="submit"><#if update>Обновить вопрос<#else>Добавить вопрос</#if></button>
+            <button class="btn btn-primary col-3"
+                    type="submit"><#if update>Обновить вопрос<#else>Добавить вопрос</#if></button>
         </div>
         <div class="col-2 mb-3">
             <div class="input-group">

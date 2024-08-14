@@ -9,7 +9,6 @@ import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.domain.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.domain.quiz.task.YesOrNoTask;
 import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
-import com.example.servingwebcontent.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
