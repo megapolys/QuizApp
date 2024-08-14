@@ -1,6 +1,5 @@
 package com.example.servingwebcontent.service;
 
-import com.example.servingwebcontent.model.UserResult;
 import com.example.servingwebcontent.model.user.UserSimple;
 import com.example.servingwebcontent.model.user.UserSimpleWithPassword;
 
@@ -30,19 +29,15 @@ public interface UserService {
 	 *
 	 * @param userId  - Идентификатор автора запроса
 	 * @param newUser - Новые данные профиля
-	 *
-	 * @return Результат изменения
 	 */
-	UserResult updateUser(Long userId, UserSimple newUser);
+	void updateUser(Long userId, UserSimple newUser);
 
 	/**
 	 * Регистрация нового пользователя
 	 *
 	 * @param user - Данные профиля
-	 *
-	 * @return Результат регистрации
 	 */
-	UserResult register(UserSimpleWithPassword user);
+	void register(UserSimpleWithPassword user);
 
 	/**
 	 * Активация профиля

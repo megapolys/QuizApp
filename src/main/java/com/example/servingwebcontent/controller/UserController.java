@@ -1,6 +1,7 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.model.UserResult;
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
 import com.example.servingwebcontent.model.user.UserDetailsCustom;
 import com.example.servingwebcontent.model.user.UserSimple;
 import com.example.servingwebcontent.service.UserService;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import static com.example.servingwebcontent.consts.Consts.ERROR_MESSAGE_PARAM;
 import static com.example.servingwebcontent.consts.Consts.SUCCESS_MESSAGE_PARAM;
 import static com.example.servingwebcontent.consts.MessageConsts.*;
-import static com.example.servingwebcontent.model.ResultType.EMAIL_FOUND;
-import static com.example.servingwebcontent.model.ResultType.USERNAME_FOUND;
 
 @Controller
 @RequiredArgsConstructor
@@ -97,12 +96,12 @@ public class UserController {
 			model.addAttribute(ERROR_MESSAGE_PARAM, REQUIRE_ALL_FIELDS);
 			return "user/editProfile";
 		}
-		UserResult result = userService.updateUser(currentUser.getId(), user);
-		if (result.result() == USERNAME_FOUND) {
+		try {
+			userService.updateUser(currentUser.getId(), user);
+		} catch (UserAlreadyExistsByUsernameException ignore) {
 			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_USERNAME_ALREADY_EXISTS);
 			return "user/editProfile";
-		}
-		if (result.result() == EMAIL_FOUND) {
+		} catch (UserAlreadyExistsByEmailException ignore) {
 			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_EMAIL_ALREADY_EXISTS);
 			return "user/editProfile";
 		}

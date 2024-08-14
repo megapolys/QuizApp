@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.service;
 
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
 import com.example.servingwebcontent.exceptions.UserNotFoundException;
-import com.example.servingwebcontent.model.ResultType;
-import com.example.servingwebcontent.model.UserResult;
 import com.example.servingwebcontent.model.user.UserSimple;
 import com.example.servingwebcontent.model.user.UserSimpleWithPassword;
 import com.example.servingwebcontent.persistence.UserPersistence;
@@ -51,14 +51,10 @@ public class UserServiceImpl implements UserService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public UserResult updateUser(Long userId, UserSimple newUser) {
-		UserResult result = checkUser(newUser);
-		if (result != null) {
-			return result;
-		}
+	public void updateUser(Long userId, UserSimple newUser) {
+		checkUser(newUser);
 		newUser.setId(userId);
 		userPersistence.save(newUser);
-		return new UserResult(ResultType.SUCCESS, null);
 	}
 
 	/**
@@ -66,11 +62,8 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional
-	public UserResult register(UserSimpleWithPassword user) {
-		UserResult result = checkUser(user);
-		if (result != null) {
-			return result;
-		}
+	public void register(UserSimpleWithPassword user) {
+		checkUser(user);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setPassword2(null);
 		String activationCode = userPersistence.create(user);
@@ -87,7 +80,6 @@ public class UserServiceImpl implements UserService {
 			simpleMessage.setText(message);
 			mailSender.send(simpleMessage);
 		}
-		return new UserResult(ResultType.SUCCESS, null);
 	}
 
 	/**
@@ -139,15 +131,14 @@ public class UserServiceImpl implements UserService {
 		userPersistence.updatePassword(repairPasswordCode, passwordEncoder.encode(password));
 	}
 
-	private UserResult checkUser(UserSimple user) {
+	private void checkUser(UserSimple user) {
 		Long userIdByUsername = userPersistence.findUserIdByUsername(user.getUsername());
 		if (userIdByUsername != null && !Objects.equals(userIdByUsername, user.getId())) {
-			return new UserResult(ResultType.USERNAME_FOUND, null);
+			throw UserAlreadyExistsByUsernameException.byUsername(user.getUsername());
 		}
 		Long userIdByEmail = userPersistence.findUserIdByEmail(user.getEmail());
 		if (userIdByEmail != null && !Objects.equals(userIdByEmail, user.getId())) {
-			return new UserResult(ResultType.EMAIL_FOUND, null);
+			throw UserAlreadyExistsByEmailException.byEmail(user.getEmail());
 		}
-		return null;
 	}
 }

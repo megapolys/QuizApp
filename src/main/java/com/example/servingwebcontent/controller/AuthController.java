@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.controller;
 
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
 import com.example.servingwebcontent.exceptions.UserNotFoundException;
-import com.example.servingwebcontent.model.ResultType;
-import com.example.servingwebcontent.model.UserResult;
 import com.example.servingwebcontent.model.dto.CaptchaResponseDto;
 import com.example.servingwebcontent.model.user.Password;
 import com.example.servingwebcontent.model.user.UserSimpleWithPassword;
@@ -75,18 +75,16 @@ public class AuthController {
 			model.addAttribute(ERROR_MESSAGE_PARAM, DIFFERENT_PASSWORDS);
 			return "auth/registration";
 		}
-		UserResult result = userService.register(user);
-		if (result.result() == ResultType.USERNAME_FOUND) {
+		try {
+			userService.register(user);
+		} catch (UserAlreadyExistsByUsernameException ignore) {
 			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_USERNAME_ALREADY_EXISTS);
-		}
-		if (result.result() == ResultType.EMAIL_FOUND) {
+			return "auth/registration";
+		} catch (UserAlreadyExistsByEmailException ignore) {
 			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_EMAIL_ALREADY_EXISTS);
-		}
-		if (result.result() == ResultType.SUCCESS) {
-			return "redirect:/activate";
-		} else {
 			return "auth/registration";
 		}
+		return "redirect:/activate";
 	}
 
 	/**
