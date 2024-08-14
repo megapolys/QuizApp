@@ -29,7 +29,8 @@ public class MedicalTopicService {
     }
 
     public List<MedicalTopic> sortedTopics() {
-        return medicalTopicRepository.findAllByOrderByName();
+//        return medicalTopicRepository.findAllByOrderByName();
+        return null;
     }
 
     public void save(MedicalTopic topic) {
@@ -45,15 +46,16 @@ public class MedicalTopicService {
     }
 
     public boolean addTask(MedicalTopic topic, MedicalTask task) {
-        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
-            return false;
-        } else {
-            task.setName(task.getName().trim());
-            task.setUnit(task.getUnit().trim());
-            task.setTopic(topic);
-            medicalTaskRepository.save(task);
-            return true;
-        }
+//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
+//            return false;
+//        } else {
+//            task.setName(task.getName().trim());
+//            task.setUnit(task.getUnit().trim());
+//            task.setTopic(topic);
+//            medicalTaskRepository.save(task);
+//            return true;
+//        }
+        return false;
     }
 
     public void deleteTask(MedicalTask task) {
@@ -61,50 +63,53 @@ public class MedicalTopicService {
     }
 
     public boolean updateTask(MedicalTopic topic, MedicalTask task) {
-        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()) && !Objects.equals(t.getId(), task.getId()))) {
-            return false;
-        } else {
-            medicalTaskRepository.save(task);
-            return true;
-        }
+//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()) && !Objects.equals(t.getId(), task.getId()))) {
+//            return false;
+//        } else {
+//            medicalTaskRepository.save(task);
+//            return true;
+//        }
+        return false;
     }
 
     public List<TopicBean> getTopics(User user) {
-        final Set<MedicalTopicResult> medicalResults = user.getMedicalResults();
-        final List<TopicBean> topicBeans = new ArrayList<>();
-        for (MedicalTopic topic : medicalTopicRepository.findAllByOrderByName()) {
-            boolean inProgress = false;
-            boolean exists = false;
-            for (MedicalTopicResult result : medicalResults) {
-                if (Objects.equals(topic.getId(), result.getMedicalTopic().getId())) {
-                    exists = true;
-                    if (result.getCompleteDate() == null) {
-                        inProgress = true;
-                    }
-                }
-            }
-            topicBeans.add(new TopicBean(topic, inProgress, exists));
-        }
-        return topicBeans;
+//        final Set<MedicalTopicResult> medicalResults = user.getMedicalResults();
+//        final List<TopicBean> topicBeans = new ArrayList<>();
+//        for (MedicalTopic topic : medicalTopicRepository.findAllByOrderByName()) {
+//            boolean inProgress = false;
+//            boolean exists = false;
+//            for (MedicalTopicResult result : medicalResults) {
+//                if (Objects.equals(topic.getId(), result.getMedicalTopic().getId())) {
+//                    exists = true;
+//                    if (result.getCompleteDate() == null) {
+//                        inProgress = true;
+//                    }
+//                }
+//            }
+//            topicBeans.add(new TopicBean(topic, inProgress, exists));
+//        }
+//        return topicBeans;
+        return null;
     }
 
     public boolean copy(MedicalTopic topic) {
-        int i = 1;
-        String finalName;
-        for (;;) {
-            final String name = topic.getName() + " - копия " + i;
-            if (name.length() > 254) {
-                return false;
-            }
-            if (medicalTopicRepository.findByName(name) != null) {
-                i++;
-            } else {
-                finalName = name;
-                break;
-            }
-        }
-        medicalTopicRepository.save(clone(topic, finalName));
-        return true;
+//        int i = 1;
+//        String finalName;
+//        for (;;) {
+//            final String name = topic.getName() + " - копия " + i;
+//            if (name.length() > 254) {
+//                return false;
+//            }
+//            if (medicalTopicRepository.findByName(name) != null) {
+//                i++;
+//            } else {
+//                finalName = name;
+//                break;
+//            }
+//        }
+//        medicalTopicRepository.save(clone(topic, finalName));
+//        return true;
+        return false;
     }
 
     private MedicalTopic clone(MedicalTopic oldTopic, String name) {

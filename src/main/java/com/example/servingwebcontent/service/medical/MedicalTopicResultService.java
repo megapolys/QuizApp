@@ -53,8 +53,9 @@ public class MedicalTopicResultService {
     }
 
     public ResultBean getResult(Long topicResultId) {
-        final MedicalTopicResult result = topicResultRepository.findById(topicResultId).orElseThrow(); // нужно для актуализации данных из бд
-        return getResult(result);
+//        final MedicalTopicResult result = topicResultRepository.findById(topicResultId).orElseThrow(); // нужно для актуализации данных из бд
+//        return getResult(result);
+        return null;
     }
 
     private ResultBean getResult(MedicalTopicResult result) {

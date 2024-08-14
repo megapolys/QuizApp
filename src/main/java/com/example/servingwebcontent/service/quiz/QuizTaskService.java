@@ -109,14 +109,15 @@ public class QuizTaskService {
     }
 
     private QuizTaskResult finalSaving(Quiz quiz, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
-        movePosition(quiz, pos, quizTask);
-        quizTask.setPosition(pos);
-        quizTask.setQuiz(quiz);
-        quizTask.setDecisions(decisions);
-        quizTask = quizTaskRepository.save(quizTask);
-        quiz.getTaskList().add(quizTask);
-        quizRepository.save(quiz);
-        return new QuizTaskResult(ResultType.SUCCESS, quizTask);
+//        movePosition(quiz, pos, quizTask);
+//        quizTask.setPosition(pos);
+//        quizTask.setQuiz(quiz);
+//        quizTask.setDecisions(decisions);
+//        quizTask = quizTaskRepository.save(quizTask);
+//        quiz.getTaskList().add(quizTask);
+//        quizRepository.save(quiz);
+//        return new QuizTaskResult(ResultType.SUCCESS, quizTask);
+        return null;
     }
 
     private String saveFile(MultipartFile file) throws IOException {
@@ -134,38 +135,38 @@ public class QuizTaskService {
     }
 
     private void movePosition(Quiz quiz, int pos, QuizTask quizTask) {
-        final QuizTask foundTask = quizTaskRepository.findByPositionAndQuiz(pos, quiz);
-        if (foundTask != null && !Objects.equals(foundTask.getId(), quizTask.getId())) {
-            for (QuizTask task : quiz.getTaskList()) {
-                if (task.getPosition() >= pos) {
-                    task.setPosition(task.getPosition() + 1);
-                    quizTaskRepository.save(task);
-                }
-            }
-        }
+//        final QuizTask foundTask = quizTaskRepository.findByPositionAndQuiz(pos, quiz);
+//        if (foundTask != null && !Objects.equals(foundTask.getId(), quizTask.getId())) {
+//            for (QuizTask task : quiz.getTaskList()) {
+//                if (task.getPosition() >= pos) {
+//                    task.setPosition(task.getPosition() + 1);
+//                    quizTaskRepository.save(task);
+//                }
+//            }
+//        }
     }
 
     @Transactional
     public void delete(QuizTask task) {
-        for (QuizResult quizResult : quizResultRepository.findAll()) {
-            final boolean removed = quizResult.getTaskList()
-                    .removeIf(resultTask -> Objects.equals(resultTask.getTask().getId(), task.getId()));
-            if (removed) {
-                quizResultRepository.save(quizResult);
-            }
-        }
-        quizTaskResultRepository.removeAllByTask(task);
-        deleteFile(task);
-        final Quiz quiz = task.getQuiz();
-        for (QuizTask quizTask : quiz.getTaskList()) {
-            if (quizTask.getPosition() > task.getPosition()) {
-                quizTask.setPosition(quizTask.getPosition() - 1);
-                quizTaskRepository.save(quizTask);
-            }
-        }
-        quiz.getTaskList().remove(task);
-        quizRepository.save(quiz);
-        quizTaskRepository.delete(task);
+//        for (QuizResult quizResult : quizResultRepository.findAll()) {
+//            final boolean removed = quizResult.getTaskList()
+//                    .removeIf(resultTask -> Objects.equals(resultTask.getTask().getId(), task.getId()));
+//            if (removed) {
+//                quizResultRepository.save(quizResult);
+//            }
+//        }
+//        quizTaskResultRepository.removeAllByTask(task);
+//        deleteFile(task);
+//        final Quiz quiz = task.getQuiz();
+//        for (QuizTask quizTask : quiz.getTaskList()) {
+//            if (quizTask.getPosition() > task.getPosition()) {
+//                quizTask.setPosition(quizTask.getPosition() - 1);
+//                quizTaskRepository.save(quizTask);
+//            }
+//        }
+//        quiz.getTaskList().remove(task);
+//        quizRepository.save(quiz);
+//        quizTaskRepository.delete(task);
     }
 
     private void deleteFile(QuizTask task) {

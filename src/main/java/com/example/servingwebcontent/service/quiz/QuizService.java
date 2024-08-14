@@ -28,47 +28,49 @@ public class QuizService {
     }
     
     public List<QuizBean> getQuizzes(User user) {
-        final Set<com.example.servingwebcontent.domain.quiz.result.QuizResult> results = user.getResults();
-        final List<QuizBean> quizList = new ArrayList<>();
-        for (Quiz quiz : quizRepository.findAllByOrderByShortName()) {
-            boolean inProgress = false;
-            boolean exists = false;
-            for (com.example.servingwebcontent.domain.quiz.result.QuizResult result : results) {
-                if (Objects.equals(quiz.getId(), result.getQuiz().getId())) {
-                    exists = true;
-                    if (!result.isComplete()) {
-                        inProgress = true;
-                    }
-                }
-            }
-            quizList.add(new QuizBean(quiz, inProgress, exists));
-        }
-        return quizList;
+//		final Set<com.example.servingwebcontent.model.quiz.result.QuizResult> results = user.getResults();
+//		final List<QuizBean> quizList = new ArrayList<>();
+//        for (Quiz quiz : quizRepository.findAllByOrderByShortName()) {
+//            boolean inProgress = false;
+//            boolean exists = false;
+//			for (com.example.servingwebcontent.model.quiz.result.QuizResult result : results) {
+//				if (Objects.equals(quiz.getId(), result.getQuiz().getId())) {
+//					exists = true;
+//					if (!result.isComplete()) {
+//						inProgress = true;
+//					}
+//				}
+//			}
+//            quizList.add(new QuizBean(quiz, inProgress, exists));
+//        }
+//        return quizList;
+        return null;
     }
 
     public QuizResult save(Quiz quiz) {
-        Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
-        if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
-            return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
-        }
-        final Quiz byName = quizRepository.findByName(quiz.getName());
-        if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
-            return new QuizResult(ResultType.NAME_FOUND, byName);
-        }
-        return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
+//        Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
+//        if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
+//            return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
+//        }
+//        final Quiz byName = quizRepository.findByName(quiz.getName());
+//        if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
+//            return new QuizResult(ResultType.NAME_FOUND, byName);
+//        }
+//        return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
+        return null;
     }
 
     @Transactional
     public void delete(Quiz quiz) {
-        for (QuizTask quizTask : quiz.getTaskList()) {
-            quizTaskService.delete(quizTask);
-        }
-        for (User user : userRepository.findAll()) {
-            user.getResults().removeIf(result -> Objects.equals(result.getQuiz().getId(), quiz.getId()));
-            userRepository.save(user);
-        }
-        quizResultRepository.deleteQuizResultsByQuiz(quiz);
-        quizRepository.delete(quiz);
+//        for (QuizTask quizTask : quiz.getTaskList()) {
+//            quizTaskService.delete(quizTask);
+//        }
+//        for (User user : userRepository.findAll()) {
+//            user.getResults().removeIf(result -> Objects.equals(result.getQuiz().getId(), quiz.getId()));
+//            userRepository.save(user);
+//        }
+//        quizResultRepository.deleteQuizResultsByQuiz(quiz);
+//        quizRepository.delete(quiz);
     }
 
     public int getNextTaskPosition(Quiz quiz) {

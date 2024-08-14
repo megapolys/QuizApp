@@ -17,24 +17,25 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+
     @Value("${rememberMe.key}")
     private String key;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
         http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/registration", "/activate/*", "/repairPassword", "/repairPassword/*").anonymous()
-                        .requestMatchers("/", "/main", "/static/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .rememberMe((remember) -> remember.rememberMeServices(rememberMeServices))
-                .logout(LogoutConfigurer::permitAll)
-        ;
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/login", "/registration", "/activate/**", "/repairPassword", "/repairPassword/*").anonymous()
+                .requestMatchers("/user/list").hasRole("ADMIN")
+                .requestMatchers("/", "/main", "/static/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin((form) -> form
+                .loginPage("/login")
+            )
+            .rememberMe((remember) -> remember.rememberMeServices(rememberMeServices))
+            .logout();
+
         return http.build();
     }
 
