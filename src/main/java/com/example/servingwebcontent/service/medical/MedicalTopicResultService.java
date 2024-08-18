@@ -1,10 +1,10 @@
 package com.example.servingwebcontent.service.medical;
 
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.medical.MedicalTask;
 import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
@@ -59,23 +59,23 @@ public class MedicalTopicResultService {
     }
 
     private ResultBean getResult(MedicalTopicResult result) {
-        final Map<QuizDecision, Float> decisionBeans = new LinkedHashMap<>();
-        final Map<QuizDecision, Integer> decisionsCount = new LinkedHashMap<>();
-        float weightSum = 0;
-        int filledCount = 0;
-        final String progress = topicInvokeService.getProgress(result);
-        if (result.getCompleteDate() == null) {
-            return new ResultBean(result, null, null, 0, false, false, progress);
-        }
-        final List<TaskResultBean> tasks = new ArrayList<>();
-        for (MedicalTaskResult taskResult : result.getResults()) {
-            final MedicalTask task = taskResult.getMedicalTask();
-            if (taskResult.getValue() == null) {
+		final Map<Decision, Float> decisionBeans = new LinkedHashMap<>();
+		final Map<Decision, Integer> decisionsCount = new LinkedHashMap<>();
+		float weightSum = 0;
+		int filledCount = 0;
+		final String progress = topicInvokeService.getProgress(result);
+		if (result.getCompleteDate() == null) {
+			return new ResultBean(result, null, null, 0, false, false, progress);
+		}
+		final List<TaskResultBean> tasks = new ArrayList<>();
+		for (MedicalTaskResult taskResult : result.getResults()) {
+			final MedicalTask task = taskResult.getMedicalTask();
+			if (taskResult.getValue() == null) {
                 continue;
             }
 
-            Set<QuizDecision> decisions = Set.of();
-            boolean left = false;
+			Set<Decision> decisions = Set.of();
+			boolean left = false;
             boolean right = false;
             if (taskResult.getValue() <= task.getLeftMid()) {
                 decisions = task.getLeftDecisions();
@@ -105,12 +105,12 @@ public class MedicalTopicResultService {
                 weight = 0;
             }
 
-            for (QuizDecision decision : decisions) {
-                decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
-                decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
-            }
-            tasks.add(new TaskResultBean(taskResult, weight, getAnalyse(taskResult), decisions.stream().sorted(Comparator.comparing(QuizDecision::getName)).toList()));
-            weightSum += weight;
+			for (Decision decision : decisions) {
+				decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
+				decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
+			}
+			tasks.add(new TaskResultBean(taskResult, weight, getAnalyse(taskResult), decisions.stream().sorted(Comparator.comparing(Decision::getName)).toList()));
+			weightSum += weight;
             filledCount++;
         }
         final float score = weightSum / filledCount;
@@ -159,10 +159,12 @@ public class MedicalTopicResultService {
                              float score, boolean yellow, boolean red, String progress) {
     }
 
-    public record TaskResultBean(MedicalTaskResult taskResult, Float resultScore, AnalyseForm analyseForm, List<QuizDecision> decisions){}
+	public record TaskResultBean(MedicalTaskResult taskResult, Float resultScore, AnalyseForm analyseForm,
+								 List<Decision> decisions) {
+	}
 
     public record AnalyseForm(List<Float> values, float marker){}
 
-    public record DecisionBean(QuizDecision decision, float score, float altScore, int count) {
-    }
+	public record DecisionBean(Decision decision, float score, float altScore, int count) {
+	}
 }

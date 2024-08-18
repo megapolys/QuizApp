@@ -1,13 +1,13 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.quiz.QuizTask;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
 import com.example.servingwebcontent.model.validation.TaskForm;
 import com.example.servingwebcontent.model.validation.TaskType;
-import com.example.servingwebcontent.service.DecisionService;
+import com.example.servingwebcontent.service.decision.impl.DecisionServiceImpl;
 import com.example.servingwebcontent.service.quiz.QuizTaskService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,22 +24,22 @@ import java.util.Set;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class QuizTaskController {
 
-    private final QuizTaskService quizTaskService;
-    private final DecisionService decisionService;
+	private final QuizTaskService quizTaskService;
+	private final DecisionServiceImpl decisionService;
 
-    public QuizTaskController(QuizTaskService quizTaskService, DecisionService decisionService) {
-        this.quizTaskService = quizTaskService;
-        this.decisionService = decisionService;
-    }
+	public QuizTaskController(QuizTaskService quizTaskService, DecisionServiceImpl decisionService) {
+		this.quizTaskService = quizTaskService;
+		this.decisionService = decisionService;
+	}
 
 
     @PostMapping("/add/yesOrNo")
     public String addYesOrNoTask(
-            @RequestParam Quiz quiz,
-            @RequestParam("file") MultipartFile file,
-            TaskForm taskForm,
-            RedirectAttributes redirectAttributes
-    ) {
+		@RequestParam QuizWithTaskSize quiz,
+		@RequestParam("file") MultipartFile file,
+		TaskForm taskForm,
+		RedirectAttributes redirectAttributes
+	) {
         taskForm.setTaskType(TaskType.YES_OR_NO);
         if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
             final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, file, taskForm);
@@ -62,21 +62,21 @@ public class QuizTaskController {
             @RequestParam(required = false) TaskForm taskForm,
             Model model
     ) {
-        if (taskForm == null) {
-            taskForm = taskFormFromYesOrNoTask(quizTask);
-        }
+		if (taskForm == null) {
+			taskForm = taskFormFromYesOrNoTask(quizTask);
+		}
 
-        model.addAttribute("taskForm", taskForm);
-        model.addAttribute("quizTask", quizTask);
-        model.addAttribute("quiz", quizTask.getQuiz());
-        model.addAttribute("groups", decisionService.groups());
-        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
-        model.addAttribute("path", "/quiz/task/update/yesOrNo");
-        model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
-        model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
-        model.addAttribute("quizTab", "active");
-        return "quiz/taskUpdate";
-    }
+		model.addAttribute("taskForm", taskForm);
+		model.addAttribute("quizTask", quizTask);
+		model.addAttribute("quiz", quizTask.getQuiz());
+		model.addAttribute("groups", decisionService.getDecisionGroups());
+		model.addAttribute("decisions", decisionService.getUngroupedDecisions());
+		model.addAttribute("path", "/quiz/task/update/yesOrNo");
+		model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
+		model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
+		model.addAttribute("quizTab", "active");
+		return "quiz/taskUpdate";
+	}
 
     private TaskForm taskFormFromYesOrNoTask(QuizTask task) {
         final YesOrNoTask yesOrNoTask = task.getYesOrNoTask();
@@ -100,8 +100,8 @@ public class QuizTaskController {
             RedirectAttributes redirectAttributes
     ) {
         if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
-            final Quiz quiz = quizTask.getQuiz();
-            final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, file, taskForm, quizTask);
+			final QuizWithTaskSize quiz = quizTask.getQuiz();
+			final QuizTaskService.QuizTaskResult result = quizTaskService.saveYesOrNo(quiz, file, taskForm, quizTask);
             resultProcess(redirectAttributes, result);
             if (result.result() == QuizTaskService.ResultType.SUCCESS) {
                 redirectAttributes.addAttribute("quizId", quiz.getId());
@@ -114,11 +114,11 @@ public class QuizTaskController {
 
     @PostMapping("/add/fiveVariant")
     public String addFiveVariantTask(
-            @RequestParam Quiz quiz,
-            @RequestParam("file") MultipartFile file,
-            TaskForm taskForm,
-            RedirectAttributes redirectAttributes
-    ) {
+		@RequestParam QuizWithTaskSize quiz,
+		@RequestParam("file") MultipartFile file,
+		TaskForm taskForm,
+		RedirectAttributes redirectAttributes
+	) {
         taskForm.setTaskType(TaskType.FIVE_VARIANT);
         if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
             final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, file, taskForm);
@@ -144,20 +144,20 @@ public class QuizTaskController {
             @RequestParam(required = false) TaskForm taskForm,
             Model model
     ) {
-        if (taskForm == null) {
-            taskForm = taskFormFromFiveVariantTask(quizTask);
-        }
-        model.addAttribute("taskForm", taskForm);
-        model.addAttribute("quizTask", quizTask);
-        model.addAttribute("quiz", quizTask.getQuiz());
-        model.addAttribute("groups", decisionService.groups());
-        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
-        model.addAttribute("path", "/quiz/task/update/fiveVariant");
-        model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
-        model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
-        model.addAttribute("quizTab", "active");
-        return "quiz/taskUpdate";
-    }
+		if (taskForm == null) {
+			taskForm = taskFormFromFiveVariantTask(quizTask);
+		}
+		model.addAttribute("taskForm", taskForm);
+		model.addAttribute("quizTask", quizTask);
+		model.addAttribute("quiz", quizTask.getQuiz());
+		model.addAttribute("groups", decisionService.getDecisionGroups());
+		model.addAttribute("decisions", decisionService.getUngroupedDecisions());
+		model.addAttribute("path", "/quiz/task/update/fiveVariant");
+		model.addAttribute("FIVE_VARIANT", TaskType.FIVE_VARIANT);
+		model.addAttribute("YES_OR_NO", TaskType.YES_OR_NO);
+		model.addAttribute("quizTab", "active");
+		return "quiz/taskUpdate";
+	}
 
     private TaskForm taskFormFromFiveVariantTask(QuizTask task) {
         final FiveVariantTask fiveVariantTask = task.getFiveVariantTask();
@@ -184,32 +184,32 @@ public class QuizTaskController {
             RedirectAttributes redirectAttributes
     ) {
         if (isAttributesValid(redirectAttributes, taskForm.getQuestionText(), taskForm.getPosition(), taskForm.getDecisions())){
-            final Quiz quiz = quizTask.getQuiz();
-            final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, file, taskForm, quizTask);
-            resultProcess(redirectAttributes, result);
-            if (result.result() == QuizTaskService.ResultType.SUCCESS) {
-                redirectAttributes.addAttribute("quizId", quiz.getId());
-                return "redirect:/quiz/{quizId}";
-            }
-        }
-        redirectAttributes.addFlashAttribute("quizTask", quizTask);
-        return "redirect:/quiz/task/update/fiveVariant/{quizTask}";
-    }
+			final QuizWithTaskSize quiz = quizTask.getQuiz();
+			final QuizTaskService.QuizTaskResult result = quizTaskService.saveFiveVariant(quiz, file, taskForm, quizTask);
+			resultProcess(redirectAttributes, result);
+			if (result.result() == QuizTaskService.ResultType.SUCCESS) {
+				redirectAttributes.addAttribute("quizId", quiz.getId());
+				return "redirect:/quiz/{quizId}";
+			}
+		}
+		redirectAttributes.addFlashAttribute("quizTask", quizTask);
+		return "redirect:/quiz/task/update/fiveVariant/{quizTask}";
+	}
 
-    private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, Set<QuizDecision> decisions) {
-        return isAttributesValid(redirectAttributes, questionText, position, decisions == null ? new QuizDecision[]{} : decisions.toArray(new QuizDecision[]{}));
-    }
+	private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, Set<Decision> decisions) {
+		return isAttributesValid(redirectAttributes, questionText, position, decisions == null ? new Decision[]{} : decisions.toArray(new Decision[]{}));
+	}
 
-    private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, QuizDecision[] decisions) {
-        if (!StringUtils.hasText(questionText)) {
-            redirectAttributes.addFlashAttribute("message", "Необходимо ввести текст вопроса.");
-        } else if (position == null) {
-            redirectAttributes.addFlashAttribute("message", "Необходимо ввести номер.");
-        } else {
-            return true;
-        }
-        return false;
-    }
+	private boolean isAttributesValid(RedirectAttributes redirectAttributes, String questionText, Integer position, Decision[] decisions) {
+		if (!StringUtils.hasText(questionText)) {
+			redirectAttributes.addFlashAttribute("message", "Необходимо ввести текст вопроса.");
+		} else if (position == null) {
+			redirectAttributes.addFlashAttribute("message", "Необходимо ввести номер.");
+		} else {
+			return true;
+		}
+		return false;
+	}
 
     private static void resultProcess(RedirectAttributes redirectAttributes, QuizTaskService.QuizTaskResult result) {
         if (result.result() == QuizTaskService.ResultType.FILE_EXCEPTION) {

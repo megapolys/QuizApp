@@ -31,7 +31,13 @@
             <tr>
                 <td>${quiz.shortName}</td>
                 <td>${quiz.name}</td>
-                <td>${(quiz.taskList)?has_content?then(quiz.taskList?size?c, "пусто")}</td>
+                <td>
+                    <#if quiz.size == 0>
+                        пусто
+                    <#else>
+                        ${quiz.size}
+                    </#if>
+                </td>
                 <td><a href="/quiz/${quiz.id?c}">Редактировать</a></td>
                 <td>
                     <@modal.deleteConfirm path="/quiz/delete/${quiz.id?c}" id="confirm-delete-quiz-${quiz.id}"

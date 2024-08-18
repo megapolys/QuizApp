@@ -4,7 +4,7 @@ import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailExceptio
 import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
 import com.example.servingwebcontent.model.user.UserDetailsCustom;
 import com.example.servingwebcontent.model.user.UserSimple;
-import com.example.servingwebcontent.service.UserService;
+import com.example.servingwebcontent.service.user.UserService;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

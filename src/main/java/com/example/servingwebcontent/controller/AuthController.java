@@ -6,7 +6,7 @@ import com.example.servingwebcontent.exceptions.UserNotFoundException;
 import com.example.servingwebcontent.model.dto.CaptchaResponseDto;
 import com.example.servingwebcontent.model.user.Password;
 import com.example.servingwebcontent.model.user.UserSimpleWithPassword;
-import com.example.servingwebcontent.service.UserService;
+import com.example.servingwebcontent.service.user.UserService;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

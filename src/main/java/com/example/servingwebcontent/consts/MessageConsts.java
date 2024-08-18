@@ -26,6 +26,14 @@ public interface MessageConsts {
 
 	String REPAIR_PASSWORD_CODE_NOT_FOUND = "Невалидная ссылка на восстановление пароля";
 
+	String GROUP_WITH_SAME_NAME_ALREADY_EXISTS = "Такое имя группы уже занято.";
+
+	String GROUP_NAME_IS_EMPTY = "Пустое название группы!";
+
+	String DECISION_WITH_SAME_NAME_ALREADY_EXISTS = "Такое имя решения уже занято.";
+
+	String DECISION_NAME_IS_EMPTY = "Пустое имя решения!";
+
 	//	SUCCESS
 
 	String CHANGES_COMPLETE_SUCCESSFUL = "Изменения успешно сохранены";
@@ -35,5 +43,17 @@ public interface MessageConsts {
 	String REPAIR_PASSWORD_CODE_SENT = "Ссылка на восстановление пароля выслана на вашу электронную почту.";
 
 	String PASSWORD_SUCCESSFUL_CHANGED = "Пароль успешно обновлен.";
+
+	String GROUP_SUCCESSFUL_ADDED = "Группа добавлена";
+
+	String GROUP_SUCCESSFUL_CHANGED = "Группа обновлена";
+
+	String GROUP_SUCCESSFUL_DELETED = "Группа удалена";
+
+	String DECISION_SUCCESSFUL_ADDED = "Решение добавлено";
+
+	String DECISION_SUCCESSFUL_CHANGED = "Решение обновлено";
+
+	String DECISION_SUCCESSFUL_DELETED = "Решение удалено";
 
 }

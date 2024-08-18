@@ -4,9 +4,12 @@ import com.example.servingwebcontent.model.entities.quiz.decision.DecisionGroupE
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DecisionGroupRepository extends CrudRepository<DecisionGroupEntity, Long> {
 	List<DecisionGroupEntity> findAllByOrderByName();
 
-	DecisionGroupEntity findByName(String name);
+	boolean existsByName(String name);
+
+	Optional<DecisionGroupEntity> findByName(String name);
 }

@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.model.validation;
 
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.decision.Decision;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ public class TaskForm {
     private Float yesWeight;
     private Float noWeight;
 
-    private Set<QuizDecision> decisions;
+	private Set<Decision> decisions;
 
     private TaskType taskType;
 
@@ -159,11 +159,11 @@ public class TaskForm {
         this.noWeight = noWeight;
     }
 
-    public Set<QuizDecision> getDecisions() {
-        return decisions;
-    }
+	public Set<Decision> getDecisions() {
+		return decisions;
+	}
 
-    public void setDecisions(Set<QuizDecision> decisions) {
-        this.decisions = decisions;
-    }
+	public void setDecisions(Set<Decision> decisions) {
+		this.decisions = decisions;
+	}
 }

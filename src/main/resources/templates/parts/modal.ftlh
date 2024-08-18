@@ -32,14 +32,24 @@
                     ${text}
                 </div>
                 <div class="modal-footer">
-                    <form action="${path}" method="post">
-                        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                        <button class="btn btn-danger" type="submit">Удалить</button>
-                    </form>
+                    <a class="btn btn-danger" href="#" onclick="deleteByPath(path, ${_csrf.token})">Удалить</a>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        async function deleteByPath(path, _csrf) {
+            const body = {_csrf: _csrf};
+            await fetch(path, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+        }
+    </script>
 </#macro>
 
 <#macro postButton path text>

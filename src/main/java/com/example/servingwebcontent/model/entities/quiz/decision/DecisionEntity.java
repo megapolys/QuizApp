@@ -15,6 +15,33 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class DecisionEntity {
 
+	public static DecisionEntity createNew(
+		String name,
+		String description,
+		Long groupId
+	) {
+		return new DecisionEntity(
+			null,
+			name,
+			description,
+			groupId
+		);
+	}
+
+	public static DecisionEntity buildExisting(
+		Long id,
+		String name,
+		String description,
+		Long groupId
+	) {
+		return new DecisionEntity(
+			id,
+			name,
+			description,
+			groupId
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "decision_gen")

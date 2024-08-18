@@ -1,164 +1,204 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.model.quiz.decision.DecisionGroup;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
-import com.example.servingwebcontent.service.DecisionService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.example.servingwebcontent.exceptions.DecisionAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.GroupAlreadyExistsByNameException;
+import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.Group;
+import com.example.servingwebcontent.service.decision.DecisionService;
+import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static com.example.servingwebcontent.consts.Consts.ERROR_MESSAGE_PARAM;
+import static com.example.servingwebcontent.consts.Consts.SUCCESS_MESSAGE_PARAM;
+import static com.example.servingwebcontent.consts.MessageConsts.*;
+
 @Controller
-@RequestMapping("/decisions")
-@PreAuthorize("hasAuthority('ADMIN')")
+@RequiredArgsConstructor
 public class DecisionController {
 
     private final DecisionService decisionService;
 
-    public DecisionController(DecisionService decisionService) {
-        this.decisionService = decisionService;
-    }
-
-    @GetMapping
+    /**
+     * Получение всех решений вместе с группами
+     *
+     * @return decisions - Решения без групп
+     * groups - Группы с решениями
+     * decisionTab - Активная вкладка решений
+     */
+    @GetMapping("/decisions")
     public String getDecisions(Model model) {
-        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
-        model.addAttribute("groups", decisionService.groups());
+        model.addAttribute("decisions", decisionService.getUngroupedDecisions());
+        model.addAttribute("groups", decisionService.getDecisionGroups());
         model.addAttribute("decisionTab", "active");
         return "decisions/decisions";
     }
 
-    @PostMapping("/group/add")
+    /**
+     * Добавление новой группы
+     */
+    @PostMapping("/decisions/group")
     public String addGroup(
-            @RequestParam String name,
-            RedirectAttributes redirectAttributes
+        Group group,
+        RedirectAttributes redirectAttributes
     ) {
-        if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("message", "Пустое название группы!");
+        if (StringUtils.isBlank(group.getName())) {
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, GROUP_NAME_IS_EMPTY);
         } else {
-            final DecisionGroup group = new DecisionGroup();
-            group.setName(name.trim());
-            final DecisionService.ResultType result = decisionService.add(group);
-            if (result == DecisionService.ResultType.NAME_FOUND) {
-                redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
+            try {
+                decisionService.addGroup(group);
+            } catch (GroupAlreadyExistsByNameException e) {
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, GROUP_WITH_SAME_NAME_ALREADY_EXISTS);
             }
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Группа добавлена");
+        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, GROUP_SUCCESSFUL_ADDED);
         return "redirect:/decisions";
     }
 
-    @PostMapping("/group/update/{group}")
-    public String groupUpdate(
-            @PathVariable DecisionGroup group,
-            @RequestParam(required = false) String name,
-            RedirectAttributes redirectAttributes
+    /**
+     * Получение формы обновления группы
+     *
+     * @param groupId - Идентификатор группы
+     *
+     * @return changeGroup - Группа
+     */
+    @GetMapping("/decisions/group/updateAction/{groupId}")
+    public String getGroupUpdate(
+        @PathVariable Long groupId,
+        RedirectAttributes redirectAttributes
     ) {
-        if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("message", "Пустое название группы!");
+        redirectAttributes.addFlashAttribute("changeGroup", decisionService.getGroupById(groupId));
+        return "redirect:/decisions";
+    }
+
+    /**
+     * Изменение группы
+     *
+     * @param groupId - Идентификатор группы
+     *
+     * @return changeGroup - Группа
+     */
+    @PostMapping("/decisions/group/{groupId}")
+    public String groupUpdate(
+        @PathVariable Long groupId,
+        Group group,
+        RedirectAttributes redirectAttributes
+    ) {
+        group.setId(groupId);
+        if (StringUtils.isBlank(group.getName())) {
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, GROUP_NAME_IS_EMPTY);
             redirectAttributes.addFlashAttribute("changeGroup", group);
         } else {
-            final DecisionGroup newGroup = new DecisionGroup();
-            newGroup.setId(group.getId());
-            newGroup.setDecisions(group.getDecisions());
-            newGroup.setName(name.trim());
-            final DecisionService.ResultType result = decisionService.update(newGroup);
-            if (result == DecisionService.ResultType.NAME_FOUND) {
-                redirectAttributes.addFlashAttribute("message", "Такое имя группы уже занято.");
+            group.setName(group.getName().trim());
+            try {
+                decisionService.updateGroup(group);
+            } catch (GroupAlreadyExistsByNameException e) {
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, GROUP_WITH_SAME_NAME_ALREADY_EXISTS);
                 redirectAttributes.addFlashAttribute("changeGroup", group);
             }
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Группа обновлена");
+        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, GROUP_SUCCESSFUL_CHANGED);
         return "redirect:/decisions";
     }
 
-    @GetMapping("/group/updateAction/{group}")
-    public String groupUpdateAction(
-            @PathVariable DecisionGroup group,
-            RedirectAttributes redirectAttributes
-    ) {
-        redirectAttributes.addFlashAttribute("changeGroup", group);
-        return "redirect:/decisions";
-    }
-
-    @PostMapping("/group/delete/{group}")
+    /**
+     * Удаление группы
+     *
+     * @param groupId - Идентификатор группы
+     */
+    @DeleteMapping("/decisions/group/{groupId}")
     public String groupDelete(
-            @PathVariable DecisionGroup group,
-            RedirectAttributes redirectAttributes
+        @PathVariable Long groupId,
+        RedirectAttributes redirectAttributes
     ) {
-        decisionService.delete(group);
-        redirectAttributes.addFlashAttribute("successMessage", "Группа удалена");
+        decisionService.deleteGroupById(groupId);
+        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, GROUP_SUCCESSFUL_DELETED);
         return "redirect:/decisions";
     }
 
-    @PostMapping("/add")
+    /**
+     * Добавление решение
+     *
+     * @param decision - Решение
+     */
+    @PostMapping("/decisions")
     public String addDecision(
-            @RequestParam(required = false) DecisionGroup group,
-            @RequestParam String name,
-            @RequestParam String description,
-            RedirectAttributes redirectAttributes
+        @RequestBody DecisionWithGroup decision,
+        RedirectAttributes redirectAttributes
     ) {
-        if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("message", "Пустое имя!");
+        if (StringUtils.isBlank(decision.getName())) {
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_NAME_IS_EMPTY);
         } else {
-            final QuizDecision decision = new QuizDecision();
-            decision.setName(name.trim());
-            decision.setDescription(description != null ? description.trim() : null);
-            decision.setGroup(group);
-            final DecisionService.ResultType result = decisionService.add(decision);
-            if (result == DecisionService.ResultType.NAME_FOUND) {
-                redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
-            } else {
-                redirectAttributes.addFlashAttribute("successMessage", "Решение добавлено");
+            try {
+                decisionService.addDecision(decision);
+            } catch (DecisionAlreadyExistsByNameException e) {
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_WITH_SAME_NAME_ALREADY_EXISTS);
             }
+            redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_ADDED);
         }
         return "redirect:/decisions";
     }
 
-    @PostMapping("/update/{decision}")
-    public String decisionUpdate(
-            @PathVariable QuizDecision decision,
-            @RequestParam String name,
-            @RequestParam String description,
-            @RequestParam(required = false) DecisionGroup group,
-            RedirectAttributes redirectAttributes
+    /**
+     * Получение страницы обновления решения
+     *
+     * @param decisionId - Идентификатор решения
+     */
+    @GetMapping("/decisions/updateAction/{decisionId}")
+    public String decisionUpdateAction(
+        @PathVariable Long decisionId,
+        RedirectAttributes redirectAttributes
     ) {
-        if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("message", "Пустое имя!");
+        redirectAttributes.addFlashAttribute("changeDecision", decisionService.getDecisionById(decisionId));
+        return "redirect:/decisions";
+    }
+
+    /**
+     * Изменение решения
+     *
+     * @param decisionId - Идентификатор решения
+     * @param decision   - Решение
+     */
+    @PostMapping("/decisions/{decisionId}")
+    public String decisionUpdate(
+        @PathVariable Long decisionId,
+        @RequestBody DecisionWithGroup decision,
+        RedirectAttributes redirectAttributes
+    ) {
+        decision.setId(decisionId);
+        if (StringUtils.isBlank(decision.getName())) {
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_NAME_IS_EMPTY);
             redirectAttributes.addFlashAttribute("changeDecision", decision);
+            return "redirect:/decisions";
         } else {
-            final QuizDecision newDecision = new QuizDecision();
-            newDecision.setId(decision.getId());
-            newDecision.setName(name.trim());
-            newDecision.setDescription(description != null ? description.trim() : null);
-            newDecision.setGroup(group);
-            final DecisionService.ResultType result = decisionService.update(newDecision);
-            if (result == DecisionService.ResultType.NAME_FOUND) {
-                redirectAttributes.addFlashAttribute("message", "Такое имя решения уже занято.");
+            try {
+                decisionService.updateDecision(decision);
+                redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_CHANGED);
+                return "redirect:/decisions";
+            } catch (DecisionAlreadyExistsByNameException e) {
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_WITH_SAME_NAME_ALREADY_EXISTS);
                 redirectAttributes.addFlashAttribute("changeDecision", decision);
                 return "redirect:/decisions";
             }
         }
-        redirectAttributes.addFlashAttribute("successMessage", "Решение обновлено");
-        return "redirect:/decisions";
     }
 
-    @GetMapping("/updateAction/{decision}")
-    public String decisionUpdateAction(
-            @PathVariable QuizDecision decision,
-            RedirectAttributes redirectAttributes
-    ) {
-        redirectAttributes.addFlashAttribute("changeDecision", decision);
-        return "redirect:/decisions";
-    }
 
-    @PostMapping("/delete/{decision}")
+    /**
+     * Удаление решения
+     *
+     * @param decisionId - Идентификатор решения
+     */
+    @DeleteMapping("/decisions/{decisionId}")
     public String deleteDecision(
-            @PathVariable QuizDecision decision,
-            RedirectAttributes redirectAttributes
+        @PathVariable Long decisionId,
+        RedirectAttributes redirectAttributes
     ) {
-        decisionService.delete(decision);
-        redirectAttributes.addFlashAttribute("successMessage", "Решение удалено");
+        decisionService.deleteDecisionById(decisionId);
+        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_DELETED);
         return "redirect:/decisions";
     }
 

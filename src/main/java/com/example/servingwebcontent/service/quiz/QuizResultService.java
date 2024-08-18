@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.quiz.QuizTask;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
@@ -63,21 +63,21 @@ public class QuizResultService {
     }
 
     public ResultBean getResult(QuizResult result) {
-        final Map<QuizDecision, Float> decisionBeans = new LinkedHashMap<>();
-        final Map<QuizDecision, Integer> decisionsCount = new LinkedHashMap<>();
-        float weightSum = 0;
-        final String progress = quizInvokeService.getProgress(result);
-        if (!result.isComplete()) {
-            return new ResultBean(result, null, 0, false, false, progress);
-        }
-        for (QuizTaskResult taskResult : result.getTaskList()) {
-            final QuizTask task = taskResult.getTask();
-            final Set<QuizDecision> decisions = task.getDecisions();
-            final float weight = taskResult.getAltScore() == null ? getWeight(taskResult) : taskResult.getAltScore();
-            for (QuizDecision decision : decisions) {
-                decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
-                decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
-            }
+		final Map<Decision, Float> decisionBeans = new LinkedHashMap<>();
+		final Map<Decision, Integer> decisionsCount = new LinkedHashMap<>();
+		float weightSum = 0;
+		final String progress = quizInvokeService.getProgress(result);
+		if (!result.isComplete()) {
+			return new ResultBean(result, null, 0, false, false, progress);
+		}
+		for (QuizTaskResult taskResult : result.getTaskList()) {
+			final QuizTask task = taskResult.getTask();
+			final Set<Decision> decisions = task.getDecisions();
+			final float weight = taskResult.getAltScore() == null ? getWeight(taskResult) : taskResult.getAltScore();
+			for (Decision decision : decisions) {
+				decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
+				decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
+			}
             taskResult.setResultScore(weight); //сделано для отображения балла, не сохраняется в бд
             weightSum += weight;
         }
@@ -126,11 +126,13 @@ public class QuizResultService {
         quizResultRepository.deleteById(quizResultId);
     }
 
-    public record QuizResultBean(Quiz quiz, List<ResultBean> results){}
+	public record QuizResultBean(QuizWithTaskSize quiz, List<ResultBean> results) {
+	}
 
     public record ResultBean(QuizResult quizResult, List<DecisionBean> decisions,
                              float score, boolean yellow, boolean red, String progress) {}
 
-    public record DecisionBean(QuizDecision decision, float score, float altScore, int count) {}
+	public record DecisionBean(Decision decision, float score, float altScore, int count) {
+	}
 
 }

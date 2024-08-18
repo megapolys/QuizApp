@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.model.quiz.result;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import jakarta.persistence.*;
 
@@ -13,8 +13,8 @@ public class QuizResult {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Quiz quiz;
+	@ManyToOne(fetch = FetchType.EAGER)
+	private QuizWithTaskSize quiz;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -42,13 +42,13 @@ public class QuizResult {
         return id;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
-    }
+	public QuizWithTaskSize getQuiz() {
+		return quiz;
+	}
 
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
+	public void setQuiz(QuizWithTaskSize quiz) {
+		this.quiz = quiz;
+	}
 
     public boolean isComplete() {
         return complete;

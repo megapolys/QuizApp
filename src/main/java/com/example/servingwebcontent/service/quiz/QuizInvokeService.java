@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.repositories.UserRepository;
@@ -40,7 +40,7 @@ public class QuizInvokeService {
         return countCompleted + "/" + taskCount;
     }
 
-    public void startQuiz(long userId, Quiz quiz) {
+	public void startQuiz(long userId, QuizWithTaskSize quiz) {
 //        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд
 //        final QuizResult quizResult = new QuizResult();
 //        quizResult.setQuiz(quiz);

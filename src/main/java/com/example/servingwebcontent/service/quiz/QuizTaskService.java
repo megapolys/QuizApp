@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.quiz.QuizTask;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
 import com.example.servingwebcontent.model.validation.TaskForm;
@@ -41,74 +41,74 @@ public class QuizTaskService {
         this.quizTaskResultRepository = quizTaskResultRepository;
     }
 
-    public QuizTaskResult saveFiveVariant(Quiz quiz, MultipartFile file, TaskForm taskForm) {
-        return saveFiveVariant(quiz, file, taskForm, new QuizTask());
-    }
+	public QuizTaskResult saveFiveVariant(QuizWithTaskSize quiz, MultipartFile file, TaskForm taskForm) {
+		return saveFiveVariant(quiz, file, taskForm, new QuizTask());
+	}
 
-    public QuizTaskResult saveFiveVariant(Quiz quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
-        final FiveVariantTask fiveVariantTask = new FiveVariantTask();
-        fiveVariantTask.setPreQuestionText(taskForm.getPreQuestionText());
-        fiveVariantTask.setQuestionText(taskForm.getQuestionText());
-        fiveVariantTask.setFirstWeight(taskForm.getFirstWeight());
-        fiveVariantTask.setSecondWeight(taskForm.getSecondWeight());
-        fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
-        fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
-        fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
-        if (quizTask.getFiveVariantTask() != null && !taskForm.isDeleteFile()) {
-            fiveVariantTask.setFileName(quizTask.getFiveVariantTask().getFileName());
+	public QuizTaskResult saveFiveVariant(QuizWithTaskSize quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
+		final FiveVariantTask fiveVariantTask = new FiveVariantTask();
+		fiveVariantTask.setPreQuestionText(taskForm.getPreQuestionText());
+		fiveVariantTask.setQuestionText(taskForm.getQuestionText());
+		fiveVariantTask.setFirstWeight(taskForm.getFirstWeight());
+		fiveVariantTask.setSecondWeight(taskForm.getSecondWeight());
+		fiveVariantTask.setThirdWeight(taskForm.getThirdWeight());
+		fiveVariantTask.setFourthWeight(taskForm.getFourthWeight());
+		fiveVariantTask.setFifthWeight(taskForm.getFifthWeight());
+		if (quizTask.getFiveVariantTask() != null && !taskForm.isDeleteFile()) {
+			fiveVariantTask.setFileName(quizTask.getFiveVariantTask().getFileName());
         }
         return saveFiveVariant(quiz, fiveVariantTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
     }
 
-    public QuizTaskResult saveFiveVariant(Quiz quiz, FiveVariantTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask, boolean deleteFile) {
-        try {
-            if (deleteFile || !file.isEmpty()) {
-                deleteFile(quizTask);
-            }
-            final String resultFileName = saveFile(file);
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                task.setFileName(resultFileName);
-            }
-        } catch (IOException e) {
-            return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
+	public QuizTaskResult saveFiveVariant(QuizWithTaskSize quiz, FiveVariantTask task, MultipartFile file, int pos, Set<Decision> decisions, QuizTask quizTask, boolean deleteFile) {
+		try {
+			if (deleteFile || !file.isEmpty()) {
+				deleteFile(quizTask);
+			}
+			final String resultFileName = saveFile(file);
+			if (file != null && !file.getOriginalFilename().isEmpty()) {
+				task.setFileName(resultFileName);
+			}
+		} catch (IOException e) {
+			return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
         }
         quizTask.setFiveVariantTask(task);
         return finalSaving(quiz, pos, decisions, quizTask);
     }
 
-    public QuizTaskResult saveYesOrNo(Quiz quiz, MultipartFile file, TaskForm taskForm) {
-        return saveYesOrNo(quiz, file, taskForm, new QuizTask());
-    }
+	public QuizTaskResult saveYesOrNo(QuizWithTaskSize quiz, MultipartFile file, TaskForm taskForm) {
+		return saveYesOrNo(quiz, file, taskForm, new QuizTask());
+	}
 
-    public QuizTaskResult saveYesOrNo(Quiz quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
-        final YesOrNoTask yesOrNoTask = new YesOrNoTask();
-        yesOrNoTask.setPreQuestionText(taskForm.getPreQuestionText());
-        yesOrNoTask.setQuestionText(taskForm.getQuestionText());
-        yesOrNoTask.setYesWeight(taskForm.getYesWeight());
-        yesOrNoTask.setNoWeight(taskForm.getNoWeight());
-        if (quizTask.getYesOrNoTask() != null && !taskForm.isDeleteFile()) {
-            yesOrNoTask.setFileName(quizTask.getYesOrNoTask().getFileName());
-        }
-        return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
-    }
+	public QuizTaskResult saveYesOrNo(QuizWithTaskSize quiz, MultipartFile file, TaskForm taskForm, QuizTask quizTask) {
+		final YesOrNoTask yesOrNoTask = new YesOrNoTask();
+		yesOrNoTask.setPreQuestionText(taskForm.getPreQuestionText());
+		yesOrNoTask.setQuestionText(taskForm.getQuestionText());
+		yesOrNoTask.setYesWeight(taskForm.getYesWeight());
+		yesOrNoTask.setNoWeight(taskForm.getNoWeight());
+		if (quizTask.getYesOrNoTask() != null && !taskForm.isDeleteFile()) {
+			yesOrNoTask.setFileName(quizTask.getYesOrNoTask().getFileName());
+		}
+		return saveYesOrNo(quiz, yesOrNoTask, file, taskForm.getPosition(), taskForm.getDecisions(), quizTask, taskForm.isDeleteFile());
+	}
 
-    public QuizTaskResult saveYesOrNo(Quiz quiz, YesOrNoTask task, MultipartFile file, int pos, Set<QuizDecision> decisions, QuizTask quizTask, boolean deleteFile) {
-        try {
-            if (deleteFile || !file.isEmpty()) {
-                deleteFile(quizTask);
-            }
-            final String resultFileName = saveFile(file);
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                task.setFileName(resultFileName);
-            }
-        } catch (IOException e) {
-            return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
+	public QuizTaskResult saveYesOrNo(QuizWithTaskSize quiz, YesOrNoTask task, MultipartFile file, int pos, Set<Decision> decisions, QuizTask quizTask, boolean deleteFile) {
+		try {
+			if (deleteFile || !file.isEmpty()) {
+				deleteFile(quizTask);
+			}
+			final String resultFileName = saveFile(file);
+			if (file != null && !file.getOriginalFilename().isEmpty()) {
+				task.setFileName(resultFileName);
+			}
+		} catch (IOException e) {
+			return new QuizTaskResult(ResultType.FILE_EXCEPTION, null);
         }
         quizTask.setYesOrNoTask(task);
         return finalSaving(quiz, pos, decisions, quizTask);
     }
 
-    private QuizTaskResult finalSaving(Quiz quiz, int pos, Set<QuizDecision> decisions, QuizTask quizTask) {
+	private QuizTaskResult finalSaving(QuizWithTaskSize quiz, int pos, Set<Decision> decisions, QuizTask quizTask) {
 //        movePosition(quiz, pos, quizTask);
 //        quizTask.setPosition(pos);
 //        quizTask.setQuiz(quiz);
@@ -117,8 +117,8 @@ public class QuizTaskService {
 //        quiz.getTaskList().add(quizTask);
 //        quizRepository.save(quiz);
 //        return new QuizTaskResult(ResultType.SUCCESS, quizTask);
-        return null;
-    }
+		return null;
+	}
 
     private String saveFile(MultipartFile file) throws IOException {
         String resultFileName = null;
@@ -134,7 +134,7 @@ public class QuizTaskService {
         return resultFileName;
     }
 
-    private void movePosition(Quiz quiz, int pos, QuizTask quizTask) {
+	private void movePosition(QuizWithTaskSize quiz, int pos, QuizTask quizTask) {
 //        final QuizTask foundTask = quizTaskRepository.findByPositionAndQuiz(pos, quiz);
 //        if (foundTask != null && !Objects.equals(foundTask.getId(), quizTask.getId())) {
 //            for (QuizTask task : quiz.getTaskList()) {
@@ -144,7 +144,7 @@ public class QuizTaskService {
 //                }
 //            }
 //        }
-    }
+	}
 
     @Transactional
     public void delete(QuizTask task) {

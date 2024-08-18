@@ -25,8 +25,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
         http
             .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/login", "/registration", "/activate/**", "/repairPassword", "/repairPassword/*").anonymous()
-                .requestMatchers("/user/list").hasRole("ADMIN")
+				.requestMatchers("/login", "/registration", "/activate/**", "/repairPassword", "/repairPassword/*").anonymous()
+				.requestMatchers("/user/list", "/quiz/**", "/decisions/**").hasRole("ADMIN")
                 .requestMatchers("/", "/main", "/static/**").permitAll()
                 .anyRequest().authenticated()
             )

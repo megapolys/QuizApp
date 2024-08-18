@@ -2,7 +2,7 @@ package com.example.servingwebcontent.controller.medical;
 
 import com.example.servingwebcontent.model.medical.MedicalTask;
 import com.example.servingwebcontent.model.medical.MedicalTopic;
-import com.example.servingwebcontent.service.DecisionService;
+import com.example.servingwebcontent.service.decision.impl.DecisionServiceImpl;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,13 +18,13 @@ import java.util.Comparator;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class MedicalController {
 
-    private final MedicalTopicService medicalTopicService;
-    private final DecisionService decisionService;
+	private final MedicalTopicService medicalTopicService;
+	private final DecisionServiceImpl decisionService;
 
-    public MedicalController(MedicalTopicService medicalTopicService, DecisionService decisionService) {
-        this.medicalTopicService = medicalTopicService;
-        this.decisionService = decisionService;
-    }
+	public MedicalController(MedicalTopicService medicalTopicService, DecisionServiceImpl decisionService) {
+		this.medicalTopicService = medicalTopicService;
+		this.decisionService = decisionService;
+	}
 
     @GetMapping("/list")
     public String medicalList(
@@ -96,13 +96,13 @@ public class MedicalController {
             @PathVariable MedicalTopic topic,
             Model model
     ) {
-        model.addAttribute("topic", topic);
-        model.addAttribute("taskList", topic.getMedicalTasks().stream()
-                .sorted(Comparator.comparing(MedicalTask::getId)).toList());
-        model.addAttribute("groups", decisionService.groups());
-        model.addAttribute("decisions", decisionService.decisionsWithoutGroups());
-        return "/medical/admin/topic";
-    }
+		model.addAttribute("topic", topic);
+		model.addAttribute("taskList", topic.getMedicalTasks().stream()
+			.sorted(Comparator.comparing(MedicalTask::getId)).toList());
+		model.addAttribute("groups", decisionService.getDecisionGroups());
+		model.addAttribute("decisions", decisionService.getUngroupedDecisions());
+		return "/medical/admin/topic";
+	}
 
     @PostMapping("/{topic}/task/add")
     public String addTask(

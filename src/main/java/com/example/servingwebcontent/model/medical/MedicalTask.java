@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.model.medical;
 
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -22,10 +22,10 @@ public class MedicalTask {
     @OneToMany(mappedBy = "medicalTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MedicalTaskResult> medicalTaskResults;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<QuizDecision> leftDecisions;
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<QuizDecision> rightDecisions;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Decision> leftDecisions;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Decision> rightDecisions;
 
     private Float leftLeft;
     private Float leftMid;
@@ -80,21 +80,21 @@ public class MedicalTask {
         this.rightRight = rightRight;
     }
 
-    public Set<QuizDecision> getLeftDecisions() {
-        return leftDecisions;
-    }
+	public Set<Decision> getLeftDecisions() {
+		return leftDecisions;
+	}
 
-    public void setLeftDecisions(Set<QuizDecision> leftDecisions) {
-        this.leftDecisions = leftDecisions;
-    }
+	public void setLeftDecisions(Set<Decision> leftDecisions) {
+		this.leftDecisions = leftDecisions;
+	}
 
-    public Set<QuizDecision> getRightDecisions() {
-        return rightDecisions;
-    }
+	public Set<Decision> getRightDecisions() {
+		return rightDecisions;
+	}
 
-    public void setRightDecisions(Set<QuizDecision> rightDecisions) {
-        this.rightDecisions = rightDecisions;
-    }
+	public void setRightDecisions(Set<Decision> rightDecisions) {
+		this.rightDecisions = rightDecisions;
+	}
 
     public String getUnit() {
         return unit;

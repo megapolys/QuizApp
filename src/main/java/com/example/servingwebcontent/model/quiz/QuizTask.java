@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.model.quiz;
 
-import com.example.servingwebcontent.model.quiz.decision.QuizDecision;
+import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
 import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
 import jakarta.persistence.*;
@@ -13,9 +13,9 @@ public class QuizTask {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "quiz_id", referencedColumnName = "id", nullable = false)
-    private Quiz quiz;
+	@ManyToOne(fetch = FetchType.EAGER, optional = false)
+	@JoinColumn(name = "quiz_id", referencedColumnName = "id", nullable = false)
+	private QuizWithTaskSize quiz;
 
     private int position;
 
@@ -25,8 +25,8 @@ public class QuizTask {
     @OneToOne(cascade = CascadeType.ALL)
     private YesOrNoTask yesOrNoTask;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<QuizDecision> decisions;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Decision> decisions;
 
     public void setId(Long id) {
         this.id = id;
@@ -36,13 +36,13 @@ public class QuizTask {
         return id;
     }
 
-    public Quiz getQuiz() {
-        return quiz;
-    }
+	public QuizWithTaskSize getQuiz() {
+		return quiz;
+	}
 
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
+	public void setQuiz(QuizWithTaskSize quiz) {
+		this.quiz = quiz;
+	}
 
     public int getPosition() {
         return position;
@@ -68,11 +68,11 @@ public class QuizTask {
         this.yesOrNoTask = yesOrNoTask;
     }
 
-    public Set<QuizDecision> getDecisions() {
-        return decisions;
-    }
+	public Set<Decision> getDecisions() {
+		return decisions;
+	}
 
-    public void setDecisions(Set<QuizDecision> decisions) {
-        this.decisions = decisions;
-    }
+	public void setDecisions(Set<Decision> decisions) {
+		this.decisions = decisions;
+	}
 }
