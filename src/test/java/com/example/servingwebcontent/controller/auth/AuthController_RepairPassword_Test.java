@@ -52,7 +52,7 @@ public class AuthController_RepairPassword_Test extends AuthControllerTest {
 		then(actualUserEntity.getBirthday()).isEqualTo(userEntity.getBirthday());
 		then(actualUserEntity.getEmail()).isEqualTo(userEntity.getEmail());
 		then(actualUserEntity.isActive()).isEqualTo(userEntity.isActive());
-		then(actualUserEntity.isMale()).isEqualTo(userEntity.isMale());
+		then(actualUserEntity.getMale()).isEqualTo(userEntity.getMale());
 		then(actualUserEntity.getActivationCode()).isEqualTo(userEntity.getActivationCode());
 		then(actualUserEntity.getRepairPasswordCode()).isNotNull();
 	}

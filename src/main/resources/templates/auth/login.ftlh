@@ -14,6 +14,10 @@
                        class="form-label">Пароль</label>
                 <input type="password" class="form-control" id="inputPassword" name="password" placeholder="пароль">
             </div>
+            <div class="mb-3">
+                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me"/>
+                <label for="remember-me" class="form-check-label">Запомнить меня</label>
+            </div>
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <button type="submit" class="btn btn-primary">Жмяк</button>
         </div>

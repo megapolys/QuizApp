@@ -18,7 +18,7 @@ import static com.example.servingwebcontent.consts.MessageConsts.*;
 
 @Controller
 @RequiredArgsConstructor
-public class DecisionController {
+public class DecisionRestController {
 
     private final DecisionService decisionService;
 

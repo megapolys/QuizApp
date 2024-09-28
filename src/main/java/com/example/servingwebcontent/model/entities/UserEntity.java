@@ -28,7 +28,7 @@ public class UserEntity {
 		String username,
 		String repairPasswordCode,
 		LocalDate birthday,
-		boolean male
+		Boolean male
 	) {
 		return new UserEntity(
 			null,
@@ -58,7 +58,7 @@ public class UserEntity {
 		String username,
 		String repairPasswordCode,
 		LocalDate birthday,
-		boolean male
+		Boolean male
 	) {
 		return new UserEntity(
 			id,
@@ -112,5 +112,5 @@ public class UserEntity {
 	LocalDate birthday;
 
 	@Column(name = "male")
-	boolean male;
+	Boolean male;
 }

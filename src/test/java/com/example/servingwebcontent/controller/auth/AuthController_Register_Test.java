@@ -92,7 +92,7 @@ public class AuthController_Register_Test extends AuthControllerTest {
 		then(actualUserEntity.getBirthday()).isEqualTo(userEntity.getBirthday());
 		then(actualUserEntity.getEmail()).isEqualTo(userEntity.getEmail());
 		then(actualUserEntity.isActive()).isFalse();
-		then(actualUserEntity.isMale()).isEqualTo(userEntity.isMale());
+		then(actualUserEntity.getMale()).isEqualTo(userEntity.getMale());
 		then(actualUserEntity.getActivationCode()).isNotBlank();
 		then(actualUserEntity.getRepairPasswordCode()).isNull();
 

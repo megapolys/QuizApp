@@ -18,7 +18,7 @@ public class UserEntityToUserSimpleConverter implements Converter<UserEntity, Us
 			.middleName(userEntity.getMiddleName())
 			.email(userEntity.getEmail())
 			.birthday(userEntity.getBirthday())
-			.male(userEntity.isMale())
+			.male(userEntity.getMale())
 			.build();
 	}
 }

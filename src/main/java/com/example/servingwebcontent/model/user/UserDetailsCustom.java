@@ -23,6 +23,10 @@ public class UserDetailsCustom implements UserDetails {
 
 	Boolean active;
 
+	public boolean isAdmin() {
+		return roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
