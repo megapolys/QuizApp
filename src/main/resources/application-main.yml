@@ -12,15 +12,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     liquibase-schema: changes
+
   #jpa.show-sql: true
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
-        web:
-          filter:
-            CommonsRequestLoggingFilter: debug
+#management.endpoints.web.exposure.include: 'httptrace'
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: DEBUG
 upload.path:
   img: '/Users/i/IdeaProjects/QuizApp/img'
   imgPrefix: 'C:'
@@ -28,8 +27,8 @@ domain.name: localhost:8082
 server:
   port: 8082
 #
-#logging:
-#  level:
-#    ROOT: ERROR
+logging:
+  level:
+    ROOT: INFO
 #  file:
 #    name: application.log

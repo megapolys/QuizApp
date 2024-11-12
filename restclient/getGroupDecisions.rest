@@ -1,0 +1,3 @@
+GET http://{{host}}/api/decisions
+Content-Type: application/json
+Cookie: JSESSIONID=04AF963F43F6F43E48CE1ABF1CC795F0

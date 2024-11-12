@@ -24,6 +24,7 @@
         <#if successMessage??>
             <div class="alert alert-success mb-3">${successMessage!}</div>
         </#if>
+        <div id="message"></div>
         <#nested>
     </div>
     <footer class="py-3 my-4">
@@ -55,7 +56,15 @@
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
             const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
         });
+
+        function showError(msg) {
+            $("#message").html('<div class="alert alert-danger mb-3">' + msg + '</div>');
+        }
+
+        function showSuccess(msg) {
+            $("#message").html('<div class="alert alert-success mb-3">' + msg + '</div>');
+        }
     </script>
     </body>
-    </html>
+</html>
 </#macro>

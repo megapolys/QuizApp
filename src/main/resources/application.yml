@@ -29,3 +29,20 @@ default:
     leftMid: 2
     rightMid: 2
     rightRight: 4
+
+quiz:
+  logger:
+    mask-value-keys: [ 'password' ]
+    ignore-headers: [ 'sec-ch-ua',
+                      'sec-ch-ua-mobile',
+                      'sec-ch-ua-platform',
+                      'sec-fetch-site',
+                      'sec-fetch-mode',
+                      'sec-fetch-dest',
+                      'sec-fetch-user',
+                      'accept-encoding',
+                      'accept-language',
+                      'cache-control',
+                      'upgrade-insecure-requests',
+                      'origin' ]
+    ignore-uri-prefix: [ '/static' ]

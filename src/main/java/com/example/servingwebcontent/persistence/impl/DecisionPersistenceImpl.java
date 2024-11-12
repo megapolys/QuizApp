@@ -124,11 +124,10 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	 */
 	@Override
 	public void createDecision(DecisionWithGroup decision) {
-		decisionRepository.save(DecisionEntity.buildExisting(
-			decision.getId(),
-			decision.getName(),
-			decision.getDescription(),
-			decision.getGroupId()
+		decisionRepository.save(DecisionEntity.createNew(
+				decision.getName(),
+				decision.getDescription(),
+				decision.getGroupId()
 		));
 	}
 

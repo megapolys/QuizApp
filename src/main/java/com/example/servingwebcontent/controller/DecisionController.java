@@ -9,7 +9,10 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import static com.example.servingwebcontent.consts.Consts.ERROR_MESSAGE_PARAM;
@@ -105,45 +108,6 @@ public class DecisionController {
     }
 
     /**
-     * Удаление группы
-     *
-     * @param groupId - Идентификатор группы
-     */
-    @DeleteMapping("/decisions/group/{groupId}")
-    public void groupDelete(
-        @PathVariable Long groupId
-//        ,
-//        RedirectAttributes redirectAttributes
-    ) {
-        decisionService.deleteGroupById(groupId);
-//        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, GROUP_SUCCESSFUL_DELETED);
-//        return "redirect:/decisions";
-    }
-
-    /**
-     * Добавление решение
-     *
-     * @param decision - Решение
-     */
-    @PostMapping("/decisions")
-    public String addDecision(
-        @RequestBody DecisionWithGroup decision,
-        RedirectAttributes redirectAttributes
-    ) {
-        if (StringUtils.isBlank(decision.getName())) {
-            redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_NAME_IS_EMPTY);
-        } else {
-            try {
-                decisionService.addDecision(decision);
-            } catch (DecisionAlreadyExistsByNameException e) {
-                redirectAttributes.addFlashAttribute(ERROR_MESSAGE_PARAM, DECISION_WITH_SAME_NAME_ALREADY_EXISTS);
-            }
-            redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_ADDED);
-        }
-        return "redirect:/decisions";
-    }
-
-    /**
      * Получение страницы обновления решения
      *
      * @param decisionId - Идентификатор решения
@@ -186,21 +150,19 @@ public class DecisionController {
             }
         }
     }
-
-
-    /**
-     * Удаление решения
-     *
-     * @param decisionId - Идентификатор решения
-     */
-    @DeleteMapping("/decisions/{decisionId}")
-    public String deleteDecision(
-        @PathVariable Long decisionId,
-        RedirectAttributes redirectAttributes
-    ) {
-        decisionService.deleteDecisionById(decisionId);
-        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_DELETED);
-        return "redirect:/decisions";
-    }
-
+//
+//    /**
+//     * Удаление решения
+//     *
+//     * @param decisionId - Идентификатор решения
+//     */
+//    @DeleteMapping("/decisions/{decisionId}")
+//    public String deleteDecision(
+//        @PathVariable Long decisionId,
+//        RedirectAttributes redirectAttributes
+//    ) {
+//        decisionService.deleteDecisionById(decisionId);
+//        redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, DECISION_SUCCESSFUL_DELETED);
+//        return "redirect:/decisions";
+//    }
 }
