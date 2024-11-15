@@ -21,35 +21,35 @@
     <a href="##" class="link-danger" data-bs-toggle="modal" data-bs-target="#${id}">
         Удалить
     </a>
-    <div class="modal fade" id="${id}" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтверждение удаления</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ${text}
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-danger" href="#" onclick="deleteByPath(path, ${_csrf.token})">Удалить</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        async function deleteByPath(path, _csrf) {
-            const body = {_csrf: _csrf};
-            await fetch(path, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            });
-        }
-    </script>
+<#--    <div class="modal fade" id="${id}" tabindex="-1" aria-hidden="true">-->
+<#--        <div class="modal-dialog modal-dialog-centered">-->
+<#--            <div class="modal-content">-->
+<#--                <div class="modal-header">-->
+<#--                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтверждение удаления</h1>-->
+<#--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<#--                </div>-->
+<#--                <div class="modal-body">-->
+<#--                    ${text}-->
+<#--                </div>-->
+<#--                <div class="modal-footer">-->
+<#--                    <a class="btn btn-danger" href="#" onclick="deleteByPath(path, ${_csrf.token})">Удалить</a>-->
+<#--                </div>-->
+<#--            </div>-->
+<#--        </div>-->
+<#--    </div>-->
+<#--    <script>-->
+<#--        async function deleteByPath(path, _csrf) {-->
+<#--            const body = {_csrf: _csrf};-->
+<#--            await fetch(path, {-->
+<#--                method: 'DELETE',-->
+<#--                headers: {-->
+<#--                    'Accept': 'application/json',-->
+<#--                    'Content-Type': 'application/json'-->
+<#--                },-->
+<#--                body: JSON.stringify(body)-->
+<#--            });-->
+<#--        }-->
+<#--    </script>-->
 </#macro>
 
 <#macro postButton path text>

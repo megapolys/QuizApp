@@ -58,21 +58,20 @@ public class RequestLoggingContextFilter extends OncePerRequestFilter {
 
 		if (log.isInfoEnabled()) {
 			try {
-				request = new CachedBodyHttpServletRequest(request);
-				StringBuilder builder = new StringBuilder().append(System.lineSeparator());
-				builder.append(request.getMethod()).append(" ").append(request.getRequestURI());
-
-				if (StringUtils.isNotBlank(queryString)) {
-					builder.append("?").append(queryString);
-				}
-
 				boolean showFull = true;
 				if (request.getRequestURI() != null && CollectionUtils.isNotEmpty(properties.getIgnoreURIPrefix())) {
 					showFull = properties.getIgnoreURIPrefix().stream()
-							.noneMatch(request.getRequestURI()::startsWith);
+						.noneMatch(request.getRequestURI()::startsWith);
 				}
 
 				if (showFull) {
+					request = new CachedBodyHttpServletRequest(request);
+					StringBuilder builder = new StringBuilder().append(System.lineSeparator());
+					builder.append(request.getMethod()).append(" ").append(request.getRequestURI());
+
+					if (StringUtils.isNotBlank(queryString)) {
+						builder.append("?").append(queryString);
+					}
 					builder.append(System.lineSeparator()).append("body: ");
 					boolean bodyVisible = true;
 					if (request.getContentType() != null) {
@@ -104,8 +103,8 @@ public class RequestLoggingContextFilter extends OncePerRequestFilter {
 						}
 					}
 					builder.append(System.lineSeparator()).append("}");
+					log.info(builder.toString());
 				}
-				log.info(builder.toString());
 			} catch (Throwable thr) {
 				logger.warn("Cannot print request" + thr.getLocalizedMessage(), thr);
 			}

@@ -119,4 +119,11 @@ public interface DecisionPersistence {
 	 * @param decisionId - Идентификатор решения
 	 */
 	void deleteDecisionById(Long decisionId);
+
+	/**
+	 * Получение всех групп без решений
+	 *
+	 * @return Группы
+	 */
+	List<Group> getGroups();
 }

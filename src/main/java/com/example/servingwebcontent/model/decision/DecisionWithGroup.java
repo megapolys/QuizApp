@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.model.decision;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,6 +10,7 @@ public class DecisionWithGroup {
 
 	Long id;
 
+	@NotBlank
 	String name;
 
 	String description;

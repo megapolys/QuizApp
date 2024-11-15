@@ -170,4 +170,14 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	public void deleteDecisionById(Long decisionId) {
 		decisionRepository.deleteById(decisionId);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Group> getGroups() {
+		return decisionGroupRepository.findAllByOrderByName().stream()
+			.map(groupConverter::convert)
+			.toList();
+	}
 }

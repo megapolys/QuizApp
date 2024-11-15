@@ -120,4 +120,12 @@ public class DecisionServiceImpl implements DecisionService {
 		decisionPersistence.deleteDecisionById(decisionId);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Group> getGroups() {
+		return decisionPersistence.getGroups();
+	}
+
 }
