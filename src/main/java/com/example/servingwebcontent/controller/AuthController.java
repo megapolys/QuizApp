@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailException;
-import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
-import com.example.servingwebcontent.exceptions.UserNotFoundException;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByUsernameException;
+import com.example.servingwebcontent.exceptions.user.UserNotFoundException;
 import com.example.servingwebcontent.model.dto.CaptchaResponseDto;
 import com.example.servingwebcontent.model.user.Password;
 import com.example.servingwebcontent.model.user.UserSimpleWithPassword;

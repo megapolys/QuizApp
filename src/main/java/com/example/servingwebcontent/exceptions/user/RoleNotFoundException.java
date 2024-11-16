@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.user;
 
 public class RoleNotFoundException extends RuntimeException {
 	public RoleNotFoundException(String message) {

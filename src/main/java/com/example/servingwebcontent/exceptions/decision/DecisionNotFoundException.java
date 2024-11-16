@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.decision;
 
 public class DecisionNotFoundException extends RuntimeException {
 	public DecisionNotFoundException(String message) {

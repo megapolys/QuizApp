@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.decision;
 
 public class DecisionAlreadyExistsByNameException extends RuntimeException {
 	public DecisionAlreadyExistsByNameException(String message) {

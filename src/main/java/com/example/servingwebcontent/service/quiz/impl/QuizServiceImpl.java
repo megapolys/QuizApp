@@ -1,6 +1,8 @@
 package com.example.servingwebcontent.service.quiz.impl;
 
+import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
 import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.QuizPersistence;
@@ -10,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,26 @@ public class QuizServiceImpl implements QuizService {
 	@Override
 	public List<QuizWithTaskSize> getQuizList() {
 		return quizPersistence.getQuizList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void addQuiz(QuizCreateCommandDto quiz) {
+		Quiz byShortName = quizPersistence.findByShortName(quiz.getShortName());
+		if (byShortName != null) {
+			throw QuizCreateException.alreadyExistsByShortName(quiz.getShortName());
+		}
+		quizPersistence.addQuiz(quiz);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteQuizById(Long id) {
+		quizPersistence.deleteQuizById(id);
 	}
 
 	public List<QuizBean> getQuizzes(User user) {
@@ -43,19 +64,6 @@ public class QuizServiceImpl implements QuizService {
 //            quizList.add(new QuizBean(quiz, inProgress, exists));
 //        }
 //        return quizList;
-		return null;
-	}
-
-	public QuizResult save(QuizWithTaskSize quiz) {
-		Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
-		if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
-			return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
-		}
-		final Quiz byName = quizRepository.findByName(quiz.getName());
-		if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
-			return new QuizResult(ResultType.NAME_FOUND, byName);
-		}
-		return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
 		return null;
 	}
 

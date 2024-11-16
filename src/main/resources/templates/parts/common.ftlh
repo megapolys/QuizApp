@@ -64,6 +64,70 @@
         function showSuccess(msg) {
             $("#message").html('<div class="alert alert-success mb-3">' + msg + '</div>');
         }
+
+        function fillFormInvalidFields(json, form) {
+            form.find('[name]').removeClass('is-invalid');
+            jQuery.each(json['fields'], function () {
+                let field = this;
+                let inputField = form.find("[name|='" + field['fieldName'] + "']");
+                inputField.addClass('is-invalid');
+                let descriptionId = inputField.attr('aria-describedby');
+                $('#' + descriptionId).html(field['error']);
+            })
+        }
+
+        async function getRequestWithError(path, errorMessage) {
+            let response = await fetch(path, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.ok) {
+                return response.json();
+            } else {
+                showError(errorMessage);
+            }
+        }
+
+        async function deleteByPath(path, successMsg, errorMsg) {
+            let response = await fetch(path, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                }
+            });
+            if (response.ok) {
+                showSuccess(successMsg ? successMsg : 'Успешно удалено');
+            } else {
+                showError(errorMsg ? errorMsg : 'Возникли непредвиденные ошибки при попытке удаления');
+            }
+        }
+
+        function deleteConfirm(onClickAction, confirmId, text) {
+            return $(`
+                <div>
+                    <a href="##" class="link-danger" data-bs-toggle="modal" data-bs-target="#` + confirmId + `">Удалить</a>
+                    <div class="modal fade" id="` + confirmId + `" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                           <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Подтверждение удаления</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">` + text + `</div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-danger" data-bs-dismiss="modal" href="#" onclick="` + onClickAction + `">Удалить</a>
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
     </script>
     </body>
 </html>

@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.exceptions.UserAlreadyExistsByEmailException;
-import com.example.servingwebcontent.exceptions.UserAlreadyExistsByUsernameException;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByUsernameException;
 import com.example.servingwebcontent.model.user.UserDetailsCustom;
 import com.example.servingwebcontent.model.user.UserSimple;
 import com.example.servingwebcontent.service.user.UserService;

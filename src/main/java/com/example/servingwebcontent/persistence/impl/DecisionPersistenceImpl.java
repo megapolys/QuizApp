@@ -4,8 +4,8 @@ import com.example.servingwebcontent.converters.DecisionEntityToDecisionConverte
 import com.example.servingwebcontent.converters.DecisionEntityToDecisionWithGroupConverter;
 import com.example.servingwebcontent.converters.DecisionGroupEntityToGroupConverter;
 import com.example.servingwebcontent.converters.DecisionGroupEntityToGroupWithDecisionsConverter;
-import com.example.servingwebcontent.exceptions.DecisionNotFoundException;
-import com.example.servingwebcontent.exceptions.GroupNotFoundException;
+import com.example.servingwebcontent.exceptions.decision.DecisionNotFoundException;
+import com.example.servingwebcontent.exceptions.decision.GroupNotFoundException;
 import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.decision.DecisionWithGroup;
 import com.example.servingwebcontent.model.decision.Group;

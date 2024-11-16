@@ -1,5 +1,7 @@
 package com.example.servingwebcontent.persistence;
 
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 
 import java.util.List;
@@ -12,4 +14,25 @@ public interface QuizPersistence {
 	 * @return Список тестов
 	 */
 	List<QuizWithTaskSize> getQuizList();
+
+	/**
+	 * Получение теста по короткому наименованию
+	 *
+	 * @return Тест
+	 */
+	Quiz findByShortName(String shortName);
+
+	/**
+	 * Добавить новый тест
+	 *
+	 * @param quiz - Тест
+	 */
+	void addQuiz(QuizCreateCommandDto quiz);
+
+	/**
+	 * Удаление теста
+	 *
+	 * @param id - Идентификатор теста
+	 */
+	void deleteQuizById(Long id);
 }

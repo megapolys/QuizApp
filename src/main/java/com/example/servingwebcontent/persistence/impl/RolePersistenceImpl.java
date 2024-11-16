@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.persistence.impl;
 
-import com.example.servingwebcontent.exceptions.RoleNotFoundException;
+import com.example.servingwebcontent.exceptions.user.RoleNotFoundException;
 import com.example.servingwebcontent.model.Role;
 import com.example.servingwebcontent.model.entities.RoleEntity;
 import com.example.servingwebcontent.persistence.RolePersistence;

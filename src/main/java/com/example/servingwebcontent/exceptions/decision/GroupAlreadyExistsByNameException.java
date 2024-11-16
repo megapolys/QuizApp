@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.decision;
 
 public class GroupAlreadyExistsByNameException extends RuntimeException {
 	public GroupAlreadyExistsByNameException(String message) {

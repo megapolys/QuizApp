@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.service.user.impl;
 
-import com.example.servingwebcontent.exceptions.UserNotFoundException;
+import com.example.servingwebcontent.exceptions.user.UserNotFoundException;
 import com.example.servingwebcontent.persistence.UserPersistence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

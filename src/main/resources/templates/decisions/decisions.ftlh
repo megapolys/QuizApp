@@ -102,7 +102,7 @@
                         : '<a href="##" class="text-decoration-none" aria-disabled="true">' + decision.name + '</a>')
                 );
                 decisionTr.append($('<td></td>').append('<a href="#" onclick="fillDecisionFormByUpdate(' + decision.id + ')">Изменить</a>'));
-                decisionTr.append($('<td></td>').append(deleteConfirm(decision.id, 'confirm-delete-decision-' + decision.id, 'Точно удалить решение?')));
+                decisionTr.append($('<td></td>').append(deleteConfirm('deleteDecision(' + decision.id + ')', 'confirm-delete-decision-' + decision.id, 'Точно удалить решение?')));
                 groupAccordionBody.append(decisionTr);
             })
         }
@@ -206,26 +206,6 @@
             `);
         }
 
-        function deleteConfirm(decisionId, confirmId, text) {
-            let deleteConfirm = $('<div></div>');
-            deleteConfirm.append('<a href="##" class="link-danger" data-bs-toggle="modal" data-bs-target="#' + confirmId + '">Удалить</a>')
-            let modelContent = $('<div class="modal-content"></div');
-            deleteConfirm.append($('<div class="modal fade" id="' + confirmId + '" tabindex="-1" aria-hidden="true"></div>')
-                .append($('<div class="modal-dialog modal-dialog-centered"></div>')
-                    .append(modelContent)));
-            modelContent.append('<div class="modal-header">' +
-                '<h1 class="modal-title fs-5" id="staticBackdropLabel">Подтверждение удаления</h1>' +
-                '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>' +
-                '</div>');
-            modelContent.append('<div class="modal-body">' + text + '</div>');
-            modelContent.append(
-                '<div class="modal-footer">' +
-                '<a class="btn btn-danger" data-bs-dismiss="modal" href="#" onclick="deleteDecision(' + decisionId + ')">Удалить</a>' +
-                '</div>'
-            );
-            return deleteConfirm;
-        }
-
         async function getGroupDecisions() {
             return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
         }
@@ -244,21 +224,6 @@
 
         async function getDecisionById(decisionId) {
             return getRequestWithError("/api/decisions/" + decisionId, 'Ошибка при попытки получения решения по идентификатору');
-        }
-
-        async function getRequestWithError(path, errorMessage) {
-            let response = await fetch(path, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.ok) {
-                return response.json();
-            } else {
-                showError(errorMessage);
-            }
         }
 
         async function addGroup() {
@@ -281,7 +246,7 @@
                 await loadContent();
             } else {
                 response.json().then(json => {
-                    fillInvalidFields(json, form);
+                    fillFormInvalidFields(json, form);
                 })
             }
         }
@@ -306,7 +271,7 @@
                 await loadContent();
             } else {
                 response.json().then(json => {
-                    fillInvalidFields(json, form);
+                    fillFormInvalidFields(json, form);
                 })
             }
         }
@@ -333,7 +298,7 @@
                 await loadContent();
             } else {
                 response.json().then(json => {
-                    fillInvalidFields(json, form);
+                    fillFormInvalidFields(json, form);
                 })
             }
         }
@@ -360,43 +325,18 @@
                 await loadContent();
             } else {
                 response.json().then(json => {
-                    fillInvalidFields(json, form);
+                    fillFormInvalidFields(json, form);
                 })
             }
         }
 
-        function fillInvalidFields(json, form) {
-            jQuery.each(json['fields'], function () {
-                let field = this;
-                let inputField = form.find("[name|='" + field['fieldName'] + "']");
-                inputField.addClass('is-invalid');
-                let descriptionId = inputField.attr('aria-describedby');
-                $('#' + descriptionId).html(field['error']);
-            })
-        }
-
         async function deleteGroup(id) {
             await deleteByPath("/api/decisions/group/" + id, 'Группа успешно удалена', 'Возникли непредвиденные ошибки при попытке удаления группы');
+            await loadContent();
         }
 
         async function deleteDecision(id) {
             await deleteByPath("/api/decisions/" + id, 'Решение успешно удалено', 'Возникли непредвиденные ошибки при попытке удаления решения');
-        }
-
-        async function deleteByPath(path, successMsg, errorMsg) {
-            let response = await fetch(path, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    '${_csrf.headerName}': '${_csrf.token}'
-                }
-            });
-            if (response.ok) {
-                showSuccess(successMsg ? successMsg : 'Успешно удалено');
-            } else {
-                showError(errorMsg ? errorMsg : 'Возникли непредвиденные ошибки при попытке удаления');
-            }
             await loadContent();
         }
 

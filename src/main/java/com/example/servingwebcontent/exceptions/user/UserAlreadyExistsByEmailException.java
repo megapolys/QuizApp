@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.user;
 
 public class UserAlreadyExistsByEmailException extends RuntimeException {
 	public UserAlreadyExistsByEmailException(String message) {

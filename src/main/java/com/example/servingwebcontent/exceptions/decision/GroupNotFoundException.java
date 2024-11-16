@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.exceptions;
+package com.example.servingwebcontent.exceptions.decision;
 
 public class GroupNotFoundException extends RuntimeException {
 	public GroupNotFoundException(String message) {

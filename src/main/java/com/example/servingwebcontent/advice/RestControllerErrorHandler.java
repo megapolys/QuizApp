@@ -1,7 +1,8 @@
 package com.example.servingwebcontent.advice;
 
-import com.example.servingwebcontent.exceptions.DecisionAlreadyExistsByNameException;
-import com.example.servingwebcontent.exceptions.GroupAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
 import com.example.servingwebcontent.model.dto.ValidationErrorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +52,8 @@ public class RestControllerErrorHandler {
 			.fields(List.of(ValidationErrorDto.FieldDto.builder()
 				.fieldName("name")
 				.error(DECISION_WITH_SAME_NAME_ALREADY_EXISTS)
-				.build()))
-			.build();
+									.build()))
+				.build();
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
@@ -62,4 +63,10 @@ public class RestControllerErrorHandler {
 		return mvcConversionService.convert(e, ValidationErrorDto.class);
 	}
 
+	@ExceptionHandler(QuizCreateException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	protected ValidationErrorDto handleMethodArgumentNotValidException(QuizCreateException e) {
+		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
+		return e.getPayload();
+	}
 }

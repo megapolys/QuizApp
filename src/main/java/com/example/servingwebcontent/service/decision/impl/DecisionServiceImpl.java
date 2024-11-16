@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.service.decision.impl;
 
-import com.example.servingwebcontent.exceptions.DecisionAlreadyExistsByNameException;
-import com.example.servingwebcontent.exceptions.GroupAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.decision.DecisionWithGroup;
 import com.example.servingwebcontent.model.decision.Group;

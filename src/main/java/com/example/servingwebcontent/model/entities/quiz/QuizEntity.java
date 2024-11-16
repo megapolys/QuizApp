@@ -15,6 +15,29 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class QuizEntity {
 
+	public static QuizEntity createNew(
+			String name,
+			String shortName
+	) {
+		return new QuizEntity(
+				null,
+				name,
+				shortName
+		);
+	}
+
+	public static QuizEntity buildExisting(
+			Long id,
+			String name,
+			String shortName
+	) {
+		return new QuizEntity(
+				id,
+				name,
+				shortName
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_gen")

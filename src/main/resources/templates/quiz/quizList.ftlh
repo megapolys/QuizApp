@@ -3,10 +3,10 @@
 <@c.page>
     <h3 class="mb-3">Список тестов</h3>
     <div id="quiz-form" class="mb-3"></div>
-    <table class="table table-striped">
+    <table id="quiz-table" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 5%">Индекс</th>
+            <th style="width: 5%">Краткое наименование</th>
             <th style="width: 65%">Наименование</th>
             <th style="width: 10%">Размер</th>
             <th style="width: 10%"></th>
@@ -14,24 +14,6 @@
         </tr>
         </thead>
         <tbody>
-        <#list quizList as quiz>
-            <tr>
-                <td>${quiz.shortName}</td>
-                <td>${quiz.name}</td>
-                <td>
-                    <#if quiz.size == 0>
-                        пусто
-                    <#else>
-                        ${quiz.size}
-                    </#if>
-                </td>
-                <td><a href="/quiz/${quiz.id?c}">Редактировать</a></td>
-                <td>
-                    <@modal.deleteConfirm path="/quiz/delete/${quiz.id?c}" id="confirm-delete-quiz-${quiz.id}"
-                    text="Вы точно уверены, что хотите удалить опросник? Это необратимая операция, которая приведет к тому же к удалению всех результатов решения данного опросника."/>
-                </td>
-            </tr>
-        </#list>
         </tbody>
     </table>
 
@@ -43,16 +25,19 @@
 
         async function loadContent() {
             fillQuizForm();
+            await fillQuizListTable();
         }
 
         function fillQuizForm() {
             $('#quiz-form').html(`
                 <div class="row">
                     <div class="col-2">
-                        <input class="form-control" type="text" name="shortName" placeholder="Краткое наименование"/>
+                        <input class="form-control" type="text" name="shortName" placeholder="Краткое наименование" aria-describedby="validationQuizFormShortName"/>
+                        <div id="validationQuizFormShortName" class="invalid-feedback"></div>
                     </div>
                     <div class="col-8">
-                        <input class="form-control" type="text" name="name" placeholder="Наименование теста"/>
+                        <input class="form-control" type="text" name="name" placeholder="Наименование теста" aria-describedby="validationQuizFormName"/>
+                        <div id="validationQuizFormName" class="invalid-feedback"></div>
                     </div>
                     <div class="col-2">
                         <button class="btn btn-primary" onclick="addQuiz()">Добавить</button>
@@ -61,7 +46,25 @@
             `);
         }
 
-        function addQuiz() {
+        async function fillQuizListTable() {
+            let quizList = await getQuizList();
+            let quizListBody = $('#quiz-table tbody');
+            quizListBody.html('');
+            quizList.forEach(quiz => {
+                let tr = $(`
+                    <tr>
+                        <td>` + quiz.shortName + `</td>
+                        <td>` + quiz.name + `</td>
+                        <td>` + (quiz.size === 0 ? 'пусто' : quiz.size) + `</td>
+                        <td><a href="/quiz/` + quiz.id + `">Открыть</a></td>
+                    </tr>
+                `);
+                tr.append($('<td></td>').append(deleteConfirm('deleteQuiz(' + quiz.id + ')', 'confirm-delete-quiz-' + quiz.id, 'Вы точно уверены, что хотите удалить опросник? Это необратимая операция, которая приведет к тому же к удалению всех результатов решения данного опросника.')))
+                quizListBody.append(tr);
+            })
+        }
+
+        async function addQuiz() {
             let form = $('#quiz-form');
             let quiz = {
                 shortName: form.find("[name|='shortName']").val(),
@@ -74,16 +77,25 @@
                     'Content-Type': 'application/json',
                     '${_csrf.headerName}': '${_csrf.token}'
                 },
-                body: JSON.stringify(group)
+                body: JSON.stringify(quiz)
             });
             if (response.ok) {
-                showSuccess('Группа ' + group.name + ' успешно создана');
+                showSuccess('Тест ' + quiz.name + ' успешно добавлен');
                 await loadContent();
             } else {
                 response.json().then(json => {
-                    fillInvalidFields(json, form);
+                    fillFormInvalidFields(json, form);
                 })
             }
+        }
+
+        async function deleteQuiz(id) {
+            await deleteByPath('/api/quiz/' + id, 'Тест успешно удален');
+            await loadContent();
+        }
+
+        async function getQuizList() {
+            return getRequestWithError('/api/quiz', 'Ошибка при загрузки списка тестов');
         }
     </script>
 </@c.page>

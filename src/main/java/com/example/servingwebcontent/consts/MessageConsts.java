@@ -34,6 +34,8 @@ public interface MessageConsts {
 
 	String DECISION_NAME_IS_EMPTY = "Пустое имя решения!";
 
+	String QUIZ_WITH_SHORT_NAME_ALREADY_EXISTS = "Данное кратное наименование уже занято";
+
 	//	SUCCESS
 
 	String CHANGES_COMPLETE_SUCCESSFUL = "Изменения успешно сохранены";
