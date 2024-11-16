@@ -1,5 +1,4 @@
 <#import "../parts/common.ftlh" as c>
-<#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <h3 class="mb-3">Список тестов</h3>
     <div id="quiz-form" class="mb-3"></div>
