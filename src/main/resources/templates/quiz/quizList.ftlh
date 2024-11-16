@@ -2,20 +2,7 @@
 <#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <h3 class="mb-3">Список тестов</h3>
-    <form class="mb-3" action="/quiz/add" method="post">
-        <div class="row">
-            <div class="col-2">
-                <input class="form-control" type="text" name="shortName" placeholder="Индекс"/>
-            </div>
-            <div class="col-8">
-                <input class="form-control" type="text" name="name" placeholder="Наименование теста"/>
-            </div>
-            <div class="col-2">
-                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                <button class="btn btn-primary" type="submit">Добавить</button>
-            </div>
-        </div>
-    </form>
+    <div id="quiz-form" class="mb-3"></div>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -48,4 +35,55 @@
         </tbody>
     </table>
 
+    <script>
+        $(async function () {
+            await loadContent();
+        });
+
+
+        async function loadContent() {
+            fillQuizForm();
+        }
+
+        function fillQuizForm() {
+            $('#quiz-form').html(`
+                <div class="row">
+                    <div class="col-2">
+                        <input class="form-control" type="text" name="shortName" placeholder="Краткое наименование"/>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" type="text" name="name" placeholder="Наименование теста"/>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary" onclick="addQuiz()">Добавить</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function addQuiz() {
+            let form = $('#quiz-form');
+            let quiz = {
+                shortName: form.find("[name|='shortName']").val(),
+                name: form.find("[name|='name']").val()
+            };
+            let response = await fetch("/api/quiz", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                },
+                body: JSON.stringify(group)
+            });
+            if (response.ok) {
+                showSuccess('Группа ' + group.name + ' успешно создана');
+                await loadContent();
+            } else {
+                response.json().then(json => {
+                    fillInvalidFields(json, form);
+                })
+            }
+        }
+    </script>
 </@c.page>

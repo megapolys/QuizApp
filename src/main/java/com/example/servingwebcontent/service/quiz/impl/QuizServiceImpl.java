@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.service.quiz.impl;
 
+import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.QuizPersistence;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class QuizServiceImpl implements QuizService {
 	public List<QuizBean> getQuizzes(User user) {
 //		final Set<com.example.servingwebcontent.model.quiz.result.QuizResult> results = user.getResults();
 //		final List<QuizBean> quizList = new ArrayList<>();
-//        for (Quiz quiz : quizRepository.findAllByOrderByShortName()) {
+//        for (Quiz quiz : quizPersistence.findAllByOrderByShortName()) {
 //            boolean inProgress = false;
 //            boolean exists = false;
 //			for (com.example.servingwebcontent.model.quiz.result.QuizResult result : results) {
@@ -45,15 +47,15 @@ public class QuizServiceImpl implements QuizService {
 	}
 
 	public QuizResult save(QuizWithTaskSize quiz) {
-//        Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
-//        if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
-//            return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
-//        }
-//        final Quiz byName = quizRepository.findByName(quiz.getName());
-//        if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
-//            return new QuizResult(ResultType.NAME_FOUND, byName);
-//        }
-//        return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
+		Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
+		if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
+			return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
+		}
+		final Quiz byName = quizRepository.findByName(quiz.getName());
+		if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
+			return new QuizResult(ResultType.NAME_FOUND, byName);
+		}
+		return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
 		return null;
 	}
 

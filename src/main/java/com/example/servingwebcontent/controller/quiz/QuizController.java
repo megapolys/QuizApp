@@ -1,7 +1,9 @@
 package com.example.servingwebcontent.controller.quiz;
 
+import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
-import com.example.servingwebcontent.service.decision.impl.DecisionServiceImpl;
+import com.example.servingwebcontent.service.decision.DecisionService;
+import com.example.servingwebcontent.service.quiz.QuizService;
 import com.example.servingwebcontent.service.quiz.impl.QuizServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,8 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class QuizController {
 
-	private final QuizServiceImpl quizService;
-	private final DecisionServiceImpl decisionService;
+	private final QuizService quizService;
+	private final DecisionService decisionService;
 
 	/**
 	 * Получение списка тестов, сортированных по shortName
@@ -61,8 +63,8 @@ public class QuizController {
 		@RequestParam String name,
 		RedirectAttributes redirectAttributes
 	) {
-//        Quiz quiz = new Quiz();
-//        addOrUpdateQuiz(shortName, name, redirectAttributes, quiz, false);
+		Quiz quiz = new Quiz();
+		addOrUpdateQuiz(shortName, name, redirectAttributes, quiz, false);
 		return "redirect:/quiz/list";
 	}
 
