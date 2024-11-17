@@ -1,6 +1,8 @@
 package com.example.servingwebcontent.controller.quiz;
 
+import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.service.decision.DecisionService;
 import com.example.servingwebcontent.service.quiz.QuizService;
@@ -28,6 +30,18 @@ public class QuizRestController {
 	}
 
 	/**
+	 * Получение теста по идентификатору
+	 *
+	 * @param id - Идентификатор теста
+	 *
+	 * @return Тест
+	 */
+	@GetMapping("/api/quiz/{id}")
+	public Quiz getQuiz(@PathVariable Long id) {
+		return quizService.getQuiz(id);
+	}
+
+	/**
 	 * Создание нового теста
 	 *
 	 * @param quiz - Новый тест
@@ -35,6 +49,16 @@ public class QuizRestController {
 	@PostMapping("/api/quiz")
 	public void addQuiz(@Valid @RequestBody QuizCreateCommandDto quiz) {
 		quizService.addQuiz(quiz);
+	}
+
+	/**
+	 * Изменение данных теста
+	 *
+	 * @param quiz - Тест
+	 */
+	@PutMapping("/api/quiz")
+	public void updateQuiz(@Valid @RequestBody QuizUpdateCommandDto quiz) {
+		quizService.updateQuiz(quiz);
 	}
 
 	/**

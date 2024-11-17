@@ -65,8 +65,12 @@
             $("#message").html('<div class="alert alert-success mb-3">' + msg + '</div>');
         }
 
+        function clearMessage() {
+            $("#message").html('');
+        }
+
         function fillFormInvalidFields(json, form) {
-            form.find('[name]').removeClass('is-invalid');
+            clearFromInvalidFields(form);
             jQuery.each(json['fields'], function () {
                 let field = this;
                 let inputField = form.find("[name|='" + field['fieldName'] + "']");
@@ -74,6 +78,10 @@
                 let descriptionId = inputField.attr('aria-describedby');
                 $('#' + descriptionId).html(field['error']);
             })
+        }
+
+        function clearFromInvalidFields(form) {
+            form.find('[name]').removeClass('is-invalid');
         }
 
         async function getRequestWithError(path, errorMessage) {

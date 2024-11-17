@@ -2,6 +2,7 @@ package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 
 import java.util.List;
@@ -16,6 +17,15 @@ public interface QuizPersistence {
 	List<QuizWithTaskSize> getQuizList();
 
 	/**
+	 * Получение теста по идентификатору
+	 *
+	 * @param id - Идентификатор теста
+	 *
+	 * @return Тест
+	 */
+	Quiz getQuiz(Long id);
+
+	/**
 	 * Получение теста по короткому наименованию
 	 *
 	 * @return Тест
@@ -28,6 +38,13 @@ public interface QuizPersistence {
 	 * @param quiz - Тест
 	 */
 	void addQuiz(QuizCreateCommandDto quiz);
+
+	/**
+	 * Изменение данных теста
+	 *
+	 * @param quiz - Тест
+	 */
+	void updateQuiz(QuizUpdateCommandDto quiz);
 
 	/**
 	 * Удаление теста

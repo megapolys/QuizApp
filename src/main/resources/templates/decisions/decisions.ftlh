@@ -113,21 +113,21 @@
         }
 
         function fillGroupFromByCreate() {
-            $('#group-form').html(
-                `<div id="group-form" class="mb-3">
-                    <div class="row">
-                        <div class="col-4">
-                            <input class="form-control" type="text" name="name" placeholder="Группа" aria-describedby="validationGroupFormName"/>
-                            <div id="validationGroupFormName" class="invalid-feedback"></div>
-                        </div>
-                        <div class="col-2">
-                            <button class="btn btn-primary" onclick="addGroup()">Добавить</button>
-                        </div>
+            $('#group-form').html(`
+                <div class="row">
+                    <div class="col-4">
+                        <input class="form-control" type="text" name="name" placeholder="Группа" aria-describedby="validationGroupFormName"/>
+                        <div id="validationGroupFormName" class="invalid-feedback"></div>
                     </div>
-                </div>`);
+                    <div class="col-2">
+                        <button class="btn btn-primary" onclick="addGroup()">Добавить</button>
+                    </div>
+                </div>
+                `);
         }
 
         async function fillGroupFormByUpdate(groupId) {
+            clearMessage();
             let group = await getGroupById(groupId);
             $('#group-form').html(`
                 <div class="row">
@@ -176,6 +176,7 @@
         }
 
         async function fillDecisionFormByUpdate(decisionId) {
+            clearMessage();
             let groups = await getGroups();
             let decision = await getDecisionById(decisionId);
             $('#decision-form').html(`

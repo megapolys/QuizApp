@@ -3,6 +3,7 @@ package com.example.servingwebcontent.service.quiz.impl;
 import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
 import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.QuizPersistence;
@@ -31,12 +32,32 @@ public class QuizServiceImpl implements QuizService {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Quiz getQuiz(Long id) {
+		return quizPersistence.getQuiz(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void addQuiz(QuizCreateCommandDto quiz) {
 		Quiz byShortName = quizPersistence.findByShortName(quiz.getShortName());
 		if (byShortName != null) {
 			throw QuizCreateException.alreadyExistsByShortName(quiz.getShortName());
 		}
 		quizPersistence.addQuiz(quiz);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateQuiz(QuizUpdateCommandDto quiz) {
+		Quiz byShortName = quizPersistence.findByShortName(quiz.getShortName());
+		if (byShortName != null && !quiz.getId().equals(byShortName.getId())) {
+			throw QuizCreateException.alreadyExistsByShortName(quiz.getShortName());
+		}
+		quizPersistence.updateQuiz(quiz);
 	}
 
 	/**
@@ -96,13 +117,6 @@ public class QuizServiceImpl implements QuizService {
 //    }
 
 	public record QuizBean(QuizWithTaskSize quiz, boolean inProgress, boolean exists) {
-	}
-
-	public enum ResultType {
-		SHORT_NAME_FOUND, NAME_FOUND, SUCCESS
-	}
-
-	public record QuizResult(ResultType result, QuizWithTaskSize quiz) {
 	}
 
 }

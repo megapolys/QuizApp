@@ -1,8 +1,10 @@
 package com.example.servingwebcontent.persistence.impl;
 
+import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
@@ -22,15 +24,24 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	private final QuizRepository quizRepository;
 	private final ConversionService conversionService;
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public List<QuizWithTaskSize> getQuizList() {
 		return quizCustomRepository.getQuizListOrderedByShortName().stream()
-				.map(quizEntity -> conversionService.convert(quizEntity, QuizWithTaskSize.class))
-				.toList();
+			.map(quizEntity -> conversionService.convert(quizEntity, QuizWithTaskSize.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Quiz getQuiz(Long id) {
+		return quizRepository.findById(id)
+			.map(quizEntity -> conversionService.convert(quizEntity, Quiz.class))
+			.orElseThrow(() -> QuizNotFoundException.byId(id));
 	}
 
 	/**
@@ -39,8 +50,8 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	@Override
 	public Quiz findByShortName(String shortName) {
 		return quizRepository.findByShortName(shortName)
-				.map(quizEntity -> conversionService.convert(quizEntity, Quiz.class))
-				.orElse(null);
+			.map(quizEntity -> conversionService.convert(quizEntity, Quiz.class))
+			.orElse(null);
 	}
 
 	/**
@@ -48,7 +59,22 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	 */
 	@Override
 	public void addQuiz(QuizCreateCommandDto quiz) {
-		quizRepository.save(QuizEntity.createNew(quiz.getName(), quiz.getShortName()));
+		quizRepository.save(QuizEntity.createNew(
+			quiz.getName(),
+			quiz.getShortName()
+		));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateQuiz(QuizUpdateCommandDto quiz) {
+		quizRepository.save(QuizEntity.buildExisting(
+			quiz.getId(),
+			quiz.getName(),
+			quiz.getShortName()
+		));
 	}
 
 	/**
