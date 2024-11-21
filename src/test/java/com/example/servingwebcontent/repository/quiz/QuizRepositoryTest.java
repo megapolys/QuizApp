@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.repository.quiz;
 
 import com.example.servingwebcontent.Application;
-import com.example.servingwebcontent.repositories.quiz.custom.QuizCustomRepository;
+import com.example.servingwebcontent.repositories.quiz.QuizRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public abstract class QuizRepositoryTest {
 
 	@Autowired
-	protected QuizCustomRepository quizCustomRepository;
+	protected QuizRepository quizRepository;
 
 }

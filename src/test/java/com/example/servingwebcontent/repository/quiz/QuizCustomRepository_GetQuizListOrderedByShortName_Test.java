@@ -17,14 +17,14 @@ public class QuizCustomRepository_GetQuizListOrderedByShortName_Test extends Qui
 	@Sql(value = {"/clean_all_tables.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 	void whenFoundThenReturnList() {
 		List<QuizWithTaskSizeEntity> expectedQuizList = QuizWithTaskSizeEntityGenerator.generateList();
-		List<QuizWithTaskSizeEntity> actualQuizList = quizCustomRepository.getQuizListOrderedByShortName();
+		List<QuizWithTaskSizeEntity> actualQuizList = quizRepository.getQuizListOrderedByShortName();
 
 		then(actualQuizList).isEqualTo(expectedQuizList);
 	}
 
 	@Test
 	void whenNotFoundThenReturnEmpty() {
-		List<QuizWithTaskSizeEntity> actualQuizList = quizCustomRepository.getQuizListOrderedByShortName();
+		List<QuizWithTaskSizeEntity> actualQuizList = quizRepository.getQuizListOrderedByShortName();
 
 		then(actualQuizList).isEmpty();
 	}

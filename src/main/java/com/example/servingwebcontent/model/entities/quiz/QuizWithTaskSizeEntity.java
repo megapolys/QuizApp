@@ -1,6 +1,5 @@
 package com.example.servingwebcontent.model.entities.quiz;
 
-import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -26,7 +25,6 @@ public class QuizWithTaskSizeEntity {
 		);
 	}
 
-	@Id
 	Long id;
 
 	String name;

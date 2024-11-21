@@ -23,7 +23,7 @@ public class QuizController_GetQuizList_Test extends QuizControllerTest {
 		List<QuizWithTaskSizeEntity> quizEntities = QuizWithTaskSizeEntityGenerator.generateList();
 		List<QuizWithTaskSize> expectedQuizList = QuizWithTaskSizeGenerator.generateList();
 
-		when(quizCustomRepository.getQuizListOrderedByShortName()).thenReturn(quizEntities);
+		when(quizRepository.getQuizListOrderedByShortName()).thenReturn(quizEntities);
 
 		mockMvc.perform(get(URL))
 			.andExpect(status().isOk())
@@ -31,13 +31,13 @@ public class QuizController_GetQuizList_Test extends QuizControllerTest {
 			.andExpect(model().attribute("quizList", expectedQuizList))
 			.andExpect(model().attribute("quizTab", "active"));
 
-		verify(quizCustomRepository).getQuizListOrderedByShortName();
+		verify(quizRepository).getQuizListOrderedByShortName();
 	}
 
 	@Test
 	@WithMockUser(roles = {"ADMIN"})
 	void whenGetEmptyQuizListThenSuccess() throws Exception {
-		when(quizCustomRepository.getQuizListOrderedByShortName()).thenReturn(List.of());
+		when(quizRepository.getQuizListOrderedByShortName()).thenReturn(List.of());
 
 		mockMvc.perform(get(URL))
 			.andExpect(status().isOk())
@@ -45,7 +45,7 @@ public class QuizController_GetQuizList_Test extends QuizControllerTest {
 			.andExpect(model().attribute("quizList", List.of()))
 			.andExpect(model().attribute("quizTab", "active"));
 
-		verify(quizCustomRepository).getQuizListOrderedByShortName();
+		verify(quizRepository).getQuizListOrderedByShortName();
 	}
 
 	@Test
@@ -54,7 +54,7 @@ public class QuizController_GetQuizList_Test extends QuizControllerTest {
 		mockMvc.perform(get(URL))
 			.andExpect(status().isForbidden());
 
-		verify(quizCustomRepository, never()).getQuizListOrderedByShortName();
+		verify(quizRepository, never()).getQuizListOrderedByShortName();
 	}
 
 }

@@ -2,13 +2,10 @@ package com.example.servingwebcontent.persistence.impl;
 
 import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
-import com.example.servingwebcontent.model.quiz.Quiz;
-import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
+import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
-import com.example.servingwebcontent.repositories.quiz.custom.QuizCustomRepository;
+import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -20,8 +17,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizPersistenceImpl implements QuizPersistence {
 
-	private final QuizCustomRepository quizCustomRepository;
 	private final QuizRepository quizRepository;
+	private final QuizTaskRepository quizTaskRepository;
+
 	private final ConversionService conversionService;
 
 	/**
@@ -29,7 +27,7 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	 */
 	@Override
 	public List<QuizWithTaskSize> getQuizList() {
-		return quizCustomRepository.getQuizListOrderedByShortName().stream()
+		return quizRepository.getQuizListOrderedByShortName().stream()
 			.map(quizEntity -> conversionService.convert(quizEntity, QuizWithTaskSize.class))
 			.toList();
 	}
@@ -42,6 +40,29 @@ public class QuizPersistenceImpl implements QuizPersistence {
 		return quizRepository.findById(id)
 			.map(quizEntity -> conversionService.convert(quizEntity, Quiz.class))
 			.orElseThrow(() -> QuizNotFoundException.byId(id));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<QuizTask> getQuizTaskList(Long quizId) {
+		return quizTaskRepository.findAllByQuizId(quizId).stream()
+			.map(quizTaskEntity -> {
+				String text;
+				if (quizTaskEntity.getFiveVariantTaskEntity() != null) {
+					text = quizTaskEntity.getFiveVariantTaskEntity().getQuestionText();
+				} else {
+					text = quizTaskEntity.getYesOrNoTaskEntity().getQuestionText();
+				}
+				return QuizTask.builder()
+					.id(quizTaskEntity.getId())
+					.position(quizTaskEntity.getPosition())
+					.text(text)
+					.emptyDecisions(quizTaskEntity.getCountDecisions() == 0)
+					.build();
+			})
+			.toList();
 	}
 
 	/**

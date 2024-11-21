@@ -4,7 +4,6 @@ import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
-import com.example.servingwebcontent.service.decision.DecisionService;
 import com.example.servingwebcontent.service.quiz.QuizService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import java.util.List;
 public class QuizRestController {
 
 	private final QuizService quizService;
-	private final DecisionService decisionService;
 
 	/**
 	 * Получение списка тестов, сортированных по shortName

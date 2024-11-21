@@ -1,9 +1,6 @@
 package com.example.servingwebcontent.persistence;
 
-import com.example.servingwebcontent.model.quiz.Quiz;
-import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
+import com.example.servingwebcontent.model.quiz.*;
 
 import java.util.List;
 
@@ -24,6 +21,15 @@ public interface QuizPersistence {
 	 * @return Тест
 	 */
 	Quiz getQuiz(Long id);
+
+	/**
+	 * Получить список вопросов
+	 *
+	 * @param quizId идентификатор теста
+	 *
+	 * @return список вопросов
+	 */
+	List<QuizTask> getQuizTaskList(Long quizId);
 
 	/**
 	 * Получение теста по короткому наименованию

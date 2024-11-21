@@ -2,7 +2,6 @@ package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.Application;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
-import com.example.servingwebcontent.repositories.quiz.custom.QuizCustomRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +20,4 @@ public abstract class QuizControllerTest {
 
 	@MockBean
 	protected QuizRepository quizRepository;
-
-	@MockBean
-	protected QuizCustomRepository quizCustomRepository;
 }

@@ -1,10 +1,7 @@
 package com.example.servingwebcontent.service.quiz.impl;
 
 import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
-import com.example.servingwebcontent.model.quiz.Quiz;
-import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
-import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
+import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.service.quiz.QuizService;
@@ -34,6 +31,14 @@ public class QuizServiceImpl implements QuizService {
 	@Override
 	public Quiz getQuiz(Long id) {
 		return quizPersistence.getQuiz(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<QuizTask> getQuizTaskList(Long quizId) {
+		return quizPersistence.getQuizTaskList(quizId);
 	}
 
 	/**
