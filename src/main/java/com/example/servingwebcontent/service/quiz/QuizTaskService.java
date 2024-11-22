@@ -1,33 +1,44 @@
 package com.example.servingwebcontent.service.quiz;
 
 import com.example.servingwebcontent.model.quiz.QuizTask;
-import com.example.servingwebcontent.repositories.quiz.QuizRepository;
-import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
-import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
-import com.example.servingwebcontent.repositories.quiz.QuizTaskResultRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-@Service
-public class QuizTaskService {
+import java.util.List;
 
-    @Value("${upload.path.img}")
-    private String uploadPath;
+public interface QuizTaskService {
 
-    @Value("${upload.path.imgPrefix}")
-    private String uploadPathPrefix;
+	/**
+	 * Получить список вопросов
+	 *
+	 * @param quizId идентификатор теста
+	 *
+	 * @return список вопросов
+	 */
+	List<QuizTask> getQuizTaskList(Long quizId);
 
-    private final QuizRepository quizRepository;
-    private final QuizTaskRepository quizTaskRepository;
-    private final QuizResultRepository quizResultRepository;
-    private final QuizTaskResultRepository quizTaskResultRepository;
+	/**
+	 * Удаление вопроса по идентификатору
+	 *
+	 * @param taskId идентификатор вопроса
+	 */
+	void deleteQuizTask(Long taskId);
 
-    public QuizTaskService(QuizRepository quizRepository, QuizTaskRepository quizTaskRepository, QuizResultRepository quizResultRepository, QuizTaskResultRepository quizTaskResultRepository) {
-        this.quizRepository = quizRepository;
-        this.quizTaskRepository = quizTaskRepository;
-        this.quizResultRepository = quizResultRepository;
-        this.quizTaskResultRepository = quizTaskResultRepository;
-    }
+//    @Value("${upload.path.img}")
+//    private String uploadPath;
+//
+//    @Value("${upload.path.imgPrefix}")
+//    private String uploadPathPrefix;
+//
+//    private final QuizRepository quizRepository;
+//    private final QuizTaskRepository quizTaskRepository;
+//    private final QuizResultRepository quizResultRepository;
+//    private final QuizTaskResultRepository quizTaskResultRepository;
+//
+//    public QuizTaskService(QuizRepository quizRepository, QuizTaskRepository quizTaskRepository, QuizResultRepository quizResultRepository, QuizTaskResultRepository quizTaskResultRepository) {
+//        this.quizRepository = quizRepository;
+//        this.quizTaskRepository = quizTaskRepository;
+//        this.quizResultRepository = quizResultRepository;
+//        this.quizTaskResultRepository = quizTaskResultRepository;
+//    }
 
 //	public QuizTaskResult saveFiveVariant(QuizWithTaskSize quiz, MultipartFile file, TaskForm taskForm) {
 //		return saveFiveVariant(quiz, file, taskForm, new QuizTask());
@@ -134,36 +145,8 @@ public class QuizTaskService {
 //        }
 //	}
 //
-//    @Transactional
-//    public void delete(QuizTask task) {
-//        for (QuizResult quizResult : quizResultRepository.findAll()) {
-//            final boolean removed = quizResult.getTaskList()
-//                    .removeIf(resultTask -> Objects.equals(resultTask.getTask().getId(), task.getId()));
-//            if (removed) {
-//                quizResultRepository.save(quizResult);
-//            }
-//        }
-//        quizTaskResultRepository.removeAllByTask(task);
-//        deleteFile(task);
-//        final Quiz quiz = task.getQuiz();
-//        for (QuizTask quizTask : quiz.getTaskList()) {
-//            if (quizTask.getPosition() > task.getPosition()) {
-//                quizTask.setPosition(quizTask.getPosition() - 1);
-//                quizTaskRepository.save(quizTask);
-//            }
-//        }
-//        quiz.getTaskList().remove(task);
-//        quizRepository.save(quiz);
-//        quizTaskRepository.delete(task);
-//    }
-//
-//    private void deleteFile(QuizTask task) {
-//        final String fileName = task.getFiveVariantTask() != null ? task.getFiveVariantTask().getFileName()
-//                : task.getYesOrNoTask() != null ? task.getYesOrNoTask().getFileName() : null;
-//        new File(uploadPathPrefix + uploadPath + "/" + fileName).delete();
-//    }
-//
-public enum ResultType {
+
+	public enum ResultType {
 	FILE_EXCEPTION, SUCCESS
 }
 

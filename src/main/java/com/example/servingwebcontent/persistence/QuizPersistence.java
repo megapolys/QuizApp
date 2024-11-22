@@ -58,4 +58,13 @@ public interface QuizPersistence {
 	 * @param id - Идентификатор теста
 	 */
 	void deleteQuizById(Long id);
+
+	/**
+	 * Получить вопрос целиком
+	 *
+	 * @param taskId идентификатор вопроса
+	 *
+	 * @return вопрос
+	 */
+	QuizTaskFull getQuizTaskById(Long taskId);
 }

@@ -8,7 +8,7 @@
     <h3 id="quiz-header" class="mb-3"></h3>
     <div id="quiz-update-form" class="mb-5"></div>
     <div class="row mb-5 text-bg-light"></div>
-    <table class="table table-striped">
+    <table id="task-table" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 5%"></th>
@@ -19,24 +19,25 @@
         </tr>
         </thead>
         <tbody>
-        <#--                <#list taskList as task>-->
-        <#--                    <tr>-->
-        <#--                        <td>${task.position}</td>-->
-        <#--                        <td>${(task.fiveVariantTask.questionText)!(task.yesOrNoTask.questionText)?truncate(50, "...")}</td>-->
-        <#--                        <#assign type = task.fiveVariantTask?has_content?string("fiveVariant", "yesOrNo")>-->
-        <#--                        <td><a href="/quiz/task/update/${type}/${task.id?c}">Изменить</a></td>-->
-        <#--                        <td>-->
-        <#--                            <@modal.deleteConfirm path="/quiz/task/delete/${task.id?c}"-->
-        <#--                            id="confirm-delete-task-${task.id}"-->
-        <#--                            text="Точно удалить задание?"/>-->
-        <#--                        </td>-->
-        <#--                        <td><#if !task.decisions?has_content><div style="color: red">Решений не назначено</div></#if></td>-->
-        <#--                    </tr>-->
-        <#--                <#else>-->
-        <#--                    <tr>-->
-        <#--                        <td colspan="4">Список вопросов пока пуст</td>-->
-        <#--                    </tr>-->
-        <#--                </#list>-->
+        <#list taskList as task>
+            <tr>
+                <td>${task.position}</td>
+                <td>${(task.fiveVariantTask.questionText)!(task.yesOrNoTask.questionText)?truncate(50, "...")}</td>
+                <#assign type = task.fiveVariantTask?has_content?string("fiveVariant", "yesOrNo")>
+                <td><a href="/quiz/task/update/${type}/${task.id?c}">Изменить</a></td>
+                <td>
+                    <@modal.deleteConfirm path="/quiz/task/delete/${task.id?c}"
+                    id="confirm-delete-task-${task.id}"
+                    text="Точно удалить задание?"/>
+                </td>
+                <td><#if !task.decisions?has_content>
+                        <div style="color: red">Решений не назначено</div></#if></td>
+            </tr>
+        <#else>
+            <tr>
+                <td colspan="4">Список вопросов пока пуст</td>
+            </tr>
+        </#list>
         </tbody>
     </table>
 
@@ -49,7 +50,9 @@
         async function loadContent() {
             let quiz = await getQuiz(${quizId});
             fillQuizHeader(quiz.name);
-            await fillQuizChangeForm(quiz);
+            fillQuizChangeForm(quiz);
+            let taskList = await getTaskList(quiz.id);
+            fillTaskList(taskList);
         }
 
         function fillQuizHeader(quizName) {
@@ -74,8 +77,36 @@
             `);
         }
 
+        function fillTaskList(taskList) {
+            let table = $('#task-table tbody');
+            if (taskList.isEmpty()) {
+                table.append(`
+                    <tr>
+                        <td colspan="4">Список вопросов пока пуст</td>
+                    </tr>
+                `);
+            }
+            taskList.forEach(task => {
+                let tr = $(`
+                    <tr>
+                        <td>` + task.position + `</td>
+                        <td>` + task.text + `</td>
+                        <td><a href="#" onclick="fillTaskFormByUpdate(` + task.id + `)">Изменить</a></td>
+                        <td></td>
+                        <td>` + (task.decisionsCount === 0 ? '<div style="color: red">Решений не назначено</div>' : task.decisionsCount) + `</td>
+                    </tr>
+                `);
+                tr.find('td')[3].html(deleteConfirm('deleteTask(' + task.id + ')', 'confirm-delete-task-' + task.id, 'Точно удалить вопрос?'))
+                table.append(tr);
+            })
+        }
+
         async function getQuiz(id) {
             return getRequestWithError('/api/quiz/' + id, 'Ошибка при загрузке данных теста');
+        }
+
+        async function getTaskList(quizId) {
+            return getRequestWithError('/api/quiz/task?quizId=' + quizId, 'Ошибка при загрузке списка вопросов');
         }
 
         async function updateQuiz(id) {
@@ -105,5 +136,10 @@
                 })
             }
         }
+
+        function deleteTask(taskId) {
+
+        }
+
     </script>
 </@c.page>

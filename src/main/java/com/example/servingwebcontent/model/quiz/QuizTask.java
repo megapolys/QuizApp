@@ -10,20 +10,20 @@ public class QuizTask {
 	/**
 	 * Идентификатор вопроса
 	 */
-	private Long id;
+	Long id;
 
 	/**
 	 * Порядковый номер отображения в интерфейсе
 	 */
-	private int position;
+	int position;
 
 	/**
 	 * Текст вопроса
 	 */
-	private String text;
+	String text;
 
 	/**
-	 * true - если нет решений, иначе false
+	 * Количество решений
 	 */
-	private boolean emptyDecisions;
+	Long decisionsCount;
 }

@@ -1,7 +1,9 @@
 package com.example.servingwebcontent.persistence.impl;
 
 import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
+import com.example.servingwebcontent.exceptions.quiz.QuizTaskNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
+import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.quiz.QuizRepository;
@@ -59,7 +61,7 @@ public class QuizPersistenceImpl implements QuizPersistence {
 					.id(quizTaskEntity.getId())
 					.position(quizTaskEntity.getPosition())
 					.text(text)
-					.emptyDecisions(quizTaskEntity.getCountDecisions() == 0)
+					.decisionsCount(quizTaskEntity.getCountDecisions())
 					.build();
 			})
 			.toList();
@@ -104,5 +106,15 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	@Override
 	public void deleteQuizById(Long id) {
 		quizRepository.deleteById(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public QuizTaskFull getQuizTaskById(Long taskId) {
+		QuizTaskEntity quizTaskEntity = quizTaskRepository.findById(taskId)
+			.orElseThrow(() -> QuizTaskNotFoundException.byId(taskId));
+
 	}
 }

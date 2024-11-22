@@ -1,6 +1,9 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.model.quiz.*;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 
 import java.util.List;
 
@@ -21,15 +24,6 @@ public interface QuizService {
 	 * @return Тест
 	 */
 	Quiz getQuiz(Long id);
-
-	/**
-	 * Получить список вопросов
-	 *
-	 * @param quizId идентификатор теста
-	 *
-	 * @return список вопросов
-	 */
-	List<QuizTask> getQuizTaskList(Long quizId);
 
 	/**
 	 * Создание нового теста
