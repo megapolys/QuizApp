@@ -28,4 +28,11 @@ public interface DecisionRepository extends CrudRepository<DecisionEntity, Long>
 	boolean existsByName(String name);
 
 	Optional<DecisionEntity> findByName(String name);
+
+	@Query("""
+		select qtd.decisionsId
+		from QuizTaskDecisionsEntity qtd
+		where qtd.quizTaskId = :taskId
+		""")
+	List<Long> findAllIdsByTaskId(Long taskId);
 }

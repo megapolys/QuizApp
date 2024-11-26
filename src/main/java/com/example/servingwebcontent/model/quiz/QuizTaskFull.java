@@ -1,8 +1,7 @@
 package com.example.servingwebcontent.model.quiz;
 
-import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.entities.quiz.task.FiveVariantTaskEntity;
-import com.example.servingwebcontent.model.entities.quiz.task.YesOrNoTaskEntity;
+import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
+import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,27 +17,27 @@ public class QuizTaskFull {
 	Long id;
 
 	/**
+	 * Идентификатор теста
+	 */
+	Long quizId;
+
+	/**
 	 * Порядковый номер отображения в интерфейсе
 	 */
 	int position;
 
 	/**
-	 * Текст вопроса
+	 * Список идентификаторов решений
 	 */
-	String text;
-
-	/**
-	 * Список решений
-	 */
-	List<Decision> decisions;
+	List<Long> decisionIds;
 
 	/**
 	 * Вопрос в пять вариантов
 	 */
-	FiveVariantTaskEntity fiveVariantTaskEntity;
+	FiveVariantTask fiveVariantTask;
 
 	/**
 	 * Да/нет вопрос
 	 */
-	YesOrNoTaskEntity yesOrNoTaskEntity;
+	YesOrNoTask yesOrNoTask;
 }

@@ -23,10 +23,12 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
 				left join QuizTaskDecisionsEntity qtd on qt.id = qtd.quizTaskId
 				where qt.quizId = :quizId
-				group by qt.id
+				group by qt.id, fvt.id, ynt.id
 				order by qt.position
 		""")
-	List<QuizTaskFullEntity> findAllByQuizId(Long quizId);
+	List<QuizTaskFullEntity> findAllFullByQuizId(Long quizId);
+
+	List<QuizTaskEntity> findAllByQuizId(Long quizId);
 
 
 	@Query("""
@@ -42,8 +44,7 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
 				left join QuizTaskDecisionsEntity qtd on qt.id = qtd.quizTaskId
 				where qt.id = :taskId
-				group by qt.id
+				group by qt.id, fvt.id, ynt.id
 		""")
-	Optional<QuizTaskFullEntity> findByTaskId(Long taskId);
-//    QuizTaskEntity findByPositionAndQuiz(int pos, Quiz quiz);
+	Optional<QuizTaskFullEntity> findFullByTaskId(Long taskId);
 }

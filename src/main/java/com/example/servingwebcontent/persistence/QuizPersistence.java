@@ -66,5 +66,26 @@ public interface QuizPersistence {
 	 *
 	 * @return вопрос
 	 */
-	QuizTaskFull getQuizTaskById(Long taskId);
+	QuizTaskFull getQuizTaskFullById(Long taskId);
+
+	/**
+	 * Удаление всех ответов на вопрос по идентификатору вопроса
+	 *
+	 * @param taskId идентификатор вопроса
+	 */
+	void deleteTaskResultByTaskId(Long taskId);
+
+	/**
+	 * Удаление вопроса по идентификатору
+	 *
+	 * @param taskId идентификатор вопроса
+	 */
+	void deleteTaskById(Long taskId);
+
+	/**
+	 * Выровнять позиции для вопросов теста
+	 *
+	 * @param quizId идентификатор теста
+	 */
+	void rePositionTasksByQuizId(Long quizId);
 }

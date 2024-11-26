@@ -7,7 +7,11 @@
     <a class="btn btn-primary mb-3" href="/quiz/list">Назад</a>
     <h3 id="quiz-header" class="mb-3"></h3>
     <div id="quiz-update-form" class="mb-5"></div>
-    <div class="row mb-5 text-bg-light"></div>
+    <div class="row mb-5 text-bg-light">
+        <#--        <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
+        <#--        (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
+        <#--        <@task.task path taskForm groups decisions false/>-->
+    </div>
     <table id="task-table" class="table table-striped">
         <thead>
         <tr>
@@ -19,25 +23,6 @@
         </tr>
         </thead>
         <tbody>
-        <#list taskList as task>
-            <tr>
-                <td>${task.position}</td>
-                <td>${(task.fiveVariantTask.questionText)!(task.yesOrNoTask.questionText)?truncate(50, "...")}</td>
-                <#assign type = task.fiveVariantTask?has_content?string("fiveVariant", "yesOrNo")>
-                <td><a href="/quiz/task/update/${type}/${task.id?c}">Изменить</a></td>
-                <td>
-                    <@modal.deleteConfirm path="/quiz/task/delete/${task.id?c}"
-                    id="confirm-delete-task-${task.id}"
-                    text="Точно удалить задание?"/>
-                </td>
-                <td><#if !task.decisions?has_content>
-                        <div style="color: red">Решений не назначено</div></#if></td>
-            </tr>
-        <#else>
-            <tr>
-                <td colspan="4">Список вопросов пока пуст</td>
-            </tr>
-        </#list>
         </tbody>
     </table>
 
@@ -79,10 +64,11 @@
 
         function fillTaskList(taskList) {
             let table = $('#task-table tbody');
-            if (taskList.isEmpty()) {
+            table.html('');
+            if (taskList.length === 0) {
                 table.append(`
                     <tr>
-                        <td colspan="4">Список вопросов пока пуст</td>
+                        <td colspan="5">Список вопросов пока пуст</td>
                     </tr>
                 `);
             }
@@ -137,8 +123,9 @@
             }
         }
 
-        function deleteTask(taskId) {
-
+        async function deleteTask(taskId) {
+            await deleteByPath("/api/quiz/task/" + taskId, 'Вопрос успешно удален', 'Возникли непредвиденные ошибки при попытке удаления вопроса');
+            await loadContent();
         }
 
     </script>

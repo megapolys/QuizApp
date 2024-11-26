@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface QuizTaskResultRepository extends CrudRepository<QuizTaskResultEntity, Long> {
 
-//    void removeAllByTask(QuizTask task);
+	void deleteByTaskId(Long taskId);
 
 }
