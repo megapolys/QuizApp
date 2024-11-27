@@ -8,9 +8,12 @@
     <h3 id="quiz-header" class="mb-3"></h3>
     <div id="quiz-update-form" class="mb-5"></div>
     <div class="row mb-5 text-bg-light">
-        <#--        <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
-        <#--        (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
-        <#--        <@task.task path taskForm groups decisions false/>-->
+        <div id="task-form" class="row g-3">
+
+        </div>
+        <#--                <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
+        <#--                (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
+        <#--                <@task.task path taskForm groups decisions false/>-->
     </div>
     <table id="task-table" class="table table-striped">
         <thead>
@@ -36,6 +39,9 @@
             let quiz = await getQuiz(${quizId});
             fillQuizHeader(quiz.name);
             fillQuizChangeForm(quiz);
+            let groupDecisions = await getGroupDecisions();
+            let ungroupedDecisions = await getUngroupedDecisions();
+            fillTaskFromByCreate(true, groupDecisions, ungroupedDecisions);
             let taskList = await getTaskList(quiz.id);
             fillTaskList(taskList);
         }
@@ -60,6 +66,118 @@
                     </div>
                 </div>
             `);
+        }
+
+        function fillTaskFromByCreate(isFiveVariant, groupDecisions, ungroupedDecisions) {
+            $('#task-form').html(`
+                <div class="row mb-3 justify-content-md-center">
+                    <button class="btn btn-primary col-3" type="submit">Добавить вопрос</button>
+                </div>
+                <div class="col-2 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">№</span>
+                        <input id="positionValue" class="form-control" type="number" min="1" name="position"/>
+                    </div>
+                </div>
+                <div class="col-10 mb-3">
+                    <div class="input-group col-9">
+                        <span class="input-group-text">Текст задания</span>
+                        <textarea id="inputText" class="form-control" name="preQuestionText"></textarea>
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Текст вопроса</span>
+                        <textarea id="inputText" class="form-control"
+                                  name="questionText"></textarea>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="formFile" class="form-label">Вспомогательная картинка</label>
+                    <input class="form-control" type="file" name="file" id="formFile">
+                </div>
+                <div class="col-6 mb-3"></div>
+                <ul id="taskTabs" class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link ` + (isFiveVariant ? 'active' : '') + `" href="#"
+                           onclick="switchTab(this, '#fiveVariantTab')">Пять вариантов (Никогда - Всегда)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link` + (isFiveVariant ? '' : 'active') + `" href="#"
+                           onclick="switchTab(this, '#yesOrNoTab')">Два варианта (Да, Нет)</a>
+                    </li>
+                </ul>
+                <div id="taskTypeTabs">
+                    <div id="fiveVariantTab" class="input-group mb-3"
+                         style="display: ` + (isFiveVariant ? '' : 'none') + `">
+                        <span class="input-group-text">Никогда</span>
+                        <input type="number" name="firstWeight" class="form-control" step="0.5" placeholder="0">
+                        <span class="input-group-text">Редко</span>
+                        <input type="number" name="secondWeight" class="form-control" step="0.5" placeholder="0">
+                        <span class="input-group-text">Иногда</span>
+                        <input type="number" name="thirdWeight" class="form-control" step="0.5" placeholder="2">
+                        <span class="input-group-text">Часто</span>
+                        <input type="number" name="fourthWeight" class="form-control" step="0.5" placeholder="3">
+                        <span class="input-group-text">Всегда</span>
+                        <input type="number" name="fifthWeight" class="form-control" step="0.5" placeholder="4">
+                    </div>
+                </div>
+                <div id="yesOrNoTab" class="input-group mb-3"
+                     style="display: ` + (isFiveVariant ? 'none' : '') + `">
+                    <span class="input-group-text">Да</span>
+                    <input type="number" name="yesWeight" class="form-control" step="0.5" placeholder="4">
+                    <span class="input-group-text">Нет</span>
+                    <input type="number" name="noWeight" class="form-control" step="0.5" placeholder="0">
+                </div>
+                <div class="mb-3">
+                    <h5 class="mb-3">Решения</h5>
+                    <div id="list-of-chosen-decisions"></div>
+                    <div id="decisions-checkbox"></div>
+                </div>
+                <div class="row mb-2 justify-content-md-center">
+                    <a href="#" class="btn btn-primary col-3" onclick="createTask()">Добавить вопрос</a>
+                </div>
+            `);
+
+        }
+
+        function listOfChosenDecisions(decisionsName, chosenDecisions, groups, ungroupedDecisions) {
+            let result = $(`
+                <div class="mb-3">
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            Выбранные решения:
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" list="` + decisionsName + `-decisionList" id="` + decisionsName + `-list" placeholder="Вводи решение"/>
+                            <datalist id="` + decisionsName + `-decisionList">
+                            </datalist>
+                        </div>
+                        <div class="col-4">
+                            <button type="button" class="btn btn-primary" onclick="clickByChosen('` + decisionsName + `-list', '` + decisionsName + `-decisionList')">Клик</button>
+                        </div>
+                    </div>
+                    <div id="chosen-` + decisionsName + `">
+                    </div>
+                </div>
+            `);
+            let datalist = result.find('#' + decisionsName + '-decisionList');
+            groups.forEach(group => {
+                group.decisions.forEach(decision => {
+                    datalist.append('<option for="#' + decisionsName + '-' + decision.id + '" value="' + group.name + ' _ ' + decision.name + '"/>');
+                })
+            })
+            ungroupedDecisions.forEach(decision => {
+                datalist.append('<option for="#' + decisionsName + '-' + decision.id + '" value="' + decision.name + '"/>');
+            })
+            let chosen = result.find('#chosen-' + decisionsName);
+            chosenDecisions.forEach(decision => {
+                chosen.append()
+            })
+        }
+
+        function chosenElement() {
+
         }
 
         function fillTaskList(taskList) {
@@ -95,6 +213,14 @@
             return getRequestWithError('/api/quiz/task?quizId=' + quizId, 'Ошибка при загрузке списка вопросов');
         }
 
+        async function getGroupDecisions() {
+            return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
+        }
+
+        async function getUngroupedDecisions() {
+            return getRequestWithError("/api/decisions/ungrouped", 'Ошибка при загрузке решений');
+        }
+
         async function updateQuiz(id) {
             clearMessage();
             let form = $('#quiz-update-form');
@@ -126,6 +252,14 @@
         async function deleteTask(taskId) {
             await deleteByPath("/api/quiz/task/" + taskId, 'Вопрос успешно удален', 'Возникли непредвиденные ошибки при попытке удаления вопроса');
             await loadContent();
+        }
+
+        function switchTab(el, tabId) {
+            $("#taskTabs li a").removeClass("active");
+            $("#taskTypeTabs").children().hide();
+
+            $(el).addClass("active");
+            $(tabId).show();
         }
 
     </script>
