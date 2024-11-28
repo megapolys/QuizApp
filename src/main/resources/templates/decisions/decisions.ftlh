@@ -56,7 +56,7 @@
                 '</div>' +
                 '' +
                 '<div class="accordion-body col-10">' +
-                (decisions.length == 0 ? 'Нет решений' :
+                (decisions.length === 0 ? 'Нет решений' :
                         '<table class="table table-striped">' +
                         '<thead>' +
                         '<tr>' +

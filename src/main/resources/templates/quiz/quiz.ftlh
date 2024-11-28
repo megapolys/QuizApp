@@ -11,9 +11,9 @@
         <div id="task-form" class="row g-3">
 
         </div>
-        <#--                <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
-        <#--                (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
-        <#--                <@task.task path taskForm groups decisions false/>-->
+        <#--                        <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
+        <#--                        (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
+        <#--                        <@task.task path taskForm groups decisions false/>-->
     </div>
     <table id="task-table" class="table table-striped">
         <thead>
@@ -138,7 +138,10 @@
                     <a href="#" class="btn btn-primary col-3" onclick="createTask()">Добавить вопрос</a>
                 </div>
             `);
-
+            let decisionsName = 'decisions';
+            let chosenDecisions = new Set();
+            $('#list-of-chosen-decisions').html(listOfChosenDecisions(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
+            $('#decisions-checkbox').html(decisionsCheckbox(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
         }
 
         function listOfChosenDecisions(decisionsName, chosenDecisions, groups, ungroupedDecisions) {
@@ -162,22 +165,123 @@
                 </div>
             `);
             let datalist = result.find('#' + decisionsName + '-decisionList');
+            let chosen = result.find('#chosen-' + decisionsName);
             groups.forEach(group => {
                 group.decisions.forEach(decision => {
                     datalist.append('<option for="#' + decisionsName + '-' + decision.id + '" value="' + group.name + ' _ ' + decision.name + '"/>');
+                    if (chosenDecisions.has(decision.id)) {
+                        chosen.append(chosenElement(
+                            'group-' + group.id + '-' + decisionsName,
+                            decisionsName + '-' + decision.id,
+                            group.name + ' _ ' + decision.name
+                        ));
+                    }
                 })
             })
             ungroupedDecisions.forEach(decision => {
                 datalist.append('<option for="#' + decisionsName + '-' + decision.id + '" value="' + decision.name + '"/>');
+                if (chosenDecisions.has(decision.id)) {
+                    chosenDecisions.forEach(decision => {
+                        chosen.append(chosenElement(
+                            'group-nonGroup-' + decisionsName,
+                            decisionsName + '-' + decision.id,
+                            decision.name
+                        ));
+                    })
+                }
             })
-            let chosen = result.find('#chosen-' + decisionsName);
-            chosenDecisions.forEach(decision => {
-                chosen.append()
-            })
+            return result;
         }
 
-        function chosenElement() {
+        function chosenElement(groupId, decisionId, name) {
+            return $(`
+                <div id="decision-chosen-` + decisionId + `">
+                    <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
+                        <a onclick=decisionFocus('` + groupId + `','` + decisionId + `')>` + name + `</a>
+                        <button onclick="$('#` + decisionId + `')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
+                    </div>
+                </div>
+            `)
+        }
 
+        function decisionsCheckbox(decisionsName, chosenDecisions, groups, ungroupedDecisions) {
+            let result = $('<div class="accordion" id="accordion_groups"></div>');
+            groups.forEach(group => {
+                result.append(accordionGroup(
+                    decisionsName,
+                    'group-' + group.id + '-' + decisionsName,
+                    group.name,
+                    group.decisions,
+                    chosenDecisions,
+                    false
+                ));
+            })
+            result.append(accordionGroup(
+                decisionsName,
+                'group-nonGroup-' + decisionsName,
+                'Не в группе',
+                ungroupedDecisions,
+                chosenDecisions,
+                true
+            ));
+            return result;
+        }
+
+        function accordionGroup(decisionsName, groupId, groupName, decisions, chosenDecisions, ungrouped) {
+            return $(`
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button id="` + groupId + `" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-` + groupId + `" aria-expanded="true" aria-controls="panelsStayOpen-` + groupId + `">
+                            ` + groupName + `
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-` + groupId + `" class="accordion-collapse collapse">
+                        <div class="row">
+                            <div class="accordion-body col-12">
+                                ` + (decisions.length === 0 ? '<p>Нет решений</p>' : `
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 60%"></th>
+                                            <th style="width: 20%"></th>
+                                            <th style="width: 20%"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        ` + decisions.map(decision => {
+                let decisionId = decisionsName + `-` + decision.id;
+                return `
+                                            <tr data-id="` + decision.name + `">
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="` + decisionsName + `"
+                                                               value="` + decision.id + `"
+                                                               id="` + decisionId + `" ` + (chosenDecisions.has(decision.id) ? 'checked' : '') + `
+                                                               onclick="chooseDecision(
+                                                                       '#chosen-` + decisionsName + `',
+                                                                       '` + (ungrouped ? '' : groupName + ' _ ') + decision.name + `',
+                                                                       '` + groupId + `',
+                                                                       '` + decisionId + `'
+                                                                       )"
+                                                        />
+                                                        <label class="form-check-label" for="` + decisionId + `">
+                                                            ` + decision.name + `
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td colspan="2">
+                                                </td>
+                                            </tr>
+                                            `;
+            }).join('') + `
+                                        </tbody>
+                                    </table>
+                                `) + `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
         }
 
         function fillTaskList(taskList) {

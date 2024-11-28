@@ -103,7 +103,8 @@
                 Выбранные решения:
             </div>
             <div class="col-4">
-                <input class="form-control" list="${decisionsName}-decisionList" id="${decisionsName}-list" placeholder="Вводи решение"/>
+                <input class="form-control" list="${decisionsName}-decisionList" id="${decisionsName}-list"
+                       placeholder="Введите решение"/>
                 <datalist id="${decisionsName}-decisionList">
                     <#list groups as group>
                         <#list group.decisions as decision>
