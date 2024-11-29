@@ -1,21 +1,21 @@
 package com.example.servingwebcontent.model.entities.quiz;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "quiz_task_decisions")
+@IdClass(QuizTaskDecisionsEntity.class)
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode
-public class QuizTaskDecisionsEntity {
+public class QuizTaskDecisionsEntity implements Serializable {
 
 	@Id
 	@Column(name = "quiz_task_id")

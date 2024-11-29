@@ -270,6 +270,7 @@
                                                     </div>
                                                 </td>
                                                 <td colspan="2">
+                                                    ` + (decision.description ? decisionWithDescription(decision, 'Описание', decisionId) : '') + `
                                                 </td>
                                             </tr>
                                             `;
@@ -282,6 +283,32 @@
                     </div>
                 </div>
             `);
+        }
+
+        function decisionWithDescription(decision, name, id) {
+            if (decision.description) {
+                return `
+                <a href="##" type="button" class="icon-link icon-link-hover text-decoration-none p-0" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);"
+                   data-bs-toggle="modal" data-bs-target="#decision-modal-` + id + `" >
+                    <i class="bi bi-clipboard me-1"></i>
+                    ` + name + `
+                </a>
+                <div class="modal fade" id="decision-modal-` + id + `" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ` + decision.description + `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            } else {
+                return '<a href="##" class="text-decoration-none" aria-disabled="true">' + name + '</a>';
+            }
         }
 
         function fillTaskList(taskList) {
