@@ -8,12 +8,7 @@
     <h3 id="quiz-header" class="mb-3"></h3>
     <div id="quiz-update-form" class="mb-5"></div>
     <div class="row mb-5 text-bg-light">
-        <div id="task-form" class="row g-3">
-
-        </div>
-        <#--                        <#assign path = (taskForm.taskType == FIVE_VARIANT)?string("/quiz/task/add/fiveVariant",-->
-        <#--                        (taskForm.taskType == YES_OR_NO)?string("/quiz/task/add/yesOrNo", ""))>-->
-        <#--                        <@task.task path taskForm groups decisions false/>-->
+        <div id="task-form" class="row g-3"></div>
     </div>
     <table id="task-table" class="table table-striped">
         <thead>
@@ -41,7 +36,7 @@
             fillQuizChangeForm(quiz);
             let groupDecisions = await getGroupDecisions();
             let ungroupedDecisions = await getUngroupedDecisions();
-            fillTaskFromByCreate(true, groupDecisions, ungroupedDecisions);
+            fillTaskFromByCreate(quiz.id, true, groupDecisions, ungroupedDecisions);
             let taskList = await getTaskList(quiz.id);
             fillTaskList(taskList);
         }
@@ -68,10 +63,11 @@
             `);
         }
 
-        function fillTaskFromByCreate(isFiveVariant, groupDecisions, ungroupedDecisions) {
+        function fillTaskFromByCreate(quizId, isFiveVariant, groupDecisions, ungroupedDecisions) {
+            let decisionsName = 'decisions';
             $('#task-form').html(`
                 <div class="row mb-3 justify-content-md-center">
-                    <button class="btn btn-primary col-3" type="submit">Добавить вопрос</button>
+                    <a href="#" class="btn btn-primary col-3" onclick="createTask(` + quizId + `, '` + decisionsName + `')">Добавить вопрос</a>
                 </div>
                 <div class="col-2 mb-3">
                     <div class="input-group">
@@ -88,8 +84,7 @@
                 <div class="col-12 mb-3">
                     <div class="input-group">
                         <span class="input-group-text">Текст вопроса</span>
-                        <textarea id="inputText" class="form-control"
-                                  name="questionText"></textarea>
+                        <textarea id="inputText" class="form-control" name="questionText"></textarea>
                     </div>
                 </div>
                 <div class="col-6 mb-3">
@@ -135,10 +130,9 @@
                     <div id="decisions-checkbox"></div>
                 </div>
                 <div class="row mb-2 justify-content-md-center">
-                    <a href="#" class="btn btn-primary col-3" onclick="createTask()">Добавить вопрос</a>
+                    <a href="#" class="btn btn-primary col-3" onclick="createTask(` + quizId + `, '` + decisionsName + `')">Добавить вопрос</a>
                 </div>
             `);
-            let decisionsName = 'decisions';
             let chosenDecisions = new Set();
             $('#list-of-chosen-decisions').html(listOfChosenDecisions(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
             $('#decisions-checkbox').html(decisionsCheckbox(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
@@ -373,6 +367,66 @@
                 clearFromInvalidFields(form);
                 showSuccess('Тест ' + body.name + ' успешно изменена');
                 fillQuizHeader(body.name);
+            } else {
+                response.json().then(json => {
+                    fillFormInvalidFields(json, form);
+                })
+            }
+        }
+
+        async function createTask(quizId, decisionsName) {
+            clearMessage();
+            let form = $('#task-form');
+            let decisions = [];
+            form.find("[name|='" + decisionsName + "']").each(function () {
+                let checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    decisions.push(checkbox.val());
+                }
+            })
+            let fiveVariant = null;
+            let fiveVariantTab = $('#fiveVariantTab');
+            if (fiveVariantTab.css('display') !== 'none') {
+                fiveVariant = {
+                    firstWeight: fiveVariantTab.find("[name|='firstWeight']").val(),
+                    secondWeight: fiveVariantTab.find("[name|='secondWeight']").val(),
+                    thirdWeight: fiveVariantTab.find("[name|='thirdWeight']").val(),
+                    fourthWeight: fiveVariantTab.find("[name|='fourthWeight']").val(),
+                    fifthWeight: fiveVariantTab.find("[name|='fifthWeight']").val()
+                }
+            }
+            let yesOrNo = null;
+            let yesOrNoTab = $('#yesOrNoTab');
+            if (yesOrNoTab.css('display') !== 'none') {
+                yesOrNo = {
+                    yesWeight: yesOrNoTab.find("[name|='yesWeight']").val(),
+                    noWeight: yesOrNoTab.find("[name|='noWeight']").val()
+                }
+            }
+            let body = {
+                quizId: quizId,
+                position: form.find("[name|='position']").val(),
+                preQuestionText: form.find("[name|='preQuestionText']").val(),
+                questionText: form.find("[name|='questionText']").val(),
+                decisions: decisions,
+                fiveVariant: fiveVariant,
+                yesOrNo: yesOrNo,
+            };
+            let formData = new FormData();
+            formData.append('taskCreateCommand', JSON.stringify(body));
+            let file = form.find("[name|='file']").prop('files')[0];
+            formData.append("file", file)
+            let response = await fetch("/api/quiz/task", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                },
+                body: formData
+            });
+            if (response.ok) {
+                clearFromInvalidFields(form);
+                showSuccess('Вопрос успешно сохранен');
             } else {
                 response.json().then(json => {
                     fillFormInvalidFields(json, form);
