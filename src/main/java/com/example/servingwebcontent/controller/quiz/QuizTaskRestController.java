@@ -41,11 +41,17 @@ public class QuizTaskRestController {
 		quizTaskService.deleteQuizTask(taskId);
 	}
 
+	/**
+	 * Создать вопрос
+	 *
+	 * @param taskCreateCommand команда создания вопроса
+	 * @param file              файл
+	 */
 	@PostMapping(value = "/api/quiz/task", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void createTask(
-			@RequestPart("taskCreateCommand") @Valid TaskCreateCommandDto taskCreateCommand,
-			@RequestPart("file") MultipartFile file
+		@RequestPart("taskCreateCommand") @Valid TaskCreateCommandDto taskCreateCommand,
+		@RequestPart("file") MultipartFile file
 	) {
-
+		quizTaskService.createTask(taskCreateCommand, file);
 	}
 }

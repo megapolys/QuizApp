@@ -2,12 +2,14 @@ package com.example.servingwebcontent.service.quiz.impl;
 
 import com.example.servingwebcontent.model.quiz.QuizTask;
 import com.example.servingwebcontent.model.quiz.QuizTaskFull;
+import com.example.servingwebcontent.model.quiz.task.TaskCreateCommandDto;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.property.UploadPathProperty;
 import com.example.servingwebcontent.service.quiz.QuizTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.List;
@@ -38,6 +40,14 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 		quizPersistence.deleteTaskById(taskId);
 		quizPersistence.rePositionTasksByQuizId(quizTask.getQuizId());
 		deleteFile(quizTask);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void createTask(TaskCreateCommandDto taskCreateCommand, MultipartFile file) {
+
 	}
 
 	private void deleteFile(QuizTaskFull task) {
