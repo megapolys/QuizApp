@@ -2,8 +2,10 @@ package com.example.servingwebcontent.repositories.quiz;
 
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskFullEntity;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 					qt.id,
 					qt.quizId,
 					qt.position,
-					count(qtd),
+					count(qtd) filter where,
 					fvt,
 					ynt
 				) from QuizTaskEntity qt
@@ -29,7 +31,6 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 	List<QuizTaskFullEntity> findAllFullByQuizId(Long quizId);
 
 	List<QuizTaskEntity> findAllByQuizId(Long quizId);
-
 
 	@Query("""
 		select new com.example.servingwebcontent.model.entities.quiz.QuizTaskFullEntity(
@@ -47,4 +48,15 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 				group by qt.id, fvt.id, ynt.id
 		""")
 	Optional<QuizTaskFullEntity> findFullByTaskId(Long taskId);
+
+	boolean existsByQuizIdAndPosition(Long quizId, Integer position);
+
+	@Transactional
+	@Modifying
+	@Query("""
+		update QuizTaskEntity t
+		set t.position = t.position + 1
+		where t.quizId = :quizId and t.position >= :position
+		""")
+	void updateByQuizIdAndPositionGatherOrEquals(Long quizId, Integer position);
 }

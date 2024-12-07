@@ -50,7 +50,7 @@ public class QuizTaskRestController {
 	@PostMapping(value = "/api/quiz/task", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public void createTask(
 		@RequestPart("taskCreateCommand") @Valid TaskCreateCommandDto taskCreateCommand,
-		@RequestPart("file") MultipartFile file
+		@RequestPart(value = "file", required = false) MultipartFile file
 	) {
 		quizTaskService.createTask(taskCreateCommand, file);
 	}

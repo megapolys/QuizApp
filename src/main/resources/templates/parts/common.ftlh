@@ -71,13 +71,17 @@
 
         function fillFormInvalidFields(json, form) {
             clearFromInvalidFields(form);
-            jQuery.each(json['fields'], function () {
-                let field = this;
-                let inputField = form.find("[name|='" + field['fieldName'] + "']");
-                inputField.addClass('is-invalid');
-                let descriptionId = inputField.attr('aria-describedby');
-                $('#' + descriptionId).html(field['error']);
-            })
+            if (json['fields']) {
+                jQuery.each(json['fields'], function () {
+                    let field = this;
+                    let inputField = form.find("[name|='" + field['fieldName'] + "']");
+                    inputField.addClass('is-invalid');
+                    let descriptionId = inputField.attr('aria-describedby');
+                    $('#' + descriptionId).html(field['error']);
+                });
+            } else {
+                showError('Произошла непредвиденная ошибка, обратитесь к администратору');
+            }
         }
 
         function clearFromInvalidFields(form) {
@@ -116,7 +120,11 @@
         }
 
         function deleteConfirm(onClickAction, confirmId, text) {
-            return $(`
+            return $(deleteConfirmString(onClickAction, confirmId, text));
+        }
+
+        function deleteConfirmString(onClickAction, confirmId, text) {
+            return `
                 <div>
                     <a href="##" class="link-danger" data-bs-toggle="modal" data-bs-target="#` + confirmId + `">Удалить</a>
                     <div class="modal fade" id="` + confirmId + `" tabindex="-1" aria-hidden="true">
@@ -134,7 +142,7 @@
                         </div>
                     </div>
                 </div>
-            `);
+            `;
         }
     </script>
     </body>

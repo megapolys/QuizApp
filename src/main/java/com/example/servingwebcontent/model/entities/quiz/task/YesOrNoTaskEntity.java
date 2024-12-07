@@ -15,6 +15,23 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class YesOrNoTaskEntity {
 
+	public static YesOrNoTaskEntity createNew(
+		String preQuestionText,
+		String questionText,
+		String fileName,
+		Float yesWeight,
+		Float noWeight
+	) {
+		return new YesOrNoTaskEntity(
+			null,
+			preQuestionText,
+			questionText,
+			fileName,
+			yesWeight,
+			noWeight
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_yes_or_no_gen")

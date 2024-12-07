@@ -72,19 +72,22 @@
                 <div class="col-2 mb-3">
                     <div class="input-group">
                         <span class="input-group-text">№</span>
-                        <input id="positionValue" class="form-control" type="number" min="1" name="position"/>
+                        <input id="positionValue" class="form-control" type="number" min="1" name="position" aria-describedby="validationTaskFormPosition"/>
+                        <div id="validationTaskFormPosition" class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="col-10 mb-3">
                     <div class="input-group col-9">
                         <span class="input-group-text">Текст задания</span>
-                        <textarea id="inputText" class="form-control" name="preQuestionText"></textarea>
+                        <textarea id="inputText" class="form-control" name="preQuestionText" aria-describedby="validationTaskFormPreQuesionText"></textarea>
+                        <div id="validationTaskFormPreQuesionText" class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="col-12 mb-3">
                     <div class="input-group">
                         <span class="input-group-text">Текст вопроса</span>
-                        <textarea id="inputText" class="form-control" name="questionText"></textarea>
+                        <textarea id="inputText" class="form-control" name="questionText" aria-describedby="validationTaskFormQuesionText"></textarea>
+                        <div id="validationTaskFormQuesionText" class="invalid-feedback"></div>
                     </div>
                 </div>
                 <div class="col-6 mb-3">
@@ -316,17 +319,15 @@
                 `);
             }
             taskList.forEach(task => {
-                let tr = $(`
+                table.append($(`
                     <tr>
                         <td>` + task.position + `</td>
                         <td>` + task.text + `</td>
                         <td><a href="#" onclick="fillTaskFormByUpdate(` + task.id + `)">Изменить</a></td>
-                        <td></td>
+                        <td>` + deleteConfirmString('deleteTask(' + task.id + ')', 'confirm-delete-task-' + task.id, 'Точно удалить вопрос?') + `</td>
                         <td>` + (task.decisionsCount === 0 ? '<div style="color: red">Решений не назначено</div>' : task.decisionsCount) + `</td>
                     </tr>
-                `);
-                tr.find('td')[3].html(deleteConfirm('deleteTask(' + task.id + ')', 'confirm-delete-task-' + task.id, 'Точно удалить вопрос?'))
-                table.append(tr);
+                `));
             })
         }
 
@@ -403,7 +404,7 @@
                     noWeight: yesOrNoTab.find("[name|='noWeight']").val()
                 }
             }
-            let body = {
+            let taskCreateCommand = {
                 quizId: quizId,
                 position: form.find("[name|='position']").val(),
                 preQuestionText: form.find("[name|='preQuestionText']").val(),
@@ -413,9 +414,12 @@
                 yesOrNo: yesOrNo,
             };
             let formData = new FormData();
-            formData.append('taskCreateCommand', JSON.stringify(body));
+
+            formData.append('taskCreateCommand', new Blob([JSON.stringify(taskCreateCommand)], {
+                type: 'application/json'
+            }), '');
             let file = form.find("[name|='file']").prop('files')[0];
-            formData.append("file", file)
+            formData.append("file", file);
             let response = await fetch("/api/quiz/task", {
                 method: 'POST',
                 headers: {
