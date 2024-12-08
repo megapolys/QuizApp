@@ -14,22 +14,6 @@ import java.util.List;
 @Service
 public class QuizResultService {
 
-    @Value("${default.fiveVariant.firstWeight}")
-    private float firstWeight;
-    @Value("${default.fiveVariant.secondWeight}")
-    private float secondWeight;
-    @Value("${default.fiveVariant.thirdWeight}")
-    private float thirdWeight;
-    @Value("${default.fiveVariant.fourthWeight}")
-    private float fourthWeight;
-    @Value("${default.fiveVariant.fifthWeight}")
-    private float fifthWeight;
-
-    @Value("${default.yesOrNo.noWeight}")
-    private float noWeight;
-    @Value("${default.yesOrNo.yesWeight}")
-    private float yesWeight;
-
     @Value("${default.ratio.yellow}")
     private float yellowRatio;
     @Value("${default.ratio.red}")

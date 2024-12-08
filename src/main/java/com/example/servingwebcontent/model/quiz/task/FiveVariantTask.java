@@ -8,6 +8,11 @@ import lombok.Data;
 public class FiveVariantTask {
 
 	/**
+	 * Идентификатор
+	 */
+	private Long id;
+
+	/**
 	 * Первичный вопрос
 	 */
 	private String preQuestionText;

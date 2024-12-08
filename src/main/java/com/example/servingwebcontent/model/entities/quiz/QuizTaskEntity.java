@@ -30,6 +30,22 @@ public class QuizTaskEntity {
 		);
 	}
 
+	public static QuizTaskEntity buildExists(
+		Long id,
+		Long quizId,
+		int position,
+		Long quizTaskFiveVariantId,
+		Long quizTaskYesOrNoId
+	) {
+		return new QuizTaskEntity(
+			id,
+			quizId,
+			position,
+			quizTaskFiveVariantId,
+			quizTaskYesOrNoId
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_gen")

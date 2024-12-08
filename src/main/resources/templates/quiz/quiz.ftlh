@@ -96,38 +96,17 @@
                     <input class="form-control" type="file" name="file" id="formFile">
                 </div>
                 <div class="col-6 mb-3"></div>
-                <ul id="taskTabs" class="nav nav-tabs">
+                <ul id="task-tabs" class="nav nav-tabs">
                     <li class="nav-item">
-                        <a class="nav-link ` + (isFiveVariant ? 'active' : '') + `" href="#"
-                           onclick="switchTab(this, '#fiveVariantTab')">Пять вариантов (Никогда - Всегда)</a>
+                        <a class="nav-link ` + (isFiveVariant ? 'active' : '') + `" href="#!"
+                           onclick="switchTab(this, '#five-variant-tab')">Пять вариантов (Никогда - Всегда)</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link` + (isFiveVariant ? '' : 'active') + `" href="#"
-                           onclick="switchTab(this, '#yesOrNoTab')">Два варианта (Да, Нет)</a>
+                        <a class="nav-link` + (isFiveVariant ? '' : 'active') + `" href="#!"
+                           onclick="switchTab(this, '#yes-or-no-tab')">Два варианта (Да, Нет)</a>
                     </li>
                 </ul>
-                <div id="taskTypeTabs">
-                    <div id="fiveVariantTab" class="input-group mb-3"
-                         style="display: ` + (isFiveVariant ? '' : 'none') + `">
-                        <span class="input-group-text">Никогда</span>
-                        <input type="number" name="firstWeight" class="form-control" step="0.5" placeholder="0">
-                        <span class="input-group-text">Редко</span>
-                        <input type="number" name="secondWeight" class="form-control" step="0.5" placeholder="0">
-                        <span class="input-group-text">Иногда</span>
-                        <input type="number" name="thirdWeight" class="form-control" step="0.5" placeholder="2">
-                        <span class="input-group-text">Часто</span>
-                        <input type="number" name="fourthWeight" class="form-control" step="0.5" placeholder="3">
-                        <span class="input-group-text">Всегда</span>
-                        <input type="number" name="fifthWeight" class="form-control" step="0.5" placeholder="4">
-                    </div>
-                </div>
-                <div id="yesOrNoTab" class="input-group mb-3"
-                     style="display: ` + (isFiveVariant ? 'none' : '') + `">
-                    <span class="input-group-text">Да</span>
-                    <input type="number" name="yesWeight" class="form-control" step="0.5" placeholder="4">
-                    <span class="input-group-text">Нет</span>
-                    <input type="number" name="noWeight" class="form-control" step="0.5" placeholder="0">
-                </div>
+                <div id="task-type-tabs"></div>
                 <div class="mb-3">
                     <h5 class="mb-3">Решения</h5>
                     <div id="list-of-chosen-decisions"></div>
@@ -137,9 +116,123 @@
                     <a href="#" class="btn btn-primary col-3" onclick="createTask(` + quizId + `, '` + decisionsName + `')">Добавить вопрос</a>
                 </div>
             `);
+            let taskTypeTabs = $('#task-type-tabs');
+            appendFiveVariantTab(taskTypeTabs, isFiveVariant, null);
+            appendYesOrNoTab(taskTypeTabs, !isFiveVariant, null);
             let chosenDecisions = new Set();
             $('#list-of-chosen-decisions').html(listOfChosenDecisions(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
             $('#decisions-checkbox').html(decisionsCheckbox(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
+        }
+
+        async function fillTaskFormByUpdate(taskId) {
+            let task = await getTask(taskId);
+            let position = task.position;
+            let quizId = task.quizId;
+            let isFiveVariant = !!task.fiveVariantTask;
+            let preQuestionText = isFiveVariant ? task.fiveVariantTask.preQuestionText : task.yesOrNoTask.preQuestionText;
+            let questionText = isFiveVariant ? task.fiveVariantTask.questionText : task.yesOrNoTask.questionText;
+            let fileName = isFiveVariant ? task.fiveVariantTask.fileName : task.yesOrNoTask.fileName;
+            let decisionsName = 'decisions';
+            $('#task-form').html(`
+                <div class="row mb-3 justify-content-md-center">
+                    <a href="#" class="btn btn-primary col-4" onclick="loadContent()">Отменить изменение</a>
+                    <div class="col-5"></div>
+                    <a href="#" class="btn btn-primary col-3" onclick="updateTask(` + quizId + `, ` + taskId + `, '` + decisionsName + `')">Изменить вопрос</a>
+                </div>
+                <div class="col-2 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">№</span>
+                        <input id="positionValue" class="form-control" type="number" min="1" name="position" value="` + position + `" aria-describedby="validationTaskFormPosition"/>
+                        <div id="validationTaskFormPosition" class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-10 mb-3">
+                    <div class="input-group col-9">
+                        <span class="input-group-text">Текст задания</span>
+                        <textarea id="inputText" class="form-control" name="preQuestionText" aria-describedby="validationTaskFormPreQuesionText">` + preQuestionText + `</textarea>
+                        <div id="validationTaskFormPreQuesionText" class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Текст вопроса</span>
+                        <textarea id="inputText" class="form-control" name="questionText" aria-describedby="validationTaskFormQuesionText">` + questionText + `</textarea>
+                        <div id="validationTaskFormQuesionText" class="invalid-feedback"></div>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label for="formFile" class="form-label">Вспомогательная картинка</label>
+                    <input class="form-control" type="file" name="file" id="formFile">
+                </div>
+                <div class="col-6 mb-3">
+                    ` + (fileName ? `
+                    <div>Выбрана картинка: ` + fileName + `</div>
+                    <div>
+                        <input class="form-check-input" type="checkbox" name="deleteFile" id="deleteFileCheckbox">
+                        <label class="form-check-label" for="deleteFileCheckbox">Удалить картинку</label>
+                    </div>` : '') + `
+                </div>
+                <ul id="task-tabs" class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link ` + (isFiveVariant ? 'active' : '') + `" href="#!"
+                           onclick="switchTab(this, '#five-variant-tab')">Пять вариантов (Никогда - Всегда)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ` + (isFiveVariant ? '' : 'active') + `" href="#!"
+                           onclick="switchTab(this, '#yes-or-no-tab')">Два варианта (Да, Нет)</a>
+                    </li>
+                </ul>
+                <div id="task-type-tabs"></div>
+                <div class="mb-3">
+                    <h5 class="mb-3">Решения</h5>
+                    <div id="list-of-chosen-decisions"></div>
+                    <div id="decisions-checkbox"></div>
+                </div>
+                <div class="row mb-2 justify-content-md-center">
+                    <a href="#" class="btn btn-primary col-3" onclick="updateTask(` + quizId + `, ` + taskId + `, '` + decisionsName + `')">Изменить вопрос</a>
+                </div>
+            `);
+            let taskTypeTabs = $('#task-type-tabs');
+            appendFiveVariantTab(taskTypeTabs, isFiveVariant, task.fiveVariantTask);
+            appendYesOrNoTab(taskTypeTabs, !isFiveVariant, task.yesOrNoTask);
+            let groupDecisions = await getGroupDecisions();
+            let ungroupedDecisions = await getUngroupedDecisions();
+            let chosenDecisions = new Set();
+            task.decisionIds.forEach(decisionId => {
+                chosenDecisions.add(decisionId);
+            });
+            $('#list-of-chosen-decisions').html(listOfChosenDecisions(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
+            $('#decisions-checkbox').html(decisionsCheckbox(decisionsName, chosenDecisions, groupDecisions, ungroupedDecisions));
+        }
+
+        async function appendFiveVariantTab(appendTo, active, task) {
+            let property = await getFiveVariantProperty();
+            appendTo.append($(`
+                <div id="five-variant-tab" class="input-group mb-3" style="display: ` + (active ? '' : 'none') + `">
+                    <span class="input-group-text">Никогда</span>
+                    <input type="number" name="firstWeight" class="form-control" step="0.5" placeholder="` + property.firstWeight + `" value="` + (task ? task.firstWeight : '') + `">
+                    <span class="input-group-text">Редко</span>
+                    <input type="number" name="secondWeight" class="form-control" step="0.5" placeholder="` + property.secondWeight + `" value="` + (task ? task.secondWeight : '') + `">
+                    <span class="input-group-text">Иногда</span>
+                    <input type="number" name="thirdWeight" class="form-control" step="0.5" placeholder="` + property.thirdWeight + `" value="` + (task ? task.thirdWeight : '') + `">
+                    <span class="input-group-text">Часто</span>
+                    <input type="number" name="fourthWeight" class="form-control" step="0.5" placeholder="` + property.fourthWeight + `" value="` + (task ? task.fourthWeight : '') + `">
+                    <span class="input-group-text">Всегда</span>
+                    <input type="number" name="fifthWeight" class="form-control" step="0.5" placeholder="` + property.fifthWeight + `" value="` + (task ? task.fifthWeight : '') + `">
+                </div>
+            `));
+        }
+
+        async function appendYesOrNoTab(appendTo, active, task) {
+            let property = await getYesOrNoProperty();
+            appendTo.append($(`
+                <div id="yes-or-no-tab" class="input-group mb-3" style="display: ` + (active ? '' : 'none') + `">
+                    <span class="input-group-text">Да</span>
+                    <input type="number" name="yesWeight" class="form-control" step="0.5" placeholder="` + property.yesWeight + `" value="` + (task ? task.yesWeight : '') + `">
+                    <span class="input-group-text">Нет</span>
+                    <input type="number" name="noWeight" class="form-control" step="0.5" placeholder="` + property.noWeight + `" value="` + (task ? task.noWeight : '') + `">
+                </div>
+            `));
         }
 
         function listOfChosenDecisions(decisionsName, chosenDecisions, groups, ungroupedDecisions) {
@@ -189,17 +282,6 @@
                 }
             })
             return result;
-        }
-
-        function chosenElement(groupId, decisionId, name) {
-            return $(`
-                <div id="decision-chosen-` + decisionId + `">
-                    <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
-                        <a onclick=decisionFocus('` + groupId + `','` + decisionId + `')>` + name + `</a>
-                        <button onclick="$('#` + decisionId + `')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
-                    </div>
-                </div>
-            `)
         }
 
         function decisionsCheckbox(decisionsName, chosenDecisions, groups, ungroupedDecisions) {
@@ -340,12 +422,24 @@
             return getRequestWithError('/api/quiz/task?quizId=' + quizId, 'Ошибка при загрузке списка вопросов');
         }
 
+        async function getTask(taskId) {
+            return getRequestWithError('/api/quiz/task?taskId=' + taskId, 'Ошибка при загрузке вопроса');
+        }
+
         async function getGroupDecisions() {
             return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
         }
 
         async function getUngroupedDecisions() {
             return getRequestWithError("/api/decisions/ungrouped", 'Ошибка при загрузке решений');
+        }
+
+        async function getFiveVariantProperty() {
+            return getRequestWithError("/api/property/fiveVariant", 'Ошибка при загрузке дефолтных значений для вопроса 5 вариантов');
+        }
+
+        async function getYesOrNoProperty() {
+            return getRequestWithError("/api/property/yesOrNo", 'Ошибка при загрузке дефолтных значений для вопроса да/нет');
         }
 
         async function updateQuiz(id) {
@@ -387,7 +481,7 @@
                 }
             })
             let fiveVariant = null;
-            let fiveVariantTab = $('#fiveVariantTab');
+            let fiveVariantTab = $('#five-variant-tab');
             if (fiveVariantTab.css('display') !== 'none') {
                 fiveVariant = {
                     firstWeight: fiveVariantTab.find("[name|='firstWeight']").val(),
@@ -398,7 +492,7 @@
                 }
             }
             let yesOrNo = null;
-            let yesOrNoTab = $('#yesOrNoTab');
+            let yesOrNoTab = $('#yes-or-no-tab');
             if (yesOrNoTab.css('display') !== 'none') {
                 yesOrNo = {
                     yesWeight: yesOrNoTab.find("[name|='yesWeight']").val(),
@@ -430,8 +524,70 @@
                 body: formData
             });
             if (response.ok) {
-                clearFromInvalidFields(form);
                 showSuccess('Вопрос успешно сохранен');
+                await loadContent();
+            } else {
+                response.json().then(json => {
+                    fillFormInvalidFields(json, form);
+                })
+            }
+        }
+
+        async function updateTask(quizId, taskId, decisionsName) {
+            clearMessage();
+            let form = $('#task-form');
+            let decisions = [];
+            form.find("[name|='" + decisionsName + "']").each(function () {
+                let checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    decisions.push(checkbox.val());
+                }
+            })
+            let fiveVariant = null;
+            let fiveVariantTab = $('#five-variant-tab');
+            if (fiveVariantTab.css('display') !== 'none') {
+                fiveVariant = {
+                    firstWeight: fiveVariantTab.find("[name|='firstWeight']").val(),
+                    secondWeight: fiveVariantTab.find("[name|='secondWeight']").val(),
+                    thirdWeight: fiveVariantTab.find("[name|='thirdWeight']").val(),
+                    fourthWeight: fiveVariantTab.find("[name|='fourthWeight']").val(),
+                    fifthWeight: fiveVariantTab.find("[name|='fifthWeight']").val()
+                }
+            }
+            let yesOrNo = null;
+            let yesOrNoTab = $('#yes-or-no-tab');
+            if (yesOrNoTab.css('display') !== 'none') {
+                yesOrNo = {
+                    yesWeight: yesOrNoTab.find("[name|='yesWeight']").val(),
+                    noWeight: yesOrNoTab.find("[name|='noWeight']").val()
+                }
+            }
+            let taskUpdateCommand = {
+                position: form.find("[name|='position']").val(),
+                preQuestionText: form.find("[name|='preQuestionText']").val(),
+                questionText: form.find("[name|='questionText']").val(),
+                decisionIds: decisions,
+                fiveVariant: fiveVariant,
+                yesOrNo: yesOrNo,
+                deleteFile: form.find("[name|='deleteFile']").is(':checked')
+            };
+            let formData = new FormData();
+
+            formData.append('taskUpdateCommand', new Blob([JSON.stringify(taskUpdateCommand)], {
+                type: 'application/json'
+            }), '');
+            let file = form.find("[name|='file']").prop('files')[0];
+            formData.append("file", file);
+            let response = await fetch("/api/quiz/task/" + taskId, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                },
+                body: formData
+            });
+            if (response.ok) {
+                showSuccess('Вопрос успешно изменен');
                 await loadContent();
             } else {
                 response.json().then(json => {
@@ -446,8 +602,8 @@
         }
 
         function switchTab(el, tabId) {
-            $("#taskTabs li a").removeClass("active");
-            $("#taskTypeTabs").children().hide();
+            $("#task-tabs li a").removeClass("active");
+            $("#task-type-tabs").children().hide();
 
             $(el).addClass("active");
             $(tabId).show();

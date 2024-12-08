@@ -1,7 +1,9 @@
 package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.model.quiz.QuizTask;
+import com.example.servingwebcontent.model.quiz.QuizTaskFull;
 import com.example.servingwebcontent.model.quiz.task.TaskCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.task.TaskUpdateCommandDto;
 import com.example.servingwebcontent.service.quiz.QuizTaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,18 @@ public class QuizTaskRestController {
 	}
 
 	/**
+	 * Получить данные вопроса
+	 *
+	 * @param taskId идентификатор вопроса
+	 *
+	 * @return вопрос
+	 */
+	@GetMapping(value = "/api/quiz/task", params = "taskId")
+	public QuizTaskFull getQuizTaskById(@RequestParam("taskId") Long taskId) {
+		return quizTaskService.getQuizTaskById(taskId);
+	}
+
+	/**
 	 * Удаление вопроса
 	 *
 	 * @param taskId идентификатор вопроса
@@ -53,5 +67,21 @@ public class QuizTaskRestController {
 		@RequestPart(value = "file", required = false) MultipartFile file
 	) {
 		quizTaskService.createTask(taskCreateCommand, file);
+	}
+
+	/**
+	 * Изменение вопроса
+	 *
+	 * @param taskUpdateCommand команда для изменения вопроса
+	 * @param file              файл
+	 * @param taskId            идентификатор вопроса
+	 */
+	@PutMapping(value = "/api/quiz/task/{taskId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public void updateTask(
+		@RequestPart("taskUpdateCommand") @Valid TaskUpdateCommandDto taskUpdateCommand,
+		@RequestPart(value = "file", required = false) MultipartFile file,
+		@PathVariable("taskId") Long taskId
+	) {
+		quizTaskService.updateTask(taskUpdateCommand, file, taskId);
 	}
 }

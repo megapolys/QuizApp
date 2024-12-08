@@ -8,6 +8,7 @@ function switchTab(el, tab_id, path) {
     $("#taskForm").attr("action", path);
 }
 
+// using in quiz.ftlh
 function chooseDecision(chosenDecisions, name, groupId, decisionId) {
     console.log("start chooseDecision");
     let exist = false;
@@ -25,14 +26,19 @@ function chooseDecision(chosenDecisions, name, groupId, decisionId) {
         }
     });
     if (!exist) {
-        let newElement = $("<div id=" + id + ">\n" +
-            "                    <div class=\"p-2 mb-2 rounded-3 position-relative\" style=\"background-color: #efadce\">\n" +
-            "                       <a onclick=decisionFocus('" + groupId + "','" + decisionId + "')>" + name + "</a>\n" +
-            "                       <button onclick=\"$('#" + decisionId + "')[0].click()\" type=\"button\" class=\"btn-close position-absolute top-50 end-0 translate-middle-y\" aria-label=\"Close\"></button>\n" +
-            "                    </div>\n" +
-            "               </div>");
-        newElement.appendTo(chosenDecisions);
+        decisions.append(chosenElement(groupId, decisionId, name));
     }
+}
+
+function chosenElement(groupId, decisionId, name) {
+    return $(`
+                <div id="decision-chosen-` + decisionId + `">
+                    <div class="p-2 mb-2 rounded-3 position-relative" style="background-color: #efadce">
+                        <a onclick=decisionFocus('` + groupId + `','` + decisionId + `')>` + name + `</a>
+                        <button onclick="$('#` + decisionId + `')[0].click()" type="button" class="btn-close position-absolute top-50 end-0 translate-middle-y" aria-label="Close"></button>
+                    </div>
+                </div>
+            `);
 }
 
 function decisionFocus(groupId, decisionId) {

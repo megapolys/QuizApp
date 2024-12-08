@@ -11,6 +11,7 @@ public class FiveVariantTaskEntityToFiveVariantTaskConverter implements Converte
 	@Override
 	public FiveVariantTask convert(FiveVariantTaskEntity entity) {
 		return FiveVariantTask.builder()
+			.id(entity.getId())
 			.preQuestionText(entity.getPreQuestionText())
 			.questionText(entity.getQuestionText())
 			.fileName(entity.getFileName())

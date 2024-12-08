@@ -38,6 +38,30 @@ public class FiveVariantTaskEntity {
 		);
 	}
 
+	public static FiveVariantTaskEntity buildExists(
+		Long id,
+		String preQuestionText,
+		String questionText,
+		String fileName,
+		Float firstWeight,
+		Float secondWeight,
+		Float thirdWeight,
+		Float fourthWeight,
+		Float fifthWeight
+	) {
+		return new FiveVariantTaskEntity(
+			id,
+			preQuestionText,
+			questionText,
+			fileName,
+			firstWeight,
+			secondWeight,
+			thirdWeight,
+			fourthWeight,
+			fifthWeight
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_five_variant_gen")

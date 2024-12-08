@@ -7,15 +7,20 @@ import lombok.Data;
 @Data
 public class YesOrNoTask {
 
-    /**
-     * Первичный вопрос
-     */
-    private String preQuestionText;
+	/**
+	 * Идентификатор
+	 */
+	private Long id;
 
-    /**
-     * Текст вопроса
-     */
-    private String questionText;
+	/**
+	 * Первичный вопрос
+	 */
+	private String preQuestionText;
+
+	/**
+	 * Текст вопроса
+	 */
+	private String questionText;
 
     /**
      * Наименование файла

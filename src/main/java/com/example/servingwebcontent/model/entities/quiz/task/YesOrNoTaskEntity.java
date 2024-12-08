@@ -32,6 +32,24 @@ public class YesOrNoTaskEntity {
 		);
 	}
 
+	public static YesOrNoTaskEntity buildExists(
+		Long id,
+		String preQuestionText,
+		String questionText,
+		String fileName,
+		Float yesWeight,
+		Float noWeight
+	) {
+		return new YesOrNoTaskEntity(
+			id,
+			preQuestionText,
+			questionText,
+			fileName,
+			yesWeight,
+			noWeight
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_yes_or_no_gen")
