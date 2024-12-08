@@ -12,6 +12,7 @@ import com.example.servingwebcontent.repositories.quiz.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -142,17 +143,18 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Transactional
 	public void deleteTaskById(Long taskId) {
 		QuizTaskEntity quizTaskEntity = quizTaskRepository.findById(taskId)
 			.orElseThrow(() -> QuizTaskNotFoundException.byId(taskId));
+		quizTaskDecisionsRepository.deleteAllByQuizTaskId(taskId);
+		quizTaskRepository.deleteById(taskId);
 		if (quizTaskEntity.getQuizTaskFiveVariantId() != null) {
 			fiveVariantRepository.deleteById(quizTaskEntity.getQuizTaskFiveVariantId());
 		}
 		if (quizTaskEntity.getQuizTaskYesOrNoId() != null) {
 			yesOrNoRepository.deleteById(quizTaskEntity.getQuizTaskYesOrNoId());
 		}
-		quizTaskDecisionsRepository.deleteAllByQuizTaskId(taskId);
-		quizTaskRepository.deleteById(taskId);
 	}
 
 	/**

@@ -36,8 +36,9 @@
             fillQuizChangeForm(quiz);
             let groupDecisions = await getGroupDecisions();
             let ungroupedDecisions = await getUngroupedDecisions();
-            fillTaskFromByCreate(quiz.id, true, groupDecisions, ungroupedDecisions);
             let taskList = await getTaskList(quiz.id);
+            let position = getNextTaskPosition(taskList);
+            fillTaskFromByCreate(quiz.id, true, groupDecisions, ungroupedDecisions, position);
             fillTaskList(taskList);
         }
 
@@ -63,7 +64,7 @@
             `);
         }
 
-        function fillTaskFromByCreate(quizId, isFiveVariant, groupDecisions, ungroupedDecisions) {
+        function fillTaskFromByCreate(quizId, isFiveVariant, groupDecisions, ungroupedDecisions, position) {
             let decisionsName = 'decisions';
             $('#task-form').html(`
                 <div class="row mb-3 justify-content-md-center">
@@ -72,7 +73,7 @@
                 <div class="col-2 mb-3">
                     <div class="input-group">
                         <span class="input-group-text">№</span>
-                        <input id="positionValue" class="form-control" type="number" min="1" name="position" aria-describedby="validationTaskFormPosition"/>
+                        <input id="positionValue" class="form-control" type="number" min="1" name="position" value="` + position + `" aria-describedby="validationTaskFormPosition"/>
                         <div id="validationTaskFormPosition" class="invalid-feedback"></div>
                     </div>
                 </div>
@@ -409,7 +410,7 @@
                 position: form.find("[name|='position']").val(),
                 preQuestionText: form.find("[name|='preQuestionText']").val(),
                 questionText: form.find("[name|='questionText']").val(),
-                decisions: decisions,
+                decisionIds: decisions,
                 fiveVariant: fiveVariant,
                 yesOrNo: yesOrNo,
             };
@@ -431,6 +432,7 @@
             if (response.ok) {
                 clearFromInvalidFields(form);
                 showSuccess('Вопрос успешно сохранен');
+                await loadContent();
             } else {
                 response.json().then(json => {
                     fillFormInvalidFields(json, form);
@@ -449,6 +451,19 @@
 
             $(el).addClass("active");
             $(tabId).show();
+        }
+
+        function getNextTaskPosition(taskList) {
+            if (taskList) {
+                for (let i = 1; i < taskList.length + 1; i++) {
+                    if (i !== taskList[i - 1].position) {
+                        return i;
+                    }
+                }
+                return taskList.length + 1;
+            } else {
+                return 1;
+            }
         }
 
     </script>

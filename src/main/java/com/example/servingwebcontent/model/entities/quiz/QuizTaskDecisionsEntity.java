@@ -17,6 +17,10 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class QuizTaskDecisionsEntity implements Serializable {
 
+	public static QuizTaskDecisionsEntity createNew(Long quizId, Long decisionId) {
+		return new QuizTaskDecisionsEntity(quizId, decisionId);
+	}
+
 	@Id
 	@Column(name = "quiz_task_id")
 	Long quizTaskId;
@@ -24,4 +28,5 @@ public class QuizTaskDecisionsEntity implements Serializable {
 	@Id
 	@Column(name = "decisions_id")
 	Long decisionsId;
+
 }

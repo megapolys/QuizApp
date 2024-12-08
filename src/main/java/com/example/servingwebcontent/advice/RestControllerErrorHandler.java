@@ -3,6 +3,7 @@ package com.example.servingwebcontent.advice;
 import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsByNameException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
+import com.example.servingwebcontent.model.dto.RestExceptionDto;
 import com.example.servingwebcontent.model.dto.ValidationErrorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +26,12 @@ public class RestControllerErrorHandler {
 
 	private final ConversionService mvcConversionService;
 
-	@ExceptionHandler(RuntimeException.class)
+	@ExceptionHandler(Throwable.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	protected String handleRuntimeException(RuntimeException e) {
-		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
-		return "error";
+	protected RestExceptionDto handleRuntimeException(Throwable t) {
+		String localizedMessage = t.getLocalizedMessage();
+		log.error("Exception: {}", localizedMessage, t);
+		return new RestExceptionDto(t.getClass().getName(), localizedMessage);
 	}
 
 	@ExceptionHandler(GroupAlreadyExistsByNameException.class)

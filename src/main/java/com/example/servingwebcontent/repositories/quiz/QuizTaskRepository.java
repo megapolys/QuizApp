@@ -17,7 +17,7 @@ public interface QuizTaskRepository extends CrudRepository<QuizTaskEntity, Long>
 					qt.id,
 					qt.quizId,
 					qt.position,
-					count(qtd) filter where,
+					count(qtd) filter (where qtd.quizTaskId is not null),
 					fvt,
 					ynt
 				) from QuizTaskEntity qt

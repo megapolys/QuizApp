@@ -20,7 +20,7 @@ spring:
 #      springframework:
 #        security: DEBUG
 upload.path:
-  img: '/Users/i/IdeaProjects/QuizApp/img'
+  img: '/Users/Daniil/IdeaProjects/QuizApp/img'
   imgPrefix: 'C:'
 domain.name: localhost:8082
 server:

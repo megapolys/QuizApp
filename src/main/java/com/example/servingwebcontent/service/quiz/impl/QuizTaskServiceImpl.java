@@ -1,6 +1,7 @@
 package com.example.servingwebcontent.service.quiz.impl;
 
 import com.example.servingwebcontent.exceptions.FileUploadException;
+import com.example.servingwebcontent.model.entities.quiz.QuizTaskDecisionsEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.task.FiveVariantTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.task.YesOrNoTaskEntity;
@@ -10,6 +11,7 @@ import com.example.servingwebcontent.model.quiz.task.TaskCreateCommandDto;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.property.UploadPathProperty;
 import com.example.servingwebcontent.repositories.quiz.FiveVariantRepository;
+import com.example.servingwebcontent.repositories.quiz.QuizTaskDecisionsRepository;
 import com.example.servingwebcontent.repositories.quiz.QuizTaskRepository;
 import com.example.servingwebcontent.repositories.quiz.YesOrNoRepository;
 import com.example.servingwebcontent.service.quiz.QuizTaskService;
@@ -32,6 +34,7 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 	private final QuizTaskRepository quizTaskRepository;
 	private final FiveVariantRepository fiveVariantRepository;
 	private final YesOrNoRepository yesOrNoRepository;
+	private final QuizTaskDecisionsRepository quizTaskDecisionsRepository;
 
 	/**
 	 * {@inheritDoc}
@@ -58,8 +61,12 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Transactional
 	public void createTask(TaskCreateCommandDto taskCreateCommand, MultipartFile file) {
-		String fileName = saveFileIfNotEmpty(file);
+		String fileName = null;
+		if (file != null && !file.isEmpty()) {
+			fileName = UUID.randomUUID() + "." + file.getOriginalFilename();
+		}
 		FiveVariantTaskEntity fiveVariantEntity = null;
 		YesOrNoTaskEntity yesOrNoEntity = null;
 		if (taskCreateCommand.getFiveVariant() != null) {
@@ -86,30 +93,33 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 				));
 		}
 		movePosition(taskCreateCommand.getQuizId(), taskCreateCommand.getPosition());
-		quizTaskRepository.save(QuizTaskEntity.createNew(
+		QuizTaskEntity taskEntity = quizTaskRepository.save(QuizTaskEntity.createNew(
 			taskCreateCommand.getQuizId(),
 			taskCreateCommand.getPosition(),
 			fiveVariantEntity == null ? null : fiveVariantEntity.getId(),
 			yesOrNoEntity == null ? null : yesOrNoEntity.getId()
 		));
+		if (taskCreateCommand.getDecisionIds() != null) {
+			for (Long decisionId : taskCreateCommand.getDecisionIds()) {
+				quizTaskDecisionsRepository.save(QuizTaskDecisionsEntity.createNew(taskEntity.getId(), decisionId));
+			}
+		}
+		if (fileName != null) {
+			saveFile(file, fileName);
+		}
 	}
 
-	private String saveFileIfNotEmpty(MultipartFile file) {
-		String fileName = null;
+	private void saveFile(MultipartFile multipartFile, String fileName) {
 		try {
-			if (file != null && !file.isEmpty()) {
-				final File uploadDir = new File(uploadPathProperty.getImgPrefix() + uploadPathProperty.getImg());
-				if (!uploadDir.exists()) {
-					uploadDir.mkdir();
-				}
-				final String uuid = UUID.randomUUID().toString();
-				fileName = uuid + "." + file.getOriginalFilename();
-				file.transferTo(new File(uploadDir + "/" + fileName));
+			final File uploadDir = new File(uploadPathProperty.getImgPrefix() + uploadPathProperty.getImg());
+			if (!uploadDir.exists()) {
+				uploadDir.mkdir();
 			}
+			File file = new File(uploadDir + "/" + fileName);
+			multipartFile.transferTo(file);
 		} catch (IOException ioe) {
 			throw FileUploadException.quizTaskFile(ioe);
 		}
-		return fileName;
 	}
 
 	private void deleteFile(QuizTaskFull task) {
