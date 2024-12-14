@@ -15,6 +15,14 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class MedicalTopicEntity {
 
+	public static MedicalTopicEntity createNew(String name) {
+		return new MedicalTopicEntity(null, name);
+	}
+
+	public static MedicalTopicEntity buildExists(Long id, String name) {
+		return new MedicalTopicEntity(id, name);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_topic_gen")

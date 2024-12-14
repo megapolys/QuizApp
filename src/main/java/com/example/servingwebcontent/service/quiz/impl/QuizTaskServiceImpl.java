@@ -61,10 +61,26 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 	@Override
 	@Transactional
 	public void deleteQuizTask(Long taskId) {
+		deleteQuizTask(taskId, true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void deleteAllQuizTask(Long quizId) {
+		quizTaskRepository.findAllByQuizId(quizId)
+			.forEach(quizTask -> deleteQuizTask(quizTask.getId(), false));
+	}
+
+	private void deleteQuizTask(Long taskId, boolean reposition) {
 		QuizTaskFull quizTask = quizPersistence.getQuizTaskFullById(taskId);
 		quizPersistence.deleteTaskResultByTaskId(taskId);
 		quizPersistence.deleteTaskById(taskId);
-		quizPersistence.rePositionTasksByQuizId(quizTask.getQuizId());
+		if (reposition) {
+			quizPersistence.rePositionTasksByQuizId(quizTask.getQuizId());
+		}
 		deleteFile(quizTask);
 	}
 

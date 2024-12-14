@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.advice;
 
-import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
 import com.example.servingwebcontent.model.dto.RestExceptionDto;
@@ -46,16 +46,16 @@ public class RestControllerErrorHandler {
 			.build();
 	}
 
-	@ExceptionHandler(DecisionAlreadyExistsByNameException.class)
+	@ExceptionHandler(DecisionAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	protected ValidationErrorDto handle(DecisionAlreadyExistsByNameException e) {
+	protected ValidationErrorDto handle(DecisionAlreadyExistsException e) {
 		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
 		return ValidationErrorDto.builder()
 			.fields(List.of(ValidationErrorDto.FieldDto.builder()
 				.fieldName("name")
 				.error(DECISION_WITH_SAME_NAME_ALREADY_EXISTS)
-									.build()))
-				.build();
+				.build()))
+			.build();
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

@@ -17,7 +17,7 @@ public class MedicalTask {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
-    private MedicalTopic topic;
+    private MedicalTopicWithTaskSize topic;
 
     @OneToMany(mappedBy = "medicalTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<MedicalTaskResult> medicalTaskResults;
@@ -104,13 +104,13 @@ public class MedicalTask {
         this.unit = unit;
     }
 
-    public MedicalTopic getTopic() {
-        return topic;
-    }
+	public MedicalTopicWithTaskSize getTopic() {
+		return topic;
+	}
 
-    public void setTopic(MedicalTopic topic) {
-        this.topic = topic;
-    }
+	public void setTopic(MedicalTopicWithTaskSize topic) {
+		this.topic = topic;
+	}
 
     public Set<MedicalTaskResult> getMedicalTaskResults() {
         return medicalTaskResults;

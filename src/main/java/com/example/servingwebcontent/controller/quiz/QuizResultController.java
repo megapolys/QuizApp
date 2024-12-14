@@ -3,13 +3,11 @@ package com.example.servingwebcontent.controller.quiz;
 import com.example.servingwebcontent.service.quiz.QuizInvokeService;
 import com.example.servingwebcontent.service.quiz.QuizResultService;
 import com.example.servingwebcontent.service.quiz.impl.QuizServiceImpl;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/result/quiz")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class QuizResultController {
 
 	private final QuizResultService quizResultService;

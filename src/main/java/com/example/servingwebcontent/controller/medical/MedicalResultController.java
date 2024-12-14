@@ -1,13 +1,12 @@
 package com.example.servingwebcontent.controller.medical;
 
-import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.service.medical.MedicalTopicInvokeService;
 import com.example.servingwebcontent.service.medical.MedicalTopicResultService;
-import com.example.servingwebcontent.service.medical.MedicalTopicService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.example.servingwebcontent.service.medical.impl.MedicalTopicServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,18 +14,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/result/topic")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class MedicalResultController {
 
-    private final MedicalTopicService topicService;
-    private final MedicalTopicResultService topicResultService;
+	private final MedicalTopicServiceImpl topicService;
+	private final MedicalTopicResultService topicResultService;
     private final MedicalTopicInvokeService topicInvokeService;
 
-    public MedicalResultController(MedicalTopicService topicService, MedicalTopicResultService topicResultService, MedicalTopicInvokeService topicInvokeService) {
-        this.topicService = topicService;
-        this.topicResultService = topicResultService;
-        this.topicInvokeService = topicInvokeService;
-    }
+	public MedicalResultController(MedicalTopicServiceImpl topicService, MedicalTopicResultService topicResultService, MedicalTopicInvokeService topicInvokeService) {
+		this.topicService = topicService;
+		this.topicResultService = topicResultService;
+		this.topicInvokeService = topicInvokeService;
+	}
 
     @GetMapping("/{user}")
     public String getTopics(
@@ -42,9 +40,9 @@ public class MedicalResultController {
 
     @PostMapping("/{userId}/newTopic/{topic}")
     public String newTopic(
-            @PathVariable Long userId,
-            @PathVariable MedicalTopic topic,
-            RedirectAttributes redirectAttributes
+	    @PathVariable Long userId,
+	    @PathVariable MedicalTopicWithTaskSize topic,
+	    RedirectAttributes redirectAttributes
     ) {
         topicInvokeService.startTopic(userId, topic);
         redirectAttributes.addAttribute("userId", userId);

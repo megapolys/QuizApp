@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.service.decision.impl;
 
-import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.decision.DecisionWithGroup;
@@ -85,7 +85,7 @@ public class DecisionServiceImpl implements DecisionService {
 		decision.setName(decision.getName().trim());
 		decision.setDescription(decision.getDescription() != null ? decision.getDescription().trim() : null);
 		if (decisionPersistence.existsDecisionsByName(decision.getName())) {
-			throw DecisionAlreadyExistsByNameException.byName(decision.getName());
+			throw DecisionAlreadyExistsException.byName(decision.getName());
 		}
 		decisionPersistence.createDecision(decision);
 	}
@@ -107,7 +107,7 @@ public class DecisionServiceImpl implements DecisionService {
 		decision.setDescription(decision.getDescription() != null ? decision.getDescription().trim() : null);
 		Optional<Decision> decisionByName = decisionPersistence.findDecisionByName(decision.getName());
 		if (decisionByName.isPresent() && !Objects.equals(decision.getId(), decisionByName.get().getId())) {
-			throw DecisionAlreadyExistsByNameException.byName(decision.getName());
+			throw DecisionAlreadyExistsException.byName(decision.getName());
 		}
 		decisionPersistence.updateDecision(decision);
 	}

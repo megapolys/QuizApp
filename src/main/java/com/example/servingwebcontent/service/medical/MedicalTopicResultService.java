@@ -2,7 +2,7 @@ package com.example.servingwebcontent.service.medical;
 
 import com.example.servingwebcontent.model.decision.Decision;
 import com.example.servingwebcontent.model.medical.MedicalTask;
-import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
 import com.example.servingwebcontent.model.user.User;
@@ -152,8 +152,9 @@ public class MedicalTopicResultService {
         return new AnalyseForm(values, marker);
     }
 
-    public record TopicResultBean(MedicalTopic topic, List<ResultBean> results) {
-    }
+	public record TopicResultBean(MedicalTopicWithTaskSize topic, List<ResultBean> results) {
+
+	}
 
     public record ResultBean(MedicalTopicResult topicResult, List<TaskResultBean> tasks, List<DecisionBean> decisions,
                              float score, boolean yellow, boolean red, String progress) {

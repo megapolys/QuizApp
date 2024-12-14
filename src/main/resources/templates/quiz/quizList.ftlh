@@ -21,7 +21,6 @@
             await loadContent();
         });
 
-
         async function loadContent() {
             fillQuizForm();
             await fillQuizListTable();
@@ -50,16 +49,15 @@
             let quizListBody = $('#quiz-table tbody');
             quizListBody.html('');
             quizList.forEach(quiz => {
-                let tr = $(`
+                quizListBody.append(`
                     <tr>
                         <td>` + quiz.shortName + `</td>
                         <td>` + quiz.name + `</td>
                         <td>` + (quiz.size === 0 ? 'пусто' : quiz.size) + `</td>
                         <td><a href="/quiz/` + quiz.id + `">Открыть</a></td>
+                        <td>` + deleteConfirmString('deleteQuiz(' + quiz.id + ')', 'confirm-delete-quiz-' + quiz.id, 'Вы точно уверены, что хотите удалить опросник? Это необратимая операция, которая приведет к тому же к удалению всех результатов решения данного опросника.') + `</td>
                     </tr>
                 `);
-                tr.append($('<td></td>').append(deleteConfirm('deleteQuiz(' + quiz.id + ')', 'confirm-delete-quiz-' + quiz.id, 'Вы точно уверены, что хотите удалить опросник? Это необратимая операция, которая приведет к тому же к удалению всех результатов решения данного опросника.')))
-                quizListBody.append(tr);
             })
         }
 

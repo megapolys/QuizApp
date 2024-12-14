@@ -60,6 +60,13 @@ public interface QuizPersistence {
 	void deleteQuizById(Long id);
 
 	/**
+	 * Удалить все выполненные тесты по идентификатору теста
+	 *
+	 * @param id - Идентификатор теста
+	 */
+	void deleteQuizResultByQuizId(Long id);
+
+	/**
 	 * Получить вопрос целиком
 	 *
 	 * @param taskId идентификатор вопроса

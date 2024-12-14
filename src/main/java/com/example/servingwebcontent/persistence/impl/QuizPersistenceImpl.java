@@ -23,6 +23,7 @@ import java.util.List;
 public class QuizPersistenceImpl implements QuizPersistence {
 
 	private final QuizRepository quizRepository;
+	private final QuizResultRepository quizResultRepository;
 	private final QuizTaskRepository quizTaskRepository;
 	private final QuizTaskResultRepository quizTaskResultRepository;
 	private final DecisionRepository decisionRepository;
@@ -115,6 +116,14 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	@Override
 	public void deleteQuizById(Long id) {
 		quizRepository.deleteById(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteQuizResultByQuizId(Long id) {
+		quizResultRepository.deleteAllByQuizId(id);
 	}
 
 	/**

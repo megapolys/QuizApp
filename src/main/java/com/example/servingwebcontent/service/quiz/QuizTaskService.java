@@ -36,6 +36,13 @@ public interface QuizTaskService {
 	void deleteQuizTask(Long taskId);
 
 	/**
+	 * Удаление всех вопросов в тесте
+	 *
+	 * @param quizId идентификатор теста
+	 */
+	void deleteAllQuizTask(Long quizId);
+
+	/**
 	 * Создать вопрос
 	 *
 	 * @param taskCreateCommand команда создания вопроса

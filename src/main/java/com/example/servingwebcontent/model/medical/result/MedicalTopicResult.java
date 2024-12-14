@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.model.medical.result;
 
-import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import jakarta.persistence.*;
 
@@ -12,9 +12,9 @@ public class MedicalTopicResult {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "medical_topic_id")
-    private MedicalTopic medicalTopic;
+	@ManyToOne
+	@JoinColumn(name = "medical_topic_id")
+	private MedicalTopicWithTaskSize medicalTopic;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -35,13 +35,13 @@ public class MedicalTopicResult {
         return id;
     }
 
-    public MedicalTopic getMedicalTopic() {
-        return medicalTopic;
-    }
+	public MedicalTopicWithTaskSize getMedicalTopic() {
+		return medicalTopic;
+	}
 
-    public void setMedicalTopic(MedicalTopic medicalTopic) {
-        this.medicalTopic = medicalTopic;
-    }
+	public void setMedicalTopic(MedicalTopicWithTaskSize medicalTopic) {
+		this.medicalTopic = medicalTopic;
+	}
 
     public Set<MedicalTaskResult> getResults() {
         return results;

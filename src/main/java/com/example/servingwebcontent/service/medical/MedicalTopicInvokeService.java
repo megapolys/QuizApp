@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.service.medical;
 
-import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
 import com.example.servingwebcontent.repositories.UserRepository;
 import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
@@ -45,7 +45,7 @@ public class MedicalTopicInvokeService {
         return countCompleted + "/" + taskCount;
     }
 
-    public void startTopic(Long userId, MedicalTopic topic) {
+	public void startTopic(Long userId, MedicalTopicWithTaskSize topic) {
 //        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд
 //        final MedicalTopicResult topicResult = new MedicalTopicResult();
 //        topicResult.setMedicalTopic(topic);
