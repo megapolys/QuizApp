@@ -36,6 +36,8 @@ public interface MessageConsts {
 
 	String QUIZ_WITH_SHORT_NAME_ALREADY_EXISTS = "Данное кратное наименование уже занято";
 
+	String MEDICAL_TOPIC_ALREADY_EXISTS_BY_NAME = "Анализ с таким именем уже существует";
+
 	//	SUCCESS
 
 	String CHANGES_COMPLETE_SUCCESSFUL = "Изменения успешно сохранены";

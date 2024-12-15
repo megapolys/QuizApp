@@ -1,17 +1,15 @@
 package com.example.servingwebcontent.repositories;
 
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface DecisionRepository extends CrudRepository<DecisionEntity, Long> {
-	List<DecisionEntity> findAll();
-
+public interface DecisionRepository extends JpaRepository<DecisionEntity, Long> {
 	List<DecisionEntity> findAllByGroupIdIsNullOrderByName();
 
 	List<DecisionEntity> findAllByGroupIdIsNotNullOrderByName();

@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.persistence.impl;
 
-import com.example.servingwebcontent.converters.QuizTaskFullEntityToQuizTaskFullConverter;
+import com.example.servingwebcontent.converters.quiz.QuizTaskFullEntityToQuizTaskFullConverter;
 import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
 import com.example.servingwebcontent.exceptions.quiz.QuizTaskNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;

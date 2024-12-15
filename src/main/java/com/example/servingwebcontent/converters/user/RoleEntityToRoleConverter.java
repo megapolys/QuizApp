@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.converters;
+package com.example.servingwebcontent.converters.user;
 
 import com.example.servingwebcontent.model.Role;
 import com.example.servingwebcontent.model.entities.RoleEntity;

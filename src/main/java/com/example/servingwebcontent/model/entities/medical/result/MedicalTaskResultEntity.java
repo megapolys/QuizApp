@@ -21,7 +21,7 @@ public class MedicalTaskResultEntity {
 	Long id;
 
 	@Column(name = "medical_task_id")
-	Long medicalTaskId;
+	Long taskId;
 
 	@Column(name = "topic_result_id")
 	Long topicResultId;

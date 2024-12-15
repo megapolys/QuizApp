@@ -20,4 +20,18 @@ public interface MedicalTopicService {
 	 * @param command команда для создания
 	 */
 	void createMedicalTopic(MedicalTopicCreateCommandDto command);
+
+	/**
+	 * Удаление анализа
+	 *
+	 * @param id идентификатор анализа
+	 */
+	void deleteMedicalTopic(Long id);
+
+	/**
+	 * Создание глубокой копии анализа с новым наименованием
+	 *
+	 * @param id идентификатор анализа
+	 */
+	void cloneMedicalTopic(Long id);
 }

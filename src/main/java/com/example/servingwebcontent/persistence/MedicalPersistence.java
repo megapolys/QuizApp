@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.persistence;
 
+import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 
@@ -29,4 +30,26 @@ public interface MedicalPersistence {
 	 * @param command команда для создания
 	 */
 	void createMedicalTopic(MedicalTopicCreateCommandDto command);
+
+	/**
+	 * Удаление анализа
+	 *
+	 * @param id идентификатор анализа
+	 */
+	void deleteMedicalTopic(Long id);
+
+	/**
+	 * Получение анализа по идентификатору
+	 *
+	 * @param id идентификатор анализа
+	 */
+	MedicalTopic getMedicalTopic(Long id);
+
+	/**
+	 * Глубокое клонирование анализа с новым именем
+	 *
+	 * @param id   идентификатор анализа
+	 * @param name новое имя
+	 */
+	void cloneMedicalTopic(Long id, String name);
 }

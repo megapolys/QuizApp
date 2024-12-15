@@ -1,9 +1,9 @@
 package com.example.servingwebcontent.persistence.impl;
 
-import com.example.servingwebcontent.converters.DecisionEntityToDecisionConverter;
-import com.example.servingwebcontent.converters.DecisionEntityToDecisionWithGroupConverter;
-import com.example.servingwebcontent.converters.DecisionGroupEntityToGroupConverter;
-import com.example.servingwebcontent.converters.DecisionGroupEntityToGroupWithDecisionsConverter;
+import com.example.servingwebcontent.converters.decision.DecisionEntityToDecisionConverter;
+import com.example.servingwebcontent.converters.decision.DecisionEntityToDecisionWithGroupConverter;
+import com.example.servingwebcontent.converters.decision.DecisionGroupEntityToGroupConverter;
+import com.example.servingwebcontent.converters.decision.DecisionGroupEntityToGroupWithDecisionsConverter;
 import com.example.servingwebcontent.exceptions.decision.DecisionNotFoundException;
 import com.example.servingwebcontent.exceptions.decision.GroupNotFoundException;
 import com.example.servingwebcontent.model.decision.Decision;

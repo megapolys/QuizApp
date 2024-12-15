@@ -13,8 +13,28 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode
-// При добавлении полей необходимо дорабатывать метод клонирование MedicalTopicService.clone()
 public class MedicalTaskEntity {
+
+	public static MedicalTaskEntity createNew(
+		String name,
+		String unit,
+		Long topicId,
+		Float leftLeft,
+		Float leftMid,
+		Float rightMid,
+		Float rightRight
+	) {
+		return new MedicalTaskEntity(
+			null,
+			name,
+			unit,
+			topicId,
+			leftLeft,
+			leftMid,
+			rightMid,
+			rightRight
+		);
+	}
 
 	@Id
 	@Column(name = "id")

@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.persistence.impl;
 
-import com.example.servingwebcontent.converters.RoleEntityToRoleConverter;
-import com.example.servingwebcontent.converters.UserEntityToUserDetailsCustomConverter;
-import com.example.servingwebcontent.converters.UserEntityToUserSimpleConverter;
+import com.example.servingwebcontent.converters.user.RoleEntityToRoleConverter;
+import com.example.servingwebcontent.converters.user.UserEntityToUserDetailsCustomConverter;
+import com.example.servingwebcontent.converters.user.UserEntityToUserSimpleConverter;
 import com.example.servingwebcontent.exceptions.user.RoleNotFoundException;
 import com.example.servingwebcontent.exceptions.user.UserNotFoundException;
 import com.example.servingwebcontent.model.Role;

@@ -23,7 +23,7 @@ public class MedicalTopicResultEntity {
 	Long id;
 
 	@Column(name = "medical_topic_id")
-	Long medicalTopicId;
+	Long topicId;
 
 	@Column(name = "user_id")
 	Long userId;

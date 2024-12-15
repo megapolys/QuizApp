@@ -2,6 +2,7 @@ package com.example.servingwebcontent.service.medical.impl;
 
 import com.example.servingwebcontent.exceptions.medical.MedicalTopicAlreadyExistsException;
 import com.example.servingwebcontent.model.medical.MedicalTask;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
@@ -37,9 +38,33 @@ public class MedicalTopicServiceImpl implements MedicalTopicService {
         medicalPersistence.createMedicalTopic(command);
     }
 
-//    public boolean contains(String name) {
-//        return null != medicalTopicRepository.findByName(name);
-//    }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteMedicalTopic(Long id) {
+        medicalPersistence.deleteMedicalTopic(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cloneMedicalTopic(Long id) {
+        MedicalTopic medicalTopic = medicalPersistence.getMedicalTopic(id);
+        int i = 1;
+        String finalName;
+        while (true) {
+            final String name = medicalTopic.getName() + " - копия " + i;
+            if (medicalPersistence.existsByName(name)) {
+                i++;
+            } else {
+                finalName = name;
+                break;
+            }
+        }
+        medicalPersistence.cloneMedicalTopic(id, finalName);
+    }
 
     public boolean addTask(MedicalTopicWithTaskSize topic, MedicalTask task) {
 //        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
@@ -87,46 +112,6 @@ public class MedicalTopicServiceImpl implements MedicalTopicService {
 //        return topicBeans;
         return null;
     }
-
-    public boolean copy(MedicalTopicWithTaskSize topic) {
-//        int i = 1;
-//        String finalName;
-//        for (;;) {
-//            final String name = topic.getName() + " - копия " + i;
-//            if (name.length() > 254) {
-//                return false;
-//            }
-//            if (medicalTopicRepository.findByName(name) != null) {
-//                i++;
-//            } else {
-//                finalName = name;
-//                break;
-//            }
-//        }
-//        medicalTopicRepository.save(clone(topic, finalName));
-//        return true;
-        return false;
-    }
-
-//    private MedicalTopicWithTaskSize clone(MedicalTopicWithTaskSize oldTopic, String name) {
-//        final MedicalTopicWithTaskSize topic = new MedicalTopicWithTaskSize();
-//        topic.setName(name);
-//        topic.setMedicalTasks(new LinkedHashSet<>());
-//        for (MedicalTask oldTask : oldTopic.getMedicalTasks().stream().sorted(Comparator.comparing(MedicalTask::getId)).toList()) {
-//            final MedicalTask task = new MedicalTask();
-//            task.setName(oldTask.getName());
-//            task.setUnit(oldTask.getUnit());
-//            task.setLeftLeft(oldTask.getLeftLeft());
-//            task.setLeftMid(oldTask.getLeftMid());
-//            task.setRightMid(oldTask.getRightMid());
-//            task.setRightRight(oldTask.getRightRight());
-//            task.setLeftDecisions(new LinkedHashSet<>(oldTask.getLeftDecisions()));
-//            task.setRightDecisions(new LinkedHashSet<>(oldTask.getRightDecisions()));
-//            task.setTopic(topic);
-//            topic.getMedicalTasks().add(task);
-//        }
-//        return topic;
-//    }
 
     public record TopicBean(MedicalTopicWithTaskSize topic, boolean inProgress, boolean exists) {
 

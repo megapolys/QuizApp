@@ -3,6 +3,7 @@ package com.example.servingwebcontent.controller.medical;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class MedicalController {
@@ -14,75 +15,15 @@ public class MedicalController {
         model.addAttribute("medicalAdminTab", "active");
         return "medical/admin/topicList";
     }
-//
-//    @PostMapping("/add")
-//    public String addTopic(
-//            @RequestParam String name,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        addOrUpdate(new MedicalTopicWithTaskSize(), name, redirectAttributes, false);
-//        return "redirect:/medical/list";
-//    }
-//
-//    @PostMapping("/copy/{topic}")
-//    public String copyTopic(
-//            @PathVariable MedicalTopicWithTaskSize topic,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        if (medicalTopicService.copy(topic)) {
-//            redirectAttributes.addFlashAttribute("successMessage", "Анализы скопированы успешно");
-//        } else {
-//            redirectAttributes.addFlashAttribute("message", "Имя анализа слишком длинное для копирования!");
-//        }
-//        return "redirect:/medical/list";
-//    }
-//
-//    @PostMapping("/rename/{topic}")
-//    public String renameTopic(
-//            @PathVariable MedicalTopicWithTaskSize topic,
-//            @RequestParam String name,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        addOrUpdate(topic, name, redirectAttributes, true);
-//        return "redirect:/medical/{topic}";
-//    }
-//
-//    private void addOrUpdate(MedicalTopicWithTaskSize topic, String name, RedirectAttributes redirectAttributes, boolean update) {
-//        name = name.trim();
-//        if (StringUtils.isBlank(name)) {
-//            redirectAttributes.addFlashAttribute("message", "Имя медицинского топика пустое!");
-//        } else if (medicalTopicService.contains(name)) {
-//            redirectAttributes.addFlashAttribute("message", "Топик с таким именем уже существует!");
-//        } else {
-//            topic.setName(name);
-//            medicalTopicService.save(topic);
-//            redirectAttributes.addFlashAttribute("successMessage", String.format("Медицинский топик '%s' успешно %s.",
-//                    name, update ? "обновлен" : "добавлен"));
-//        }
-//    }
-//
-//    @PostMapping("/delete/{topic}")
-//    public String delete(
-//            @PathVariable MedicalTopicWithTaskSize topic,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        medicalTopicService.delete(topic);
-//        redirectAttributes.addFlashAttribute("successMessage", "Анализы успешно удалены");
-//        return "redirect:/medical/list";
-//    }
-//
-//    @GetMapping("/{topic}")
-//    public String topic(
-//            @PathVariable MedicalTopicWithTaskSize topic,
-//            Model model
-//    ) {
-//		model.addAttribute("topic", topic);
-//		model.addAttribute("taskList", topic.getMedicalTasks().stream()
-//			.sorted(Comparator.comparing(MedicalTask::getId)).toList());
-//		model.addAttribute("groups", decisionService.getDecisionGroups());
-//		model.addAttribute("decisions", decisionService.getUngroupedDecisions());
-//		return "/medical/admin/topic";
-//	}
+
+    @GetMapping("/medical/{topicId}")
+    public String topic(
+        @PathVariable Long topicId,
+        Model model
+    ) {
+        model.addAttribute("medicalAdminTab", "active");
+        return "/medical/admin/topic";
+    }
 //
 //    @PostMapping("/{topic}/task/add")
 //    public String addTask(

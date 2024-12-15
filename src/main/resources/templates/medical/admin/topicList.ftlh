@@ -30,7 +30,7 @@
         }
 
         function fillMedicalForm() {
-            $('#medical-form').append(`
+            $('#medical-form').html(`
                 <div class="row">
                     <div class="col-8">
                         <input class="form-control" type="text" name="name" placeholder="Наименование анализа" aria-describedby="validationMedicalFormName"/>
@@ -44,7 +44,7 @@
         }
 
         function fillMedicalListTable(medicalList) {
-            let medicalListBody = $('#quiz-table tbody');
+            let medicalListBody = $('#medical-topic-table tbody');
             medicalListBody.html('');
             medicalList.forEach(medicalTopic => {
                 medicalListBody.append(`
@@ -103,7 +103,7 @@
         }
 
         async function getMedicalList() {
-            return getRequestWithError('/api/medical', 'Ошибка при загрузки списка анализов');
+            return getRequestWithError('/api/medical/all', 'Ошибка при загрузки списка анализов');
         }
 
         async function deleteMedical(id) {

@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.converters;
+package com.example.servingwebcontent.converters.decision;
 
 import com.example.servingwebcontent.model.decision.Group;
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionGroupEntity;

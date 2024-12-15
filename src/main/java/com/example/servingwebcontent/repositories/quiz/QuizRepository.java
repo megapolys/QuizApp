@@ -2,13 +2,13 @@ package com.example.servingwebcontent.repositories.quiz;
 
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizWithTaskSizeEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface QuizRepository extends CrudRepository<QuizEntity, Long> {
+public interface QuizRepository extends JpaRepository<QuizEntity, Long> {
 
 	Optional<QuizEntity> findByShortName(String quizShortName);
 

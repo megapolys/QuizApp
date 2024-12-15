@@ -44,4 +44,14 @@ public class MedicalRestController {
 	void deleteMedicalTopic(@PathVariable Long id) {
 		medicalTopicService.deleteMedicalTopic(id);
 	}
+
+	/**
+	 * Создание глубокой копии анализа с новым наименованием
+	 *
+	 * @param id идентификатор анализа
+	 */
+	@PostMapping("api/medical/clone/{id}")
+	void cloneMedicalTopic(@PathVariable Long id) {
+		medicalTopicService.cloneMedicalTopic(id);
+	}
 }

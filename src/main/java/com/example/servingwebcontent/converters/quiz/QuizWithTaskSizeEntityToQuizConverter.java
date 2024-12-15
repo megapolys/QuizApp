@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.converters;
+package com.example.servingwebcontent.converters.quiz;
 
 import com.example.servingwebcontent.model.entities.quiz.QuizWithTaskSizeEntity;
 import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
