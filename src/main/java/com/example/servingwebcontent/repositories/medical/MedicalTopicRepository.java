@@ -4,9 +4,9 @@ import com.example.servingwebcontent.model.entities.medical.MedicalTopicEntity;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MedicalTopicRepository extends JpaRepository<MedicalTopicEntity, Long> {
 
@@ -22,8 +22,7 @@ public interface MedicalTopicRepository extends JpaRepository<MedicalTopicEntity
 		""")
 	List<MedicalTopicWithTaskSize> findAllByOrderByName();
 
-	@Nullable
-	MedicalTopicEntity findByName(String name);
+	Optional<MedicalTopicEntity> findByName(String name);
 
 	boolean existsByName(String name);
 }

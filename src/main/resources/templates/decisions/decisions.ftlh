@@ -207,16 +207,8 @@
             `);
         }
 
-        async function getGroupDecisions() {
-            return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
-        }
-
         async function getGroups() {
             return getRequestWithError("/api/decisions/group", 'Ошибка при загрузке групп');
-        }
-
-        async function getUngroupedDecisions() {
-            return getRequestWithError("/api/decisions/ungrouped", 'Ошибка при загрузке решений');
         }
 
         async function getGroupById(groupId) {

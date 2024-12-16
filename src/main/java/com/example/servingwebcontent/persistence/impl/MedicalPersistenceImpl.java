@@ -7,6 +7,7 @@ import com.example.servingwebcontent.model.entities.medical.decision.MedicalTask
 import com.example.servingwebcontent.model.entities.medical.decision.MedicalTaskRightDecisionEntity;
 import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.repositories.medical.*;
@@ -103,6 +104,24 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 					.map(entity -> MedicalTaskRightDecisionEntity.createNew(newTask.getId(), entity.getDecisionsId()))
 					.forEach(medicalTaskRightDecisionsRepository::save);
 			});
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public MedicalTopic findByName(String name) {
+		return medicalTopicRepository.findByName(name)
+			.map(entity -> conversionService.convert(entity, MedicalTopic.class))
+			.orElse(null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateMedicalTopic(MedicalTopicUpdateCommandDto command) {
+		medicalTopicRepository.save(MedicalTopicEntity.buildExists(command.getId(), command.getName()));
 	}
 
 	private void deleteMedicalTask(Long taskId) {

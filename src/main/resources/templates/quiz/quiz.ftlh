@@ -1,8 +1,4 @@
-<#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.quiz.QuizTask" -->
 <#import "../parts/common.ftlh" as c>
-<#import "../parts/taskForm.ftlh" as task>
-<#import "../parts/decisions.ftlh" as d>
-<#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/quiz/list">Назад</a>
     <h3 id="quiz-header" class="mb-3"></h3>
@@ -424,14 +420,6 @@
 
         async function getTask(taskId) {
             return getRequestWithError('/api/quiz/task?taskId=' + taskId, 'Ошибка при загрузке вопроса');
-        }
-
-        async function getGroupDecisions() {
-            return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
-        }
-
-        async function getUngroupedDecisions() {
-            return getRequestWithError("/api/decisions/ungrouped", 'Ошибка при загрузке решений');
         }
 
         async function getFiveVariantProperty() {

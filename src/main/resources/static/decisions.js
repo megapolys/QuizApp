@@ -74,3 +74,11 @@ function clickByChosen(inputFieldId, listId) {
         }
     })
 }
+
+async function getGroupDecisions() {
+    return getRequestWithError("/api/decisions", 'Ошибка при загрузке решений с группами');
+}
+
+async function getUngroupedDecisions() {
+    return getRequestWithError("/api/decisions/ungrouped", 'Ошибка при загрузке решений');
+}

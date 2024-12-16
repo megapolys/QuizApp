@@ -1,6 +1,8 @@
 package com.example.servingwebcontent.controller.medical;
 
+import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
 import jakarta.validation.Valid;
@@ -26,6 +28,18 @@ public class MedicalRestController {
 	}
 
 	/**
+	 * Получение топика анализа по идентификатору
+	 *
+	 * @param id идентификатор анализа
+	 *
+	 * @return анализ
+	 */
+	@GetMapping("api/medical/{id}")
+	MedicalTopic getMedicalTopic(@PathVariable("id") Long id) {
+		return medicalTopicService.getMedicalTopic(id);
+	}
+
+	/**
 	 * Создание нового анализа
 	 *
 	 * @param command команда для создания
@@ -33,6 +47,16 @@ public class MedicalRestController {
 	@PostMapping("api/medical")
 	void createMedicalTopic(@Valid @RequestBody MedicalTopicCreateCommandDto command) {
 		medicalTopicService.createMedicalTopic(command);
+	}
+
+	/**
+	 * Изменение анализа
+	 *
+	 * @param command команда для изменения
+	 */
+	@PutMapping("api/medical")
+	void updateMedicalTopic(@Valid @RequestBody MedicalTopicUpdateCommandDto command) {
+		medicalTopicService.updateMedicalTopic(command);
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.medical.MedicalTopic;
 import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 
 import java.util.List;
@@ -52,4 +53,20 @@ public interface MedicalPersistence {
 	 * @param name новое имя
 	 */
 	void cloneMedicalTopic(Long id, String name);
+
+	/**
+	 * Получение топика по имени
+	 *
+	 * @param name наименование
+	 *
+	 * @return топик анализа
+	 */
+	MedicalTopic findByName(String name);
+
+	/**
+	 * Изменение анализа
+	 *
+	 * @param command команда для изменения
+	 */
+	void updateMedicalTopic(MedicalTopicUpdateCommandDto command);
 }

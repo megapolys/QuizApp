@@ -1,21 +1,10 @@
-<#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.medical.MedicalTask" -->
 <#import "../../parts/common.ftlh" as c>
-<#import "../../parts/decisions.ftlh" as d>
-<#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/medical/list">Назад</a>
-    <h3 class="mb-3">Страница редактирования "${topic.name}"</h3>
-    <div class="row mb-5">
-        <form action="/medical/rename/${topic.id?c}" method="post">
-            <div class="input-group">
-                <input class="form-control" style="width: 75%" type="text" value="${topic.name}" name="name" placeholder="Название топика"/>
-                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                <button class="btn btn-primary" type="submit">Переименовать</button>
-            </div>
-        </form>
-    </div>
+    <h3 id="medical-topic-header" class="mb-3"></h3>
+    <div id="medical-topic-update-form" class="row mb-5"></div>
     <div class="mb-3 p-3 text-bg-light">
-        <form method="post" class="row" action="/medical/${topic.id?c}/task/${update!"add"}">
+        <div id="medical-task-create-form" class="row">
             <div class="row mb-3 justify-content-md-center">
                 <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
             </div>
@@ -33,7 +22,6 @@
                     </div>
                 </div>
             </div>
-            <#setting locale="en_US">
             <div class="input-group mb-3">
                 <span class="input-group-text">Левый референс</span>
                 <input type="number" name="leftLeft" class="form-control" step="0.01" value="${(task.leftLeft?string("0.##"))!}"/>
@@ -57,7 +45,7 @@
             <div class="row mb-2 justify-content-md-center">
                 <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
             </div>
-        </form>
+        </div>
     </div>
     <table id="medical-topic-task-table" class="table table-striped">
         <thead>
@@ -79,8 +67,10 @@
                     id="confirm-delete-medicalTask-${task.id}"
                     text="Точно удалить анализ?"/>
                 </td>
-                <td><#if !task.leftDecisions?has_content><div style="color: red">Левых решений не назначено</div></#if></td>
-                <td><#if !task.rightDecisions?has_content><div style="color: red">Правых решений не назначено</div></#if></td>
+                <td><#if !task.leftDecisions?has_content>
+                        <div style="color: red">Левых решений не назначено</div></#if></td>
+                <td><#if !task.rightDecisions?has_content>
+                        <div style="color: red">Правых решений не назначено</div></#if></td>
             </tr>
         <#else>
             <tr>
@@ -89,4 +79,116 @@
         </#list>
         </tbody>
     </table>
+
+    <script>
+
+        $(async function () {
+            await loadContent();
+        });
+
+        async function loadContent() {
+            let medicalTopic = await getMedicalTopic(${topicId});
+            fillMedicalTopicHeader(medicalTopic.name);
+            fillMedicalTopicChangeForm(medicalTopic);
+            let groupDecisions = await getGroupDecisions();
+            let ungroupedDecisions = await getUngroupedDecisions();
+            fillMedicalTaskFromByCreate(medicalTopic.id, groupDecisions, ungroupedDecisions);
+
+            let taskList = await getTaskList(quiz.id);
+            fillTaskList(taskList);
+        }
+
+        function fillMedicalTopicChangeForm(medicalTopic) {
+            $('#medical-topic-update-form').html(`
+                <div class="input-group">
+                    <input class="form-control" style="width: 75%" type="text" value="` + medicalTopic.name + `" name="name" aria-describedby="validationMedicalFormName"/>
+                    <div id="validationMedicalFormName" class="invalid-feedback"></div>
+                    <button class="btn btn-primary" onclick="updateMedicalTopic(` + medicalTopic.id + `)">Переименовать</button>
+                </div>
+            `);
+        }
+
+        async function updateMedicalTopic(id) {
+            clearMessage();
+            let form = $('#medical-topic-update-form');
+            let body = {
+                id: id,
+                name: form.find("[name|='name']").val()
+            };
+            let response = await fetch("/api/medical", {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                },
+                body: JSON.stringify(body)
+            });
+            if (response.ok) {
+                clearFromInvalidFields(form);
+                showSuccess('Анализ ' + body.name + ' успешно изменена');
+                fillMedicalTopicHeader(body.name);
+            } else {
+                response.json().then(json => {
+                    fillFormInvalidFields(json, form);
+                })
+            }
+        }
+
+        function fillMedicalTaskFromByCreate(id, groupDecisions, ungroupedDecisions) {
+            $('#medical-task-create-form').html(`
+                <div class="row mb-3 justify-content-md-center">
+                    <button class="btn btn-primary col-3" type="submit">Добавить анализ</button>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-10">
+                        <div class="input-group">
+                            <span class="input-group-text">Название анализа</span>
+                            <input id="inputText" class="form-control" name="name" aria-describedby="validationMedicalTaskFormName"/>
+                            <div id="validationMedicalTaskFormName" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-speedometer"></i></span>
+                            <input id="inputText" class="form-control" name="unit" aria-describedby="validationMedicalTaskFormUnit"/>
+                            <div id="validationMedicalTaskFormUnit" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3" aria-describedby="validationMedicalTaskFormName">
+                    <span class="input-group-text">Левый референс</span>
+                    <input type="number" name="leftLeft" class="form-control" step="0.01"/>
+                    <span class="input-group-text">Левый оптимум</span>
+                    <input type="number" name="leftMid" class="form-control" step="0.01"/>
+                    <span class="input-group-text">Правый оптимум</span>
+                    <input type="number" name="rightMid" class="form-control" step="0.01"/>
+                    <span class="input-group-text">Правый референс</span>
+                    <input type="number" name="rightRight" class="form-control" step="0.01"/>
+                </div>
+                <div id="validationMedicalTaskFormName" class="invalid-feedback"></div>
+                <div class="col-6 p-2 mb-3">
+                    <@d.listOfChosenDecisions decisionsName="leftDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.leftDecisions)!/>
+                    <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="leftDecisions" checkedDecisions=(task.leftDecisions)!/>
+                </div>
+                <div class="col-6 p-2 mb-3">
+                    <@d.listOfChosenDecisions decisionsName="rightDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.rightDecisions)!/>
+                    <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="rightDecisions" checkedDecisions=(task.rightDecisions)!/>
+                </div>
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <input type="hidden" name="id" value="${(task.id)!}"/>
+                <div class="row mb-2 justify-content-md-center">
+                    <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
+                </div>
+            `);
+        }
+
+        async function getMedicalTopic(topicId) {
+            return getRequestWithError('/api/medical/' + topicId, 'Ошибка при загрузки списка анализов');
+        }
+
+        function fillMedicalTopicHeader(name) {
+            $('#medical-topic-header').html('Страница редактирования ' + name);
+        }
+    </script>
 </@c.page>

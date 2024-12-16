@@ -1,10 +1,7 @@
 package com.example.servingwebcontent.service.medical.impl;
 
 import com.example.servingwebcontent.exceptions.medical.MedicalTopicAlreadyExistsException;
-import com.example.servingwebcontent.model.medical.MedicalTask;
-import com.example.servingwebcontent.model.medical.MedicalTopic;
-import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
-import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
+import com.example.servingwebcontent.model.medical.*;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
@@ -31,11 +28,31 @@ public class MedicalTopicServiceImpl implements MedicalTopicService {
      * {@inheritDoc}
      */
     @Override
+    public MedicalTopic getMedicalTopic(Long id) {
+        return medicalPersistence.getMedicalTopic(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void createMedicalTopic(MedicalTopicCreateCommandDto command) {
         if (medicalPersistence.existsByName(command.getName())) {
             throw MedicalTopicAlreadyExistsException.byName(command.getName());
         }
         medicalPersistence.createMedicalTopic(command);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateMedicalTopic(MedicalTopicUpdateCommandDto command) {
+        MedicalTopic topicByName = medicalPersistence.findByName(command.getName());
+        if (topicByName != null && topicByName.getId().equals(command.getId())) {
+            throw MedicalTopicAlreadyExistsException.byName(command.getName());
+        }
+        medicalPersistence.updateMedicalTopic(command);
     }
 
     /**
