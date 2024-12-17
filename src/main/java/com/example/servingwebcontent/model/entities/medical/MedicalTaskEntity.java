@@ -26,8 +26,8 @@ public class MedicalTaskEntity {
 	) {
 		return new MedicalTaskEntity(
 			null,
-			name,
-			unit,
+			name.trim(),
+			unit.trim(),
 			topicId,
 			leftLeft,
 			leftMid,

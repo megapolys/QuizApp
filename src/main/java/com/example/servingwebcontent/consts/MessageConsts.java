@@ -38,6 +38,8 @@ public interface MessageConsts {
 
 	String MEDICAL_TOPIC_ALREADY_EXISTS_BY_NAME = "Анализ с таким именем уже существует";
 
+	String MEDICAL_TASK_INVALID_REFERENCE = "Значение границ оптимума и референса недопустимо";
+
 	//	SUCCESS
 
 	String CHANGES_COMPLETE_SUCCESSFUL = "Изменения успешно сохранены";

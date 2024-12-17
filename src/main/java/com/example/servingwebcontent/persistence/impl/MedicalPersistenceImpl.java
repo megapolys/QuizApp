@@ -5,10 +5,7 @@ import com.example.servingwebcontent.model.entities.medical.MedicalTaskEntity;
 import com.example.servingwebcontent.model.entities.medical.MedicalTopicEntity;
 import com.example.servingwebcontent.model.entities.medical.decision.MedicalTaskLeftDecisionEntity;
 import com.example.servingwebcontent.model.entities.medical.decision.MedicalTaskRightDecisionEntity;
-import com.example.servingwebcontent.model.medical.MedicalTopic;
-import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
-import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
-import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
+import com.example.servingwebcontent.model.medical.*;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.repositories.medical.*;
 import lombok.RequiredArgsConstructor;
@@ -122,6 +119,16 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	@Override
 	public void updateMedicalTopic(MedicalTopicUpdateCommandDto command) {
 		medicalTopicRepository.save(MedicalTopicEntity.buildExists(command.getId(), command.getName()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public MedicalTask findMedicalTaskByName(String name) {
+		return medicalTaskRepository.findByName(name)
+			.map(taskEntity -> conversionService.convert(taskEntity, MedicalTask.class))
+			.orElse(null);
 	}
 
 	private void deleteMedicalTask(Long taskId) {

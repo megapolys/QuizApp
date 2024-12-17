@@ -1,7 +1,10 @@
 package com.example.servingwebcontent.service.medical.impl;
 
 import com.example.servingwebcontent.exceptions.medical.MedicalTopicAlreadyExistsException;
-import com.example.servingwebcontent.model.medical.*;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.service.medical.MedicalTopicService;
@@ -83,33 +86,7 @@ public class MedicalTopicServiceImpl implements MedicalTopicService {
         medicalPersistence.cloneMedicalTopic(id, finalName);
     }
 
-    public boolean addTask(MedicalTopicWithTaskSize topic, MedicalTask task) {
-//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
-//            return false;
-//        } else {
-//            task.setName(task.getName().trim());
-//            task.setUnit(task.getUnit().trim());
-//            task.setTopic(topic);
-//            medicalTaskRepository.save(task);
-//            return true;
-//        }
-        return false;
-    }
-
-    public void deleteTask(MedicalTask task) {
-//        medicalTaskRepository.delete(task);
-    }
-
-    public boolean updateTask(MedicalTopicWithTaskSize topic, MedicalTask task) {
-//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()) && !Objects.equals(t.getId(), task.getId()))) {
-//            return false;
-//        } else {
-//            medicalTaskRepository.save(task);
-//            return true;
-//        }
-        return false;
-    }
-
+    // Пока не нашел, где нужно, но проверяются topicResult
     public List<TopicBean> getTopics(User user) {
 //        final Set<MedicalTopicResult> medicalResults = user.getMedicalResults();
 //        final List<TopicBean> topicBeans = new ArrayList<>();

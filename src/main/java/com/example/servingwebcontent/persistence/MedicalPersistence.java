@@ -1,9 +1,6 @@
 package com.example.servingwebcontent.persistence;
 
-import com.example.servingwebcontent.model.medical.MedicalTopic;
-import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
-import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
-import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
+import com.example.servingwebcontent.model.medical.*;
 
 import java.util.List;
 
@@ -69,4 +66,13 @@ public interface MedicalPersistence {
 	 * @param command команда для изменения
 	 */
 	void updateMedicalTopic(MedicalTopicUpdateCommandDto command);
+
+	/**
+	 * Получение анализа по имени
+	 *
+	 * @param name наименование
+	 *
+	 * @return анализ, если не найден - null
+	 */
+	MedicalTask findMedicalTaskByName(String name);
 }

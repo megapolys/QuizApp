@@ -2,18 +2,12 @@ package com.example.servingwebcontent.model.medical;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
-@Value
-@Builder
-public class MedicalTask {
+import java.util.List;
 
-	/**
-	 * Идентификатор анализа
-	 */
-	@NotNull
-	Long id;
+@Data
+public class MedicalTaskCreateCommandDto {
 
 	/**
 	 * Идентификатор топика анализов
@@ -56,4 +50,15 @@ public class MedicalTask {
 	 */
 	@NotNull
 	Float rightRight;
+
+	/**
+	 * Список идентификаторов левых решений
+	 */
+	List<Long> leftDecisionIds;
+
+	/**
+	 * Список идентификаторов правых решений
+	 */
+	List<Long> rightDecisionIds;
+
 }
