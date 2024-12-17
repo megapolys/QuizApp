@@ -227,7 +227,7 @@
                 body: JSON.stringify(taskCreateCommand)
             });
             if (response.ok) {
-                showSuccess('Анализ успешно сохранен');
+                showSuccess('Анализ успешно создан');
                 await loadContent();
             } else {
                 response.json().then(json => {

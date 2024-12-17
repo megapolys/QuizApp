@@ -131,6 +131,30 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 			.orElse(null);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void createMedicalTask(MedicalTaskCreateCommandDto command) {
+		MedicalTaskEntity medicalTaskEntity = medicalTaskRepository.save(MedicalTaskEntity.createNew(
+			command.getName(),
+			command.getUnit(),
+			command.getTopicId(),
+			command.getLeftLeft(),
+			command.getLeftMid(),
+			command.getRightMid(),
+			command.getRightRight()
+		));
+		command.getLeftDecisionIds()
+			.forEach(decisionId -> medicalTaskLeftDecisionsRepository.save(
+				MedicalTaskLeftDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
+			);
+		command.getRightDecisionIds()
+			.forEach(decisionId -> medicalTaskRightDecisionsRepository.save(
+				MedicalTaskRightDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
+			);
+	}
+
 	private void deleteMedicalTask(Long taskId) {
 		medicalTaskResultRepository.deleteAllByTaskId(taskId);
 		medicalTaskRepository.deleteById(taskId);

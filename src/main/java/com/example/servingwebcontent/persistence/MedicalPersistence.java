@@ -75,4 +75,11 @@ public interface MedicalPersistence {
 	 * @return анализ, если не найден - null
 	 */
 	MedicalTask findMedicalTaskByName(String name);
+
+	/**
+	 * Создание анализа
+	 *
+	 * @param command команда для создания
+	 */
+	void createMedicalTask(MedicalTaskCreateCommandDto command);
 }

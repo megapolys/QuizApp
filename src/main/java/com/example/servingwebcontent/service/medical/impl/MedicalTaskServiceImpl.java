@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.service.medical.impl;
 
+import com.example.servingwebcontent.exceptions.medical.MedicalTaskAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.medical.MedicalTaskInvalidException;
 import com.example.servingwebcontent.model.medical.MedicalTask;
 import com.example.servingwebcontent.model.medical.MedicalTaskCreateCommandDto;
@@ -23,8 +24,9 @@ public class MedicalTaskServiceImpl implements MedicalTaskService {
 		validateMedicalTask(command);
 		MedicalTask medicalTaskByName = medicalPersistence.findMedicalTaskByName(command.getName());
 		if (medicalTaskByName != null) {
-			throw MedicalTaskAlreadyExists.byName(command.getName());
+			throw MedicalTaskAlreadyExistsException.byName(command.getName());
 		}
+		medicalPersistence.createMedicalTask(command);
 	}
 
 	private void validateMedicalTask(MedicalTaskCreateCommandDto command) {
@@ -33,19 +35,6 @@ public class MedicalTaskServiceImpl implements MedicalTaskService {
 			command.getRightMid() < command.getRightRight())) {
 			throw MedicalTaskInvalidException.byReference();
 		}
-	}
-
-	public boolean addTask(MedicalTopicWithTaskSize topic, MedicalTask task) {
-//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
-//            return false;
-//        } else {
-//            task.setName(task.getName().trim());
-//            task.setUnit(task.getUnit().trim());
-//            task.setTopic(topic);
-//            medicalTaskRepository.save(task);
-//            return true;
-//        }
-		return false;
 	}
 
 	public void deleteTask(MedicalTask task) {
