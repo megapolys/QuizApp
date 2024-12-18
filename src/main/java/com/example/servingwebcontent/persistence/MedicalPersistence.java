@@ -74,7 +74,7 @@ public interface MedicalPersistence {
 	 *
 	 * @return анализ, если не найден - null
 	 */
-	MedicalTask findMedicalTaskByName(String name);
+	MedicalTask findMedicalTaskByName(String name, Long topicId);
 
 	/**
 	 * Создание анализа
@@ -82,4 +82,22 @@ public interface MedicalPersistence {
 	 * @param command команда для создания
 	 */
 	void createMedicalTask(MedicalTaskCreateCommandDto command);
+
+	/**
+	 * Получение списка анализов
+	 *
+	 * @param medicalTopicId идентификатор топика анализов
+	 *
+	 * @return список анализов
+	 */
+	List<MedicalTaskWithDecisionsSize> getMedicalTaskList(Long medicalTopicId);
+
+	/**
+	 * Получение анализа
+	 *
+	 * @param medicalTaskId идентификатор анализа
+	 *
+	 * @return анализа
+	 */
+	MedicalTaskFull getMedicalTaskFullById(Long medicalTaskId);
 }

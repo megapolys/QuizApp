@@ -37,7 +37,7 @@ public interface QuizTaskRepository extends JpaRepository<QuizTaskEntity, Long> 
 					qt.id,
 					qt.quizId,
 					qt.position,
-					count(qtd),
+					count(qtd) filter (where qtd.quizTaskId is not null),
 					fvt,
 					ynt
 				) from QuizTaskEntity qt

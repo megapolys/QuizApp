@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.persistence.impl;
 
+import com.example.servingwebcontent.converters.medical.MedicalTaskEntityToMedicalTaskFullConverter;
 import com.example.servingwebcontent.exceptions.medical.MedicalTopicNotFoundException;
 import com.example.servingwebcontent.model.entities.medical.MedicalTaskEntity;
 import com.example.servingwebcontent.model.entities.medical.MedicalTopicEntity;
@@ -28,6 +29,7 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	private final MedicalTaskLeftDecisionsRepository medicalTaskLeftDecisionsRepository;
 	private final MedicalTaskRightDecisionsRepository medicalTaskRightDecisionsRepository;
 	private final ConversionService conversionService;
+	private final MedicalTaskEntityToMedicalTaskFullConverter medicalTaskFullConverter;
 
 	/**
 	 * {@inheritDoc}
@@ -125,8 +127,8 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public MedicalTask findMedicalTaskByName(String name) {
-		return medicalTaskRepository.findByName(name)
+	public MedicalTask findMedicalTaskByName(String name, Long topicId) {
+		return medicalTaskRepository.findByNameAndTopicId(name, topicId)
 			.map(taskEntity -> conversionService.convert(taskEntity, MedicalTask.class))
 			.orElse(null);
 	}
@@ -153,6 +155,30 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 			.forEach(decisionId -> medicalTaskRightDecisionsRepository.save(
 				MedicalTaskRightDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
 			);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MedicalTaskWithDecisionsSize> getMedicalTaskList(Long medicalTopicId) {
+		return medicalTaskRepository.getMedicalTaskList(medicalTopicId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public MedicalTaskFull getMedicalTaskFullById(Long medicalTaskId) {
+		MedicalTaskEntity medicalTaskEntity = medicalTaskRepository.findById(medicalTaskId)
+			.orElse(null);
+		List<Long> leftDecisions = medicalTaskLeftDecisionsRepository.findAllByMedicalTaskId(medicalTaskId).stream()
+			.map(MedicalTaskLeftDecisionEntity::getDecisionsId)
+			.toList();
+		List<Long> rightDecisions = medicalTaskRightDecisionsRepository.findAllByMedicalTaskId(medicalTaskId).stream()
+			.map(MedicalTaskRightDecisionEntity::getDecisionsId)
+			.toList();
+		return medicalTaskFullConverter.convert(medicalTaskEntity, leftDecisions, rightDecisions);
 	}
 
 	private void deleteMedicalTask(Long taskId) {
