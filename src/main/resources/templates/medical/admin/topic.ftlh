@@ -4,48 +4,7 @@
     <h3 id="medical-topic-header" class="mb-3"></h3>
     <div id="medical-topic-update-form" class="row mb-5"></div>
     <div class="mb-3 p-3 text-bg-light">
-        <div id="medical-task-form" class="row">
-            <div class="row mb-3 justify-content-md-center">
-                <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
-            </div>
-            <div class="row mb-3">
-                <div class="col-10">
-                    <div class="input-group">
-                        <span class="input-group-text">Название анализа</span>
-                        <input id="inputText" class="form-control" name="name" value="${(task.name)!}"/>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-speedometer"></i></span>
-                        <input id="inputText" class="form-control" name="unit" value="${(task.unit)!}"/>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text">Левый референс</span>
-                <input type="number" name="leftLeft" class="form-control" step="0.01" value="${(task.leftLeft?string("0.##"))!}"/>
-                <span class="input-group-text">Левый оптимум</span>
-                <input type="number" name="leftMid" class="form-control" step="0.01" value="${(task.leftMid?string("0.##"))!}"/>
-                <span class="input-group-text">Правый оптимум</span>
-                <input type="number" name="rightMid" class="form-control" step="0.01" value="${(task.rightMid?string("0.##"))!}"/>
-                <span class="input-group-text">Правый референс</span>
-                <input type="number" name="rightRight" class="form-control" step="0.01" value="${(task.rightRight?string("0.##"))!}"/>
-            </div>
-            <div class="col-6 p-2 mb-3">
-                <@d.listOfChosenDecisions decisionsName="leftDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.leftDecisions)!/>
-                <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="leftDecisions" checkedDecisions=(task.leftDecisions)!/>
-            </div>
-            <div class="col-6 p-2 mb-3">
-                <@d.listOfChosenDecisions decisionsName="rightDecisions" groups=groups noGroupDecisions=decisions decisions_=(task.rightDecisions)!/>
-                <@d.decisionsCheckbox groups=groups decisions_=decisions decisionsName="rightDecisions" checkedDecisions=(task.rightDecisions)!/>
-            </div>
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <input type="hidden" name="id" value="${(task.id)!}"/>
-            <div class="row mb-2 justify-content-md-center">
-                <button class="btn btn-primary col-3" type="submit"><#if update??>Обновить анализ<#else>Добавить анализ</#if></button>
-            </div>
-        </div>
+        <div id="medical-task-form" class="row"></div>
     </div>
     <table id="medical-topic-task-table" class="table table-striped">
         <thead>
@@ -96,7 +55,7 @@
             let decisionsRightName = 'decisions-right';
             $('#medical-task-form').html(`
                 <div class="row mb-3 justify-content-md-center">
-                    <button class="btn btn-primary col-3" onclick="createMedicalTask(` + id + `, ` + decisionsLeftName + `, ` + decisionsRightName + `)">Добавить анализ</button>
+                    <button class="btn btn-primary col-3" onclick="createMedicalTask(` + id + `, '` + decisionsLeftName + `', '` + decisionsRightName + `')">Добавить анализ</button>
                 </div>
                 <div class="row mb-3">
                     <div class="col-10">
@@ -123,8 +82,8 @@
                     <input type="number" name="rightMid" class="form-control" step="0.01" aria-describedby="validationMedicalTaskFormReference"/>
                     <span class="input-group-text">Правый референс</span>
                     <input type="number" name="rightRight" class="form-control" step="0.01" aria-describedby="validationMedicalTaskFormReference"/>
+                    <div id="validationMedicalTaskFormReference" class="invalid-feedback"></div>
                 </div>
-                <div id="validationMedicalTaskFormReference" class="invalid-feedback"></div>
                 <div class="col-6 p-2 mb-3">
                     <div id="list-of-chosen-decisions-left"></div>
                     <div id="decisions-checkbox-left"></div>
@@ -134,7 +93,7 @@
                     <div id="decisions-checkbox-right"></div>
                 </div>
                 <div class="row mb-2 justify-content-md-center">
-                    <button class="btn btn-primary col-3" onclick="createMedicalTask(` + id + `, ` + decisionsLeftName + `, ` + decisionsRightName + `)">Добавить анализ</button>
+                    <button class="btn btn-primary col-3" onclick="createMedicalTask(` + id + `, '` + decisionsLeftName + `', '` + decisionsRightName + `')">Добавить анализ</button>
                 </div>
             `);
             let chosenDecisions = new Set();
@@ -145,12 +104,13 @@
         }
 
         async function fillMedicalTaskFormByUpdate(id) {
+            clearMessage();
             let task = await getMedicalTask(id);
             let decisionsLeftName = 'decisions-left';
             let decisionsRightName = 'decisions-right';
             $('#medical-task-form').html(`
                 <div class="row mb-3 justify-content-md-center">
-                    <button class="btn btn-primary col-3" onclick="updateMedicalTask(` + id + `, ` + decisionsLeftName + `, ` + decisionsRightName + `)">Обновить анализ</button>
+                    <button class="btn btn-primary col-3" onclick="updateMedicalTask(` + task.topicId + `, ` + id + `, '` + decisionsLeftName + `', '` + decisionsRightName + `')">Обновить анализ</button>
                 </div>
                 <div class="row mb-3">
                     <div class="col-10">
@@ -188,19 +148,19 @@
                     <div id="decisions-checkbox-right"></div>
                 </div>
                 <div class="row mb-2 justify-content-md-center">
-                    <button class="btn btn-primary col-3" onclick="updateMedicalTask(` + id + `, ` + decisionsLeftName + `, ` + decisionsRightName + `)">Обновить анализ</button>
+                    <button class="btn btn-primary col-3" onclick="updateMedicalTask(` + task.topicId + `, ` + id + `, '` + decisionsLeftName + `', '` + decisionsRightName + `')">Обновить анализ</button>
                 </div>
             `);
             let groupDecisions = await getGroupDecisions();
             let ungroupedDecisions = await getUngroupedDecisions();
             let leftChosenDecisions = new Set();
-            task.decisionIds.forEach(decisionId => {
+            task.leftDecisions.forEach(decisionId => {
                 leftChosenDecisions.add(decisionId);
             });
             $('#list-of-chosen-decisions-left').html(listOfChosenDecisions(decisionsLeftName, leftChosenDecisions, groupDecisions, ungroupedDecisions));
             $('#decisions-checkbox-left').html(decisionsCheckbox(decisionsLeftName, leftChosenDecisions, groupDecisions, ungroupedDecisions));
             let rightChosenDecisions = new Set();
-            task.decisionIds.forEach(decisionId => {
+            task.rightDecisions.forEach(decisionId => {
                 rightChosenDecisions.add(decisionId);
             });
             $('#list-of-chosen-decisions-right').html(listOfChosenDecisions(decisionsRightName, rightChosenDecisions, groupDecisions, ungroupedDecisions));
@@ -248,7 +208,7 @@
             });
             if (response.ok) {
                 clearFromInvalidFields(form);
-                showSuccess('Анализ ' + body.name + ' успешно изменена');
+                showSuccess('Анализ ' + body.name + ' успешно изменен');
                 fillMedicalTopicHeader(body.name);
             } else {
                 response.json().then(json => {
@@ -303,6 +263,61 @@
                     fillFormInvalidFields(json, form);
                 })
             }
+        }
+
+        async function updateMedicalTask(topicId, taskId, decisionsLeftName, decisionsRightName) {
+            clearMessage();
+            let form = $('#medical-task-form');
+            let leftDecisions = [];
+            form.find("[name|='" + decisionsLeftName + "']").each(function () {
+                let checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    leftDecisions.push(checkbox.val());
+                }
+            })
+            let rightDecisions = [];
+            form.find("[name|='" + decisionsRightName + "']").each(function () {
+                let checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    rightDecisions.push(checkbox.val());
+                }
+            })
+            let name = form.find("[name|='name']").val();
+            let taskCreateCommand = {
+                topicId: topicId,
+                taskId: taskId,
+                name: name,
+                unit: form.find("[name|='unit']").val(),
+                leftLeft: form.find("[name|='leftLeft']").val(),
+                leftMid: form.find("[name|='leftMid']").val(),
+                rightMid: form.find("[name|='rightMid']").val(),
+                rightRight: form.find("[name|='rightRight']").val(),
+                leftDecisionIds: leftDecisions,
+                rightDecisionIds: rightDecisions
+            };
+
+            let response = await fetch("/api/medical/task", {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                },
+                body: JSON.stringify(taskCreateCommand)
+            });
+            if (response.ok) {
+                showSuccess('Анализ' + name + ' успешно обновлен');
+                await loadContent();
+            } else {
+                response.json().then(json => {
+                    fillFormInvalidFields(json, form);
+                })
+            }
+        }
+
+        async function deleteMedicalTask(taskId) {
+            await deleteByPath("/api/medical/task/" + taskId, 'Анализ успешно удален', 'Возникли непредвиденные ошибки при попытке удаления анализа');
+            await loadContent();
         }
 
         async function getMedicalTopic(topicId) {

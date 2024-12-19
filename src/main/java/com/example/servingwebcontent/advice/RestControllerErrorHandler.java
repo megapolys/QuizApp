@@ -2,6 +2,7 @@ package com.example.servingwebcontent.advice;
 
 import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
+import com.example.servingwebcontent.exceptions.medical.MedicalTaskInvalidException;
 import com.example.servingwebcontent.exceptions.medical.MedicalTopicAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.quiz.QuizCreateException;
 import com.example.servingwebcontent.model.dto.RestExceptionDto;
@@ -76,6 +77,13 @@ public class RestControllerErrorHandler {
 	@ExceptionHandler(MedicalTopicAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	protected ValidationErrorDto handle(MedicalTopicAlreadyExistsException e) {
+		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
+		return e.getPayload();
+	}
+
+	@ExceptionHandler(MedicalTaskInvalidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	protected ValidationErrorDto handle(MedicalTaskInvalidException e) {
 		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
 		return e.getPayload();
 	}

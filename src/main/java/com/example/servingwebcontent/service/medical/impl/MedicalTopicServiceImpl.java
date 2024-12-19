@@ -52,7 +52,7 @@ public class MedicalTopicServiceImpl implements MedicalTopicService {
     @Override
     public void updateMedicalTopic(MedicalTopicUpdateCommandDto command) {
         MedicalTopic topicByName = medicalPersistence.findByName(command.getName());
-        if (topicByName != null && topicByName.getId().equals(command.getId())) {
+        if (topicByName != null && !topicByName.getId().equals(command.getId())) {
             throw MedicalTopicAlreadyExistsException.byName(command.getName());
         }
         medicalPersistence.updateMedicalTopic(command);

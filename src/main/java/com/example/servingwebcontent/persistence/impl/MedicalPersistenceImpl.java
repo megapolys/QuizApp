@@ -137,6 +137,7 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Transactional
 	public void createMedicalTask(MedicalTaskCreateCommandDto command) {
 		MedicalTaskEntity medicalTaskEntity = medicalTaskRepository.save(MedicalTaskEntity.createNew(
 			command.getName(),
@@ -151,6 +152,34 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 			.forEach(decisionId -> medicalTaskLeftDecisionsRepository.save(
 				MedicalTaskLeftDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
 			);
+		command.getRightDecisionIds()
+			.forEach(decisionId -> medicalTaskRightDecisionsRepository.save(
+				MedicalTaskRightDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
+			);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void updateMedicalTask(MedicalTaskUpdateCommandDto command) {
+		MedicalTaskEntity medicalTaskEntity = medicalTaskRepository.save(MedicalTaskEntity.buildExists(
+			command.getTaskId(),
+			command.getName(),
+			command.getUnit(),
+			command.getTopicId(),
+			command.getLeftLeft(),
+			command.getLeftMid(),
+			command.getRightMid(),
+			command.getRightRight()
+		));
+		medicalTaskLeftDecisionsRepository.deleteAllByMedicalTaskId(command.getTaskId());
+		command.getLeftDecisionIds()
+			.forEach(decisionId -> medicalTaskLeftDecisionsRepository.save(
+				MedicalTaskLeftDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
+			);
+		medicalTaskRightDecisionsRepository.deleteAllByMedicalTaskId(command.getTaskId());
 		command.getRightDecisionIds()
 			.forEach(decisionId -> medicalTaskRightDecisionsRepository.save(
 				MedicalTaskRightDecisionEntity.createNew(medicalTaskEntity.getId(), decisionId))
@@ -181,7 +210,14 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 		return medicalTaskFullConverter.convert(medicalTaskEntity, leftDecisions, rightDecisions);
 	}
 
-	private void deleteMedicalTask(Long taskId) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void deleteMedicalTask(Long taskId) {
+		medicalTaskLeftDecisionsRepository.deleteAllByMedicalTaskId(taskId);
+		medicalTaskRightDecisionsRepository.deleteAllByMedicalTaskId(taskId);
 		medicalTaskResultRepository.deleteAllByTaskId(taskId);
 		medicalTaskRepository.deleteById(taskId);
 	}

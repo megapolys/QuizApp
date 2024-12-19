@@ -36,6 +36,28 @@ public class MedicalTaskEntity {
 		);
 	}
 
+	public static MedicalTaskEntity buildExists(
+		Long id,
+		String name,
+		String unit,
+		Long topicId,
+		Float leftLeft,
+		Float leftMid,
+		Float rightMid,
+		Float rightRight
+	) {
+		return new MedicalTaskEntity(
+			id,
+			name.trim(),
+			unit.trim(),
+			topicId,
+			leftLeft,
+			leftMid,
+			rightMid,
+			rightRight
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_task_gen")

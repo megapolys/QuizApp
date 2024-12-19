@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface MedicalTaskRightDecisionsRepository extends JpaRepository<MedicalTaskRightDecisionEntity, MedicalTaskRightDecisionEntity> {
 	List<MedicalTaskRightDecisionEntity> findAllByMedicalTaskId(Long id);
+
+	void deleteAllByMedicalTaskId(Long taskId);
 }

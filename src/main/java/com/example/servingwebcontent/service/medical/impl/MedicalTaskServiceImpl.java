@@ -21,12 +21,25 @@ public class MedicalTaskServiceImpl implements MedicalTaskService {
 	 */
 	@Override
 	public void createMedicalTask(MedicalTaskCreateCommandDto command) {
-		validateMedicalTask(command);
+		validateMedicalTaskReferenceAndOptimumValues(command.getLeftLeft(), command.getLeftMid(), command.getRightMid(), command.getRightRight());
 		MedicalTask medicalTaskByName = medicalPersistence.findMedicalTaskByName(command.getName(), command.getTopicId());
 		if (medicalTaskByName != null) {
 			throw MedicalTaskAlreadyExistsException.byName(command.getName());
 		}
 		medicalPersistence.createMedicalTask(command);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateMedicalTask(MedicalTaskUpdateCommandDto command) {
+		validateMedicalTaskReferenceAndOptimumValues(command.getLeftLeft(), command.getLeftMid(), command.getRightMid(), command.getRightRight());
+		MedicalTask medicalTaskByName = medicalPersistence.findMedicalTaskByName(command.getName(), command.getTopicId());
+		if (medicalTaskByName != null && !medicalTaskByName.getId().equals(command.getTaskId())) {
+			throw MedicalTaskAlreadyExistsException.byName(command.getName());
+		}
+		medicalPersistence.updateMedicalTask(command);
 	}
 
 	/**
@@ -45,25 +58,18 @@ public class MedicalTaskServiceImpl implements MedicalTaskService {
 		return medicalPersistence.getMedicalTaskFullById(medicalTaskId);
 	}
 
-	private void validateMedicalTask(MedicalTaskCreateCommandDto command) {
-		if (!(command.getLeftLeft() < command.getLeftMid() &&
-			command.getLeftMid() < command.getRightMid() &&
-			command.getRightMid() < command.getRightRight())) {
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteMedicalTaskById(Long medicalTaskId) {
+		medicalPersistence.deleteMedicalTask(medicalTaskId);
+	}
+
+	private void validateMedicalTaskReferenceAndOptimumValues(Float leftLeft, Float leftMid, Float rightMid, Float rightRight) {
+		if (!(leftLeft < leftMid && leftMid < rightMid && rightMid < rightRight)) {
 			throw MedicalTaskInvalidException.byReference();
 		}
 	}
 
-	public void deleteTask(MedicalTask task) {
-//        medicalTaskRepository.delete(task);
-	}
-
-	public boolean updateTask(MedicalTopicWithTaskSize topic, MedicalTask task) {
-//        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()) && !Objects.equals(t.getId(), task.getId()))) {
-//            return false;
-//        } else {
-//            medicalTaskRepository.save(task);
-//            return true;
-//        }
-		return false;
-	}
 }

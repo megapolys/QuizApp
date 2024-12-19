@@ -120,13 +120,11 @@ function listOfChosenDecisions(decisionsName, chosenDecisions, groups, ungrouped
     ungroupedDecisions.forEach(decision => {
         datalist.append('<option for="#' + decisionsName + '-' + decision.id + '" value="' + decision.name + '"/>');
         if (chosenDecisions.has(decision.id)) {
-            chosenDecisions.forEach(decision => {
-                chosen.append(chosenElement(
-                    'group-nonGroup-' + decisionsName,
-                    decisionsName + '-' + decision.id,
-                    decision.name
-                ));
-            })
+            chosen.append(chosenElement(
+                'group-nonGroup-' + decisionsName,
+                decisionsName + '-' + decision.id,
+                decision.name
+            ));
         }
     })
     return result;

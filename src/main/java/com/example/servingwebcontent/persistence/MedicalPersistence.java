@@ -84,6 +84,13 @@ public interface MedicalPersistence {
 	void createMedicalTask(MedicalTaskCreateCommandDto command);
 
 	/**
+	 * Обновление анализа
+	 *
+	 * @param command команда для обновления
+	 */
+	void updateMedicalTask(MedicalTaskUpdateCommandDto command);
+
+	/**
 	 * Получение списка анализов
 	 *
 	 * @param medicalTopicId идентификатор топика анализов
@@ -100,4 +107,11 @@ public interface MedicalPersistence {
 	 * @return анализа
 	 */
 	MedicalTaskFull getMedicalTaskFullById(Long medicalTaskId);
+
+	/**
+	 * Удаление анализа
+	 *
+	 * @param medicalTaskId идентификатор анализа
+	 */
+	void deleteMedicalTask(Long medicalTaskId);
 }

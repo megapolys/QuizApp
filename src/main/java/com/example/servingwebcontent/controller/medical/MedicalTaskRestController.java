@@ -2,6 +2,7 @@ package com.example.servingwebcontent.controller.medical;
 
 import com.example.servingwebcontent.model.medical.MedicalTaskCreateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTaskFull;
+import com.example.servingwebcontent.model.medical.MedicalTaskUpdateCommandDto;
 import com.example.servingwebcontent.model.medical.MedicalTaskWithDecisionsSize;
 import com.example.servingwebcontent.service.medical.MedicalTaskService;
 import jakarta.validation.Valid;
@@ -27,6 +28,16 @@ public class MedicalTaskRestController {
 	}
 
 	/**
+	 * Обновление анализа
+	 *
+	 * @param command команда для обновления
+	 */
+	@PutMapping("api/medical/task")
+	void updateMedicalTask(@Valid @RequestBody MedicalTaskUpdateCommandDto command) {
+		medicalTaskService.updateMedicalTask(command);
+	}
+
+	/**
 	 * Получение списка анализов
 	 *
 	 * @param medicalTopicId идентификатор топика анализов
@@ -48,5 +59,15 @@ public class MedicalTaskRestController {
 	@GetMapping(value = "api/medical/task/{medicalTaskId}")
 	MedicalTaskFull getMedicalTaskById(@PathVariable("medicalTaskId") Long medicalTaskId) {
 		return medicalTaskService.getMedicalTaskById(medicalTaskId);
+	}
+
+	/**
+	 * Удаление анализа
+	 *
+	 * @param medicalTaskId идентификатор анализа
+	 */
+	@DeleteMapping(value = "api/medical/task/{medicalTaskId}")
+	void deleteMedicalTaskById(@PathVariable("medicalTaskId") Long medicalTaskId) {
+		medicalTaskService.deleteMedicalTaskById(medicalTaskId);
 	}
 }
