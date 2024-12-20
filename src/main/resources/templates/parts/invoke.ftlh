@@ -1,4 +1,4 @@
-<#-- @ftlvariable name="task" type="com.example.servingwebcontent.domain.quiz.result.QuizTaskResult" -->
+<#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.quiz.result.QuizTaskResult" -->
 <#import "modal.ftlh" as modal>
 <#macro invoke path admin>
     <div class="card">

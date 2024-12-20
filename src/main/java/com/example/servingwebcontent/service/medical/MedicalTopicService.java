@@ -1,131 +1,55 @@
 package com.example.servingwebcontent.service.medical;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.MedicalTask;
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
-import com.example.servingwebcontent.repositories.medical.MedicalTaskRepository;
-import com.example.servingwebcontent.repositories.medical.MedicalTaskResultRepository;
-import com.example.servingwebcontent.repositories.medical.MedicalTopicRepository;
-import com.example.servingwebcontent.repositories.medical.MedicalTopicResultRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import com.example.servingwebcontent.model.medical.MedicalTopic;
+import com.example.servingwebcontent.model.medical.MedicalTopicCreateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicUpdateCommandDto;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 
-import java.util.*;
+import java.util.List;
 
-@Service
-public class MedicalTopicService {
+public interface MedicalTopicService {
 
-    private final MedicalTopicRepository medicalTopicRepository;
-    private final MedicalTopicResultRepository medicalTopicResultRepository;
-    private final MedicalTaskRepository medicalTaskRepository;
-    private final MedicalTaskResultRepository medicalTaskResultRepository;
+	/**
+	 * Получение отсортированного списка топиков анализов
+	 *
+	 * @return список топиков анализов
+	 */
+	List<MedicalTopicWithTaskSize> getMedicalTopicList();
 
-    public MedicalTopicService(MedicalTopicRepository medicalTopicRepository, MedicalTopicResultRepository medicalTopicResultRepository, MedicalTaskRepository medicalTaskRepository, MedicalTaskResultRepository medicalTaskResultRepository) {
-        this.medicalTopicRepository = medicalTopicRepository;
-        this.medicalTopicResultRepository = medicalTopicResultRepository;
-        this.medicalTaskRepository = medicalTaskRepository;
-        this.medicalTaskResultRepository = medicalTaskResultRepository;
-    }
+	/**
+	 * Получение топика анализа по идентификатору
+	 *
+	 * @param id идентификатор анализа
+	 *
+	 * @return анализ
+	 */
+	MedicalTopic getMedicalTopic(Long id);
 
-    public List<MedicalTopic> sortedTopics() {
-        return medicalTopicRepository.findAllByOrderByName();
-    }
+	/**
+	 * Создание нового анализа
+	 *
+	 * @param command команда для создания
+	 */
+	void createMedicalTopic(MedicalTopicCreateCommandDto command);
 
-    public void save(MedicalTopic topic) {
-        medicalTopicRepository.save(topic);
-    }
+	/**
+	 * Изменение анализа
+	 *
+	 * @param command команда для изменения
+	 */
+	void updateMedicalTopic(MedicalTopicUpdateCommandDto command);
 
-    public void delete(MedicalTopic topic) {
-        medicalTopicRepository.delete(topic);
-    }
+	/**
+	 * Удаление анализа
+	 *
+	 * @param id идентификатор анализа
+	 */
+	void deleteMedicalTopic(Long id);
 
-    public boolean contains(String name) {
-        return null != medicalTopicRepository.findByName(name);
-    }
-
-    public boolean addTask(MedicalTopic topic, MedicalTask task) {
-        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()))) {
-            return false;
-        } else {
-            task.setName(task.getName().trim());
-            task.setUnit(task.getUnit().trim());
-            task.setTopic(topic);
-            medicalTaskRepository.save(task);
-            return true;
-        }
-    }
-
-    public void deleteTask(MedicalTask task) {
-        medicalTaskRepository.delete(task);
-    }
-
-    public boolean updateTask(MedicalTopic topic, MedicalTask task) {
-        if (topic.getMedicalTasks().stream().anyMatch(t -> t.getName().equals(task.getName()) && !Objects.equals(t.getId(), task.getId()))) {
-            return false;
-        } else {
-            medicalTaskRepository.save(task);
-            return true;
-        }
-    }
-
-    public List<TopicBean> getTopics(User user) {
-        final Set<MedicalTopicResult> medicalResults = user.getMedicalResults();
-        final List<TopicBean> topicBeans = new ArrayList<>();
-        for (MedicalTopic topic : medicalTopicRepository.findAllByOrderByName()) {
-            boolean inProgress = false;
-            boolean exists = false;
-            for (MedicalTopicResult result : medicalResults) {
-                if (Objects.equals(topic.getId(), result.getMedicalTopic().getId())) {
-                    exists = true;
-                    if (result.getCompleteDate() == null) {
-                        inProgress = true;
-                    }
-                }
-            }
-            topicBeans.add(new TopicBean(topic, inProgress, exists));
-        }
-        return topicBeans;
-    }
-
-    public boolean copy(MedicalTopic topic) {
-        int i = 1;
-        String finalName;
-        for (;;) {
-            final String name = topic.getName() + " - копия " + i;
-            if (name.length() > 254) {
-                return false;
-            }
-            if (medicalTopicRepository.findByName(name) != null) {
-                i++;
-            } else {
-                finalName = name;
-                break;
-            }
-        }
-        medicalTopicRepository.save(clone(topic, finalName));
-        return true;
-    }
-
-    private MedicalTopic clone(MedicalTopic oldTopic, String name) {
-        final MedicalTopic topic = new MedicalTopic();
-        topic.setName(name);
-        topic.setMedicalTasks(new LinkedHashSet<>());
-        for (MedicalTask oldTask : oldTopic.getMedicalTasks().stream().sorted(Comparator.comparing(MedicalTask::getId)).toList()) {
-            final MedicalTask task = new MedicalTask();
-            task.setName(oldTask.getName());
-            task.setUnit(oldTask.getUnit());
-            task.setLeftLeft(oldTask.getLeftLeft());
-            task.setLeftMid(oldTask.getLeftMid());
-            task.setRightMid(oldTask.getRightMid());
-            task.setRightRight(oldTask.getRightRight());
-            task.setLeftDecisions(new LinkedHashSet<>(oldTask.getLeftDecisions()));
-            task.setRightDecisions(new LinkedHashSet<>(oldTask.getRightDecisions()));
-            task.setTopic(topic);
-            topic.getMedicalTasks().add(task);
-        }
-        return topic;
-    }
-
-    public record TopicBean(MedicalTopic topic, boolean inProgress, boolean exists) {}
+	/**
+	 * Создание глубокой копии анализа с новым наименованием
+	 *
+	 * @param id идентификатор анализа
+	 */
+	void cloneMedicalTopic(Long id);
 }

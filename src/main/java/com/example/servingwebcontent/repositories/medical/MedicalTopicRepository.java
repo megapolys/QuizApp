@@ -1,14 +1,28 @@
 package com.example.servingwebcontent.repositories.medical;
 
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.lang.Nullable;
+import com.example.servingwebcontent.model.entities.medical.MedicalTopicEntity;
+import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface MedicalTopicRepository extends CrudRepository<MedicalTopic, Long> {
-    List<MedicalTopic> findAllByOrderByName();
+public interface MedicalTopicRepository extends JpaRepository<MedicalTopicEntity, Long> {
 
-    @Nullable
-    MedicalTopic findByName(String name);
+	@Query("""
+		select new com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize(
+			m.id,
+			m.name,
+			count(mt.id)
+		) from MedicalTopicEntity m
+		left join MedicalTaskEntity mt on mt.topicId = m.id
+		group by m.id
+		order by m.name
+		""")
+	List<MedicalTopicWithTaskSize> findAllByOrderByName();
+
+	Optional<MedicalTopicEntity> findByName(String name);
+
+	boolean existsByName(String name);
 }

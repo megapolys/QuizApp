@@ -1,13 +1,9 @@
 package com.example.servingwebcontent.repositories.medical;
 
-import com.example.servingwebcontent.domain.medical.MedicalTopic;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
-import org.springframework.data.repository.CrudRepository;
+import com.example.servingwebcontent.model.entities.medical.result.MedicalTopicResultEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface MedicalTopicResultRepository extends JpaRepository<MedicalTopicResultEntity, Long> {
 
-public interface MedicalTopicResultRepository extends CrudRepository<MedicalTopicResult, Long> {
-    void deleteAllByMedicalTopic(MedicalTopic medicalTopic);
-
-    List<MedicalTopicResult> findAllByMedicalTopic(MedicalTopic topic);
+	void deleteAllByTopicId(Long id);
 }

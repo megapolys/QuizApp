@@ -1,2 +1,6 @@
-delete from user_role;
-delete from usr;
+delete
+from usr_role;
+delete
+from role;
+delete
+from usr;

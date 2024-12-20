@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,24 +17,25 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+
     @Value("${rememberMe.key}")
     private String key;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
         http
-                .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/registration", "/activate/*", "/repairPassword", "/repairPassword/*").anonymous()
-                        .requestMatchers("/", "/main", "/static/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .rememberMe((remember) -> remember.rememberMeServices(rememberMeServices))
-                .logout(LogoutConfigurer::permitAll)
-        ;
+            .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/login", "/registration", "/activate/**", "/repairPassword", "/repairPassword/*").anonymous()
+                .requestMatchers("/user/list", "/quiz/**", "/api/quiz/**", "/decisions/**", "/api/decisions/**", "/medical/**", "/api/medical/**").hasRole("ADMIN")
+                .requestMatchers("/", "/main", "/static/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin((form) -> form
+                .loginPage("/login")
+            )
+            .rememberMe((remember) -> remember.rememberMeServices(rememberMeServices))
+            .logout();
+
         return http.build();
     }
 

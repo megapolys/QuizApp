@@ -1,11 +1,10 @@
 package com.example.servingwebcontent.repositories.quiz;
 
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.domain.quiz.result.QuizTaskResult;
-import org.springframework.data.repository.CrudRepository;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface QuizTaskResultRepository extends CrudRepository<QuizTaskResult, Long> {
+public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEntity, Long> {
 
-    void removeAllByTask(QuizTask task);
+	void deleteByTaskId(Long taskId);
 
 }

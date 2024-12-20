@@ -38,9 +38,9 @@
                 <a href="/user" class="navbar-text btn btn-outline-secondary me-3">${name}</a>
             </#if>
             <#if user??>
-                <@l.logout true/>
+                <@l.login true/>
             <#else>
-                <@l.logout false/>
+                <@l.login false/>
             </#if>
         </div>
     </div>

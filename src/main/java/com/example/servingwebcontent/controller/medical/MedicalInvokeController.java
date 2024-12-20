@@ -1,8 +1,8 @@
 package com.example.servingwebcontent.controller.medical;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.medical.result.MedicalTaskResult;
-import com.example.servingwebcontent.domain.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTaskResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.user.User;
 import com.example.servingwebcontent.service.medical.MedicalTopicInvokeService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

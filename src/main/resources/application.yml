@@ -12,15 +12,15 @@ spring.profiles.include:
   - main
 
 default:
-  fiveVariant:
-    firstWeight: 0
-    secondWeight: 0
-    thirdWeight: 2
-    fourthWeight: 3
-    fifthWeight: 4
-  yesOrNo:
-    noWeight: 0
-    yesWeight: 4
+  five-variant:
+    first-weight: 0
+    second-weight: 0
+    third-weight: 2
+    fourth-weight: 3
+    fifth-weight: 4
+  yes-or-no:
+    no-weight: 0
+    yes-weight: 4
   ratio:
     yellow: 2
     red: 3
@@ -29,3 +29,20 @@ default:
     leftMid: 2
     rightMid: 2
     rightRight: 4
+
+quiz:
+  logger:
+    mask-value-keys: [ 'password' ]
+    ignore-headers: [ 'sec-ch-ua',
+                      'sec-ch-ua-mobile',
+                      'sec-ch-ua-platform',
+                      'sec-fetch-site',
+                      'sec-fetch-mode',
+                      'sec-fetch-dest',
+                      'sec-fetch-user',
+                      'accept-encoding',
+                      'accept-language',
+                      'cache-control',
+                      'upgrade-insecure-requests',
+                      'origin' ]
+    ignore-uri-prefix: [ '/static' ]

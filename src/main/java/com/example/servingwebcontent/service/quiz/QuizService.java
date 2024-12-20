@@ -1,98 +1,48 @@
 package com.example.servingwebcontent.service.quiz;
 
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.QuizTask;
-import com.example.servingwebcontent.repositories.quiz.QuizRepository;
-import com.example.servingwebcontent.repositories.quiz.QuizResultRepository;
-import com.example.servingwebcontent.repositories.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import com.example.servingwebcontent.model.quiz.Quiz;
+import com.example.servingwebcontent.model.quiz.QuizCreateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizUpdateCommandDto;
+import com.example.servingwebcontent.model.quiz.QuizWithTaskSize;
 
-import java.util.*;
+import java.util.List;
 
-@Service
-public class QuizService {
+public interface QuizService {
 
-    private final QuizRepository quizRepository;
-    private final UserRepository userRepository;
-    private final QuizResultRepository quizResultRepository;
-    private final QuizTaskService quizTaskService;
+	/**
+	 * Получение списка тестов, сортированных по shortName
+	 *
+	 * @return Список тестов
+	 */
+	List<QuizWithTaskSize> getQuizList();
 
-    public QuizService(QuizRepository quizRepository, UserRepository userRepository, QuizResultRepository quizResultRepository, QuizTaskService quizTaskService) {
-        this.quizRepository = quizRepository;
-        this.userRepository = userRepository;
-        this.quizResultRepository = quizResultRepository;
-        this.quizTaskService = quizTaskService;
-    }
-    
-    public List<QuizBean> getQuizzes(User user) {
-        final Set<com.example.servingwebcontent.domain.quiz.result.QuizResult> results = user.getResults();
-        final List<QuizBean> quizList = new ArrayList<>();
-        for (Quiz quiz : quizRepository.findAllByOrderByShortName()) {
-            boolean inProgress = false;
-            boolean exists = false;
-            for (com.example.servingwebcontent.domain.quiz.result.QuizResult result : results) {
-                if (Objects.equals(quiz.getId(), result.getQuiz().getId())) {
-                    exists = true;
-                    if (!result.isComplete()) {
-                        inProgress = true;
-                    }
-                }
-            }
-            quizList.add(new QuizBean(quiz, inProgress, exists));
-        }
-        return quizList;
-    }
+	/**
+	 * Получение теста по идентификатору
+	 *
+	 * @param id - Идентификатор теста
+	 *
+	 * @return Тест
+	 */
+	Quiz getQuiz(Long id);
 
-    public QuizResult save(Quiz quiz) {
-        Quiz byShortName = quizRepository.findByShortName(quiz.getShortName());
-        if (byShortName != null && !Objects.equals(byShortName.getId(), quiz.getId())) {
-            return new QuizResult(ResultType.SHORT_NAME_FOUND, byShortName);
-        }
-        final Quiz byName = quizRepository.findByName(quiz.getName());
-        if (byName != null && !Objects.equals(byName.getId(), quiz.getId())) {
-            return new QuizResult(ResultType.NAME_FOUND, byName);
-        }
-        return new QuizResult(ResultType.SUCCESS, quizRepository.save(quiz));
-    }
+	/**
+	 * Создание нового теста
+	 *
+	 * @param quiz - Новый тест
+	 */
+	void addQuiz(QuizCreateCommandDto quiz);
 
-    @Transactional
-    public void delete(Quiz quiz) {
-        for (QuizTask quizTask : quiz.getTaskList()) {
-            quizTaskService.delete(quizTask);
-        }
-        for (User user : userRepository.findAll()) {
-            user.getResults().removeIf(result -> Objects.equals(result.getQuiz().getId(), quiz.getId()));
-            userRepository.save(user);
-        }
-        quizResultRepository.deleteQuizResultsByQuiz(quiz);
-        quizRepository.delete(quiz);
-    }
+	/**
+	 * Изменение данных теста
+	 *
+	 * @param quiz - Тест
+	 */
+	void updateQuiz(QuizUpdateCommandDto quiz);
 
-    public int getNextTaskPosition(Quiz quiz) {
-        int max = 1;
-        final List<QuizTask> taskList = quiz.getTaskList().stream()
-                .sorted(Comparator.comparing(QuizTask::getPosition))
-                .toList();
-        for (QuizTask task : taskList) {
-            if (task.getPosition() == max) {
-                max++;
-            } else {
-                return max;
-            }
-        }
-        return max;
-    }
-    
-    public record QuizBean(Quiz quiz, boolean inProgress, boolean exists) {
-    }
-
-    public enum ResultType {
-        SHORT_NAME_FOUND, NAME_FOUND, SUCCESS
-    }
-
-    public record QuizResult(ResultType result, Quiz quiz) {
-    }
-
+	/**
+	 * Удаление теста
+	 *
+	 * @param id - Идентификатор теста
+	 */
+	void deleteQuizById(Long id);
 }

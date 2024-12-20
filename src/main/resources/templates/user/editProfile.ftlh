@@ -1,6 +1,44 @@
 <#import "../parts/common.ftlh" as c>
-<#import "../parts/login.ftlh" as l>
 <@c.page>
     <h3>Редактирование профиля</h3>
-    <@l.edit "/user/edit"/>
+    <form action="/user/edit" method="post">
+        <div class="col-5 mb-3">
+            <div class="mb-3">
+                <label for="inputLogin" class="form-label">Логин</label>
+                <input id="inputLogin" class="form-control" type="text" name="username"
+                       aria-describedby="inputLoginHelp"
+                       placeholder="логин" value="${(user.username)!}"/>
+            </div>
+            <div class="mb-3">
+                <label for="lastNameInput" class="form-label">Фамилия</label>
+                <input id="lastNameInput" class="form-control" type="text" name="lastName" placeholder="Фамилия"
+                       value="${(user.lastName)!}"/>
+            </div>
+            <div class="mb-3">
+                <label for="firstNameInput" class="form-label">Имя</label>
+                <input id="firstNameInput" class="form-control" type="text" name="firstName" placeholder="Имя"
+                       value="${(user.firstName)!}"/>
+            </div>
+            <div class="mb-3">
+                <label for="inputEmail" class="form-label">Адрес почты</label>
+                <input id="inputEmail" class="form-control" type="email" name="email" placeholder="email"
+                       value="${(user.email)!}"/>
+            </div>
+            <div class="mb-3">
+                <div class="form-label">Гендер</div>
+                <input class="form-check-input" type="radio" name="male" value="true"
+                       id="gender-1" ${((user.male)!false)?string("checked", "")}>
+                <label class="form-check-label" for="gender-1">Муж</label>
+                <input class="form-check-input" type="radio" name="male" value="false"
+                       id="gender-2" ${((user.male)!true)?string("", "checked")}>
+                <label class="form-check-label" for="gender-2">Жен</label>
+            </div>
+            <div class="mb-3">
+                <label for="inputBirthday" class="form-label">Дата рождения</label>
+                <input id="inputBirthday" class="form-control" type="date" name="birthday" value="${(user.birthday)!}">
+            </div>
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-primary">Жмяк</button>
+        </div>
+    </form>
 </@c.page>

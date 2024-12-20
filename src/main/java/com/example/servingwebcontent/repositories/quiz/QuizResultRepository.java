@@ -1,11 +1,9 @@
 package com.example.servingwebcontent.repositories.quiz;
 
-import com.example.servingwebcontent.domain.quiz.Quiz;
-import com.example.servingwebcontent.domain.quiz.result.QuizResult;
-import org.springframework.data.repository.CrudRepository;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizResultEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface QuizResultRepository extends JpaRepository<QuizResultEntity, Long> {
 
-public interface QuizResultRepository extends CrudRepository<QuizResult, Long> {
-    void deleteQuizResultsByQuiz(Quiz quiz);
+	void deleteAllByQuizId(Long id);
 }

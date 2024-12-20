@@ -1,87 +1,111 @@
 package com.example.servingwebcontent.controller;
 
-import com.example.servingwebcontent.repositories.UserRepository;
-import com.example.servingwebcontent.domain.User;
-import com.example.servingwebcontent.service.UserService;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByEmailException;
+import com.example.servingwebcontent.exceptions.user.UserAlreadyExistsByUsernameException;
+import com.example.servingwebcontent.model.user.UserDetailsCustom;
+import com.example.servingwebcontent.model.user.UserSimple;
+import com.example.servingwebcontent.service.user.UserService;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Objects;
+import static com.example.servingwebcontent.consts.Consts.ERROR_MESSAGE_PARAM;
+import static com.example.servingwebcontent.consts.Consts.SUCCESS_MESSAGE_PARAM;
+import static com.example.servingwebcontent.consts.MessageConsts.*;
 
 @Controller
-@RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final UserService userService;
+	private final UserService userService;
 
-    public UserController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
+	/**
+	 * Получение списка пользователей
+	 * Доступно только администратору
+	 *
+	 * @return users    - Список пользователей
+	 * usersTab - Активная вкладка
+	 */
+	@GetMapping("/user/list")
+	public String userList(Model model) {
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("usersTab", "active");
+		return "user/list";
+	}
 
-    @GetMapping("/list")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String userList(Model model) {
-        model.addAttribute("users", userRepository.findAll());
-        model.addAttribute("usersTab", "active");
-        return "user/userList";
-    }
+	/**
+	 * Получение своего профиля
+	 *
+	 * @param user - Автор запроса
+	 *
+	 * @return user - Профиль пользователя
+	 */
+	@GetMapping("/user")
+	public String getProfile(
+		@AuthenticationPrincipal UserDetailsCustom user,
+		Model model
+	) {
+		if (user == null) {
+			return "redirect:/login";
+		}
+		model.addAttribute("user", userService.getSimpleUserById(user.getId()));
+		return "user/profile";
+	}
 
-    @GetMapping
-    public String getProfile(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        if (user == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("user", userRepository.findById(user.getId()).orElse(null));
-        return "user/profile";
-    }
+	/**
+	 * Получение формы изменения своего профиля
+	 *
+	 * @param user - Автор запроса
+	 *
+	 * @return user - Профиль пользователя
+	 */
+	@GetMapping("/user/edit")
+	public String editProfile(
+		@AuthenticationPrincipal UserDetailsCustom user,
+		Model model
+	) {
+		model.addAttribute("user", userService.getSimpleUserById(user.getId()));
+		return "user/editProfile";
+	}
 
-    @GetMapping("/edit")
-    public String editProfile(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        model.addAttribute("user", userRepository.findById(user.getId()).orElse(null));
-        return "user/editProfile";
-    }
-
-    @PostMapping("/edit")
-    public String editProfile(
-            @AuthenticationPrincipal User currentUser,
-            User user,
-            Model model,
-            RedirectAttributes redirectAttributes
-    ) {
-        currentUser = userRepository.findById(currentUser.getId()).orElse(null);
-        model.addAttribute("user", user);
-        if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getEmail()) || user.getYearBorn() == null
-                || StringUtils.isBlank(user.getLastName()) || StringUtils.isBlank(user.getFirstName())) {
-            model.addAttribute("message", "Необходимо заполнить все поля");
-            return "user/editProfile";
-        }
-        if (!Objects.equals(user.getPassword(), user.getPassword2())) {
-            model.addAttribute("message", "Пароли не совпадают");
-            return "user/editProfile";
-        }
-        UserService.UserResult result = userService.updateUser(currentUser, user);
-        if (result.result() == UserService.ResultType.USERNAME_FOUND) {
-            model.addAttribute("message", "Пользователь с таким логином уже существует!");
-            return "user/editProfile";
-        }
-        if (result.result() == UserService.ResultType.EMAIL_FOUND) {
-            model.addAttribute("message", "Пользователь с такой почтой уже существует!");
-            return "user/editProfile";
-        }
-        redirectAttributes.addFlashAttribute("successMessage", "Изменения успешно сохранены");
-        return "redirect:/user";
-    }
+	/**
+	 * Запрос на изменение своего профиля
+	 *
+	 * @param currentUser - Автор запроса
+	 * @param user        - Новые данные профиля
+	 *
+	 * @return user           - Профиль пользователя (при неудачном изменении)
+	 * message        - Сообщение об ошибке
+	 * successMessage - Сообщение об удачном изменении
+	 */
+	@PostMapping("/user/edit")
+	public String editProfile(
+		@AuthenticationPrincipal UserDetailsCustom currentUser,
+		UserSimple user,
+		Model model,
+		RedirectAttributes redirectAttributes
+	) {
+		model.addAttribute("user", user);
+		if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getEmail()) || user.getBirthday() == null
+			|| StringUtils.isBlank(user.getLastName()) || StringUtils.isBlank(user.getFirstName())) {
+			model.addAttribute(ERROR_MESSAGE_PARAM, REQUIRE_ALL_FIELDS);
+			return "user/editProfile";
+		}
+		try {
+			userService.updateUser(currentUser.getId(), user);
+		} catch (UserAlreadyExistsByUsernameException ignore) {
+			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_USERNAME_ALREADY_EXISTS);
+			return "user/editProfile";
+		} catch (UserAlreadyExistsByEmailException ignore) {
+			model.addAttribute(ERROR_MESSAGE_PARAM, PROFILE_WITH_SAME_EMAIL_ALREADY_EXISTS);
+			return "user/editProfile";
+		}
+		redirectAttributes.addFlashAttribute(SUCCESS_MESSAGE_PARAM, CHANGES_COMPLETE_SUCCESSFUL);
+		return "redirect:/user";
+	}
 }
