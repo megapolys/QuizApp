@@ -2,35 +2,31 @@ package com.example.servingwebcontent.controller.quiz;
 
 import com.example.servingwebcontent.service.quiz.QuizInvokeService;
 import com.example.servingwebcontent.service.quiz.QuizResultService;
-import com.example.servingwebcontent.service.quiz.impl.QuizServiceImpl;
+import com.example.servingwebcontent.service.quiz.QuizService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-@RequestMapping("/result/quiz")
+@RequiredArgsConstructor
 public class QuizResultController {
 
 	private final QuizResultService quizResultService;
 	private final QuizInvokeService quizInvokeService;
-	private final QuizServiceImpl quizService;
+	private final QuizService quizService;
 
-	public QuizResultController(QuizResultService quizResultService, QuizInvokeService quizInvokeService, QuizServiceImpl quizService) {
-		this.quizResultService = quizResultService;
-		this.quizInvokeService = quizInvokeService;
-		this.quizService = quizService;
+	@GetMapping("quiz/result/{user}")
+	public String getQuizzes(
+		@PathVariable Long userId,
+		Model model
+	) {
+		model.addAttribute("quizResults", quizResultService.getResults(user));
+		model.addAttribute("quizList", quizService.getQuizzes(user));
+		model.addAttribute("user", user);
+		model.addAttribute("usersTab", "active");
+		return "result/quizList";
 	}
-
-//    @GetMapping("/{user}")
-//    public String getQuizzes(
-//            @PathVariable User user,
-//            Model model
-//    ) {
-//        model.addAttribute("quizResults", quizResultService.getResults(user));
-//        model.addAttribute("quizList", quizService.getQuizzes(user));
-//        model.addAttribute("user", user);
-//        model.addAttribute("usersTab", "active");
-//        return "result/quizList";
-//    }
 //
 //    @PostMapping("/{userId}/newQuiz/{quiz}")
 //    public String newQuiz(

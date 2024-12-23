@@ -1,4 +1,4 @@
-<#import "../../parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/medical/list">Назад</a>
     <h3 id="medical-topic-header" class="mb-3"></h3>

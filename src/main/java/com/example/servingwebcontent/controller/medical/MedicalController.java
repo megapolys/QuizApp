@@ -13,7 +13,7 @@ public class MedicalController {
         Model model
     ) {
         model.addAttribute("medicalAdminTab", "active");
-        return "medical/admin/topicList";
+        return "medical/topicList";
     }
 
     @GetMapping("/medical/{topicId}")
@@ -22,7 +22,7 @@ public class MedicalController {
         Model model
     ) {
         model.addAttribute("medicalAdminTab", "active");
-        return "/medical/admin/topic";
+        return "/medical/topic";
     }
 }
 

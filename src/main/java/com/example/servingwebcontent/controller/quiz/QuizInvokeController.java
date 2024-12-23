@@ -33,7 +33,7 @@ public class QuizInvokeController {
     ) {
         model.addAttribute("quizzes", quizInvokeService.getQuizResults(user.getId()));
         model.addAttribute("invokeQuizTab", "active");
-        return "invoke/quizList";
+        return "quiz/invoke/quizList";
     }
 
     @GetMapping("/invokeQuiz/{quizResult}")
@@ -60,7 +60,7 @@ public class QuizInvokeController {
         model.addAttribute("pagination", countCompleted + "/" + taskCount);
         model.addAttribute("progress", countCompleted * 100f / taskCount);
         model.addAttribute("invokeQuizTab", "active");
-        return "invoke/quiz";
+		return "quiz/invoke/quiz";
     }
 
     @PostMapping("/invokeQuiz/{quizResult}")
