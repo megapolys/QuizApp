@@ -2,13 +2,10 @@
 <#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
-    <#if user.lastName?has_content && user.firstName?has_content>
-        <div class="card">
-            <div class="card-body">
-                ${user.lastName!} ${user.firstName!}  ${user.yearBorn?has_content?then(user.yearBorn?c + " г.р.", "")}
-            </div>
+    <div id="user-card" class="card">
+        <div class="card-body">
         </div>
-    </#if>
+    </div>
     <h3 class="mb-3">Активные опросники</h3>
     <table class="table">
         <thead>
@@ -80,4 +77,26 @@
         </#list>
         </tbody>
     </table>
+
+    <script>
+
+        $(async function () {
+            await loadContent();
+        });
+
+        async function loadContent() {
+            let userId = ${userId};
+            let user = await getUserById(userId);
+            fillUserCard(user);
+        }
+
+        function fillUserCard(user) {
+            $('#user-card .card-body').html(user.lastName + user.firstName + user.birthday);
+        }
+
+        async function getUserById(userId) {
+            return getRequestWithError('/api/user/' + userId, 'Ошибка при загрузки данных пользователя');
+        }
+
+    </script>
 </@c.page>

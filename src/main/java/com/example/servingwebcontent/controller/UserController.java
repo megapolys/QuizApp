@@ -25,15 +25,10 @@ public class UserController {
 	private final UserService userService;
 
 	/**
-	 * Получение списка пользователей
-	 * Доступно только администратору
-	 *
-	 * @return users    - Список пользователей
-	 * usersTab - Активная вкладка
+	 * Получение страницы списка пользователей
 	 */
 	@GetMapping("/user/list")
 	public String userList(Model model) {
-		model.addAttribute("users", userService.findAll());
 		model.addAttribute("usersTab", "active");
 		return "user/list";
 	}

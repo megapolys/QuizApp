@@ -1,7 +1,7 @@
 <#import "../parts/common.ftlh" as c>
 <@c.page>
     <h3>Список пользователей</h3>
-    <table class="table table-striped">
+    <table id="user-table" class="table table-striped">
         <thead>
         <tr>
             <th style="width: 30%">Имя</th>
@@ -10,15 +10,35 @@
             <th style="width: 20%"></th>
         </tr>
         </thead>
-        <tbody>
-        <#list users as user>
-            <tr>
-                <td>${user.username}</td>
-                <td>${user.email!}</td>
-                <td><a href="/result/quiz/${user.id?c}">Управление тестами</a></td>
-                <td><a href="/result/topic/${user.id?c}">Управление анализами</a></td>
-            </tr>
-        </#list>
-        </tbody>
+        <tbody></tbody>
     </table>
+    <script>
+        $(async function () {
+            await loadContent();
+        });
+
+        async function loadContent() {
+            let userList = await getUserList();
+            fillUserTable(userList);
+        }
+
+        function fillUserTable(userList) {
+            let userTableBody = $('#user-table tbody');
+            userTableBody.html('');
+            userList.forEach(user => {
+                userTableBody.append(`
+                    <tr>
+                        <td>` + user.username + `</td>
+                        <td>` + user.email + `</td>
+                        <td><a href="/quiz/result/` + user.id + `">Управление тестами</a></td>
+                        <td><a href="/topic/result/` + user.id + `">Управление тестами</a></td>
+                    </tr>
+                `);
+            })
+        }
+
+        async function getUserList() {
+            return getRequestWithError('/api/user/all', 'Ошибка при загрузки списка пользователей');
+        }
+    </script>
 </@c.page>

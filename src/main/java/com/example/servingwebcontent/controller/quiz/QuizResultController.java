@@ -5,6 +5,7 @@ import com.example.servingwebcontent.service.quiz.QuizResultService;
 import com.example.servingwebcontent.service.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -16,16 +17,14 @@ public class QuizResultController {
 	private final QuizInvokeService quizInvokeService;
 	private final QuizService quizService;
 
-	@GetMapping("quiz/result/{user}")
-	public String getQuizzes(
+	@GetMapping("quiz/result/{userId}")
+	public String getQuizList(
 		@PathVariable Long userId,
 		Model model
 	) {
-		model.addAttribute("quizResults", quizResultService.getResults(user));
-		model.addAttribute("quizList", quizService.getQuizzes(user));
-		model.addAttribute("user", user);
+		model.addAttribute("userId", userId);
 		model.addAttribute("usersTab", "active");
-		return "result/quizList";
+		return "quiz/result/quizList";
 	}
 //
 //    @PostMapping("/{userId}/newQuiz/{quiz}")
