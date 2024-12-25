@@ -3,9 +3,13 @@ package com.example.servingwebcontent.service.quiz.impl;
 import com.example.servingwebcontent.model.quiz.Quiz;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizResultCalculated;
-import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 import com.example.servingwebcontent.model.quiz.result.QuizWithResults;
+import com.example.servingwebcontent.model.quiz.task.FiveVariantTask;
+import com.example.servingwebcontent.model.quiz.task.YesOrNoTask;
 import com.example.servingwebcontent.persistence.QuizPersistence;
+import com.example.servingwebcontent.property.FiveVariantProperty;
+import com.example.servingwebcontent.property.YesOrNoProperty;
 import com.example.servingwebcontent.service.quiz.QuizResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ import java.util.stream.Collectors;
 public class QuizResultServiceImpl implements QuizResultService {
 
 	private final QuizPersistence quizPersistence;
+	private final FiveVariantProperty fiveVariantProperty;
+	private final YesOrNoProperty yesOrNoProperty;
 
 	/**
 	 * {@inheritDoc}
@@ -46,11 +52,10 @@ public class QuizResultServiceImpl implements QuizResultService {
 	}
 
 	public QuizResultCalculated getResult(QuizResult result) {
-		float weightSum = 0;
-		List<QuizTaskResult> taskResultList = quizPersistence.getQuizTaskResultByQuizResultId(result.getId());
+		List<QuizTaskResultWithTaskType> taskResultList = quizPersistence.getQuizTaskResultByQuizResultId(result.getId());
 		int taskCount = taskResultList.size();
 		Long countCompleted = taskResultList.stream()
-			.filter(QuizTaskResult::isComplete)
+			.filter(QuizTaskResultWithTaskType::isComplete)
 			.count();
 		if (!result.isComplete()) {
 			return QuizResultCalculated.builder()
@@ -62,7 +67,8 @@ public class QuizResultServiceImpl implements QuizResultService {
 				.countCompleted(countCompleted)
 				.build();
 		}
-		for (QuizTaskResult taskResult : taskResultList) {
+		float weightSum = 0;
+		for (QuizTaskResultWithTaskType taskResult : taskResultList) {
 			final float weight = taskResult.getAltScore() == null ? getWeight(taskResult) : taskResult.getAltScore();
 			weightSum += weight;
 		}
@@ -107,25 +113,24 @@ public class QuizResultServiceImpl implements QuizResultService {
 //		return new ResultBean(result, decisionsList, score, score > yellowRatio, score > redRatio, progress);
 //	}
 
-	public float getWeight(QuizTaskResult taskResult) {
+	public float getWeight(QuizTaskResultWithTaskType taskResult) {
 		float weight = 0;
-		final QuizTask task = taskResult.getTask();
-		final FiveVariantTask fiveVariantTask = task.getFiveVariantTask();
+		FiveVariantTask fiveVariantTask = taskResult.getFiveVariantTask();
 		if (fiveVariantTask != null) {
 			weight = switch (taskResult.getVariant()) {
-				case "1" -> withDefault(fiveVariantTask.getFifthWeight(), firstWeight);
-				case "2" -> withDefault(fiveVariantTask.getSecondWeight(), secondWeight);
-				case "3" -> withDefault(fiveVariantTask.getThirdWeight(), thirdWeight);
-				case "4" -> withDefault(fiveVariantTask.getFourthWeight(), fourthWeight);
-				case "5" -> withDefault(fiveVariantTask.getFifthWeight(), fifthWeight);
+				case "1" -> withDefault(fiveVariantTask.getFifthWeight(), fiveVariantProperty.getFirstWeight());
+				case "2" -> withDefault(fiveVariantTask.getSecondWeight(), fiveVariantProperty.getSecondWeight());
+				case "3" -> withDefault(fiveVariantTask.getThirdWeight(), fiveVariantProperty.getThirdWeight());
+				case "4" -> withDefault(fiveVariantTask.getFourthWeight(), fiveVariantProperty.getFourthWeight());
+				case "5" -> withDefault(fiveVariantTask.getFifthWeight(), fiveVariantProperty.getFifthWeight());
 				default -> throw new IllegalArgumentException("Unknown value of taskResult.variant!");
 			};
 		}
-		final YesOrNoTask yesOrNoTask = task.getYesOrNoTask();
+		YesOrNoTask yesOrNoTask = taskResult.getYesOrNoTask();
 		if (yesOrNoTask != null) {
 			weight = switch (taskResult.getVariant()) {
-				case "1" -> withDefault(yesOrNoTask.getYesWeight(), yesWeight);
-				case "2" -> withDefault(yesOrNoTask.getNoWeight(), noWeight);
+				case "1" -> withDefault(yesOrNoTask.getYesWeight(), yesOrNoProperty.getYesWeight());
+				case "2" -> withDefault(yesOrNoTask.getNoWeight(), yesOrNoProperty.getNoWeight());
 				default -> throw new IllegalArgumentException("Unknown value of taskResult.variant!");
 			};
 		}

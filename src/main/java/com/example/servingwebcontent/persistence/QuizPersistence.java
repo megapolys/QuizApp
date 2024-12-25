@@ -2,7 +2,7 @@ package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
-import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 
 import java.util.List;
 
@@ -119,5 +119,5 @@ public interface QuizPersistence {
 	 *
 	 * @return список результатов тасков
 	 */
-	List<QuizTaskResult> getQuizTaskResultByQuizResultId(Long id);
+	List<QuizTaskResultWithTaskType> getQuizTaskResultByQuizResultId(Long id);
 }

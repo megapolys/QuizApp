@@ -7,7 +7,7 @@ import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
-import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.DecisionRepository;
 import com.example.servingwebcontent.repositories.quiz.*;
@@ -206,9 +206,9 @@ public class QuizPersistenceImpl implements QuizPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<QuizTaskResult> getQuizTaskResultByQuizResultId(Long id) {
+	public List<QuizTaskResultWithTaskType> getQuizTaskResultByQuizResultId(Long id) {
 		return quizTaskResultRepository.findAllByQuizResultId(id).stream()
-			.map(entity -> conversionService.convert(entity, QuizTaskResult.class))
+			.map(entity -> conversionService.convert(entity, QuizTaskResultWithTaskType.class))
 			.toList();
 	}
 }

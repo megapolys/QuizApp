@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.controller.quiz;
 
+import com.example.servingwebcontent.property.ColorRatioProperty;
 import com.example.servingwebcontent.property.FiveVariantProperty;
 import com.example.servingwebcontent.property.YesOrNoProperty;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ public class PropertyController {
 
 	private final FiveVariantProperty fiveVariantProperty;
 	private final YesOrNoProperty yesOrNoProperty;
+	private final ColorRatioProperty colorRatioProperty;
 
 	/**
 	 * Получение дефолтных значений для вопроса с 5 вариантами
@@ -31,6 +33,16 @@ public class PropertyController {
 	@GetMapping("api/property/yesOrNo")
 	YesOrNoProperty getYesOrNoProperty() {
 		return yesOrNoProperty;
+	}
+
+	/**
+	 * Получение дефолтных значений для значений цветов в результатах теста
+	 *
+	 * @return дефолтные значения
+	 */
+	@GetMapping("api/property/color-ratio")
+	ColorRatioProperty getColorRatioProperty() {
+		return colorRatioProperty;
 	}
 
 }
