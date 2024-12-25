@@ -1,6 +1,8 @@
 package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.quiz.*;
+import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
 
 import java.util.List;
 
@@ -95,4 +97,27 @@ public interface QuizPersistence {
 	 * @param quizId идентификатор теста
 	 */
 	void rePositionTasksByQuizId(Long quizId);
+
+	/**
+	 * Получить список результатов тестов
+	 *
+	 * @param userId идентификатор профиля
+	 */
+	List<QuizResult> getQuizResultListByUserId(Long userId);
+
+	/**
+	 * Получение всех тестов
+	 *
+	 * @return тесты
+	 */
+	List<Quiz> getAllQuizzes();
+
+	/**
+	 * Получить список результатов тасков в тесте
+	 *
+	 * @param id идентификатор результата теста
+	 *
+	 * @return список результатов тасков
+	 */
+	List<QuizTaskResult> getQuizTaskResultByQuizResultId(Long id);
 }

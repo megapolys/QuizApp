@@ -35,10 +35,11 @@ public class QuizInvokeService {
 
 
     public String getProgress(QuizResult quizResult) {
-        final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
-        final int taskCount = quizResult.getTaskList().size();
-        return countCompleted + "/" + taskCount;
-    }
+//        final long countCompleted = quizResult.getTaskList().stream().filter(QuizTaskResult::isComplete).count();
+//        final int taskCount = quizResult.getTaskList().size();
+//        return countCompleted + "/" + taskCount;
+		return null;
+	}
 
 	public void startQuiz(long userId, QuizWithTaskSize quiz) {
 //        final User user = userRepository.findById(userId).orElseThrow(); // нужно для актуализации данных из бд

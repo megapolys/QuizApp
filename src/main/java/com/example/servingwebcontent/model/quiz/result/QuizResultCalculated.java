@@ -7,15 +7,17 @@ import java.time.Instant;
 
 @Value
 @Builder
-public class QuizResult {
+public class QuizResultCalculated {
 
     Long id;
-
-    Long quizId;
-
-    Long userId;
 
     boolean complete;
 
     Instant completeDate;
+
+    float score;
+
+    Long countCompleted;
+
+    Integer taskCount;
 }

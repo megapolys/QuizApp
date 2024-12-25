@@ -1,6 +1,6 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizWithResults;
 import com.example.servingwebcontent.service.quiz.QuizResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ public class QuizResultRestController {
 	 * @return список результатов тестов
 	 */
 	@GetMapping(value = "api/quiz/result", params = "userId")
-	public List<QuizResult> getQuizResultListByUserId(@RequestParam Long userId) {
+	public List<QuizWithResults> getQuizResultListByUserId(@RequestParam Long userId) {
 		return quizResultService.getQuizResultListByUserId(userId);
 	}
 }

@@ -6,6 +6,8 @@ import com.example.servingwebcontent.exceptions.quiz.QuizTaskNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.quiz.*;
+import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResult;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.DecisionRepository;
 import com.example.servingwebcontent.repositories.quiz.*;
@@ -178,5 +180,35 @@ public class QuizPersistenceImpl implements QuizPersistence {
 			quizTaskEntity.setPosition(position++);
 		}
 		quizTaskRepository.saveAll(taskList);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<QuizResult> getQuizResultListByUserId(Long userId) {
+		return quizResultRepository.findAllByUserId(userId).stream()
+			.map(entity -> conversionService.convert(entity, QuizResult.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Quiz> getAllQuizzes() {
+		return quizRepository.findAll().stream()
+			.map(entity -> conversionService.convert(entity, Quiz.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<QuizTaskResult> getQuizTaskResultByQuizResultId(Long id) {
+		return quizTaskResultRepository.findAllByQuizResultId(id).stream()
+			.map(entity -> conversionService.convert(entity, QuizTaskResult.class))
+			.toList();
 	}
 }
