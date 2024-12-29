@@ -15,6 +15,21 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class QuizTaskResultEntity {
 
+	public static QuizTaskResultEntity createNew(
+		Long taskId,
+		Long quizResultId
+	) {
+		return new QuizTaskResultEntity(
+			null,
+			taskId,
+			quizResultId,
+			false,
+			null,
+			null,
+			null
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_result_gen")

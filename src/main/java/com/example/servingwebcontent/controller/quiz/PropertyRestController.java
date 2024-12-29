@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class PropertyController {
+public class PropertyRestController {
 
 	private final FiveVariantProperty fiveVariantProperty;
 	private final YesOrNoProperty yesOrNoProperty;

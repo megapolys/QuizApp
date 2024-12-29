@@ -5,6 +5,8 @@ import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
 import com.example.servingwebcontent.exceptions.quiz.QuizTaskNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizResultEntity;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultEntity;
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
@@ -210,5 +212,26 @@ public class QuizPersistenceImpl implements QuizPersistence {
 		return quizTaskResultRepository.findAllByQuizResultId(id).stream()
 			.map(entity -> conversionService.convert(entity, QuizTaskResultWithTaskType.class))
 			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void deleteQuizResultById(Long quizResultId) {
+		quizTaskResultRepository.deleteAllByQuizResultId(quizResultId);
+		quizResultRepository.deleteById(quizResultId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void createNewQuizResult(Long userId, Long quizId) {
+		QuizResultEntity savedQuizResult = quizResultRepository.save(QuizResultEntity.createNew(quizId, userId));
+		quizTaskRepository.findAllByQuizId(quizId).forEach(quizTaskEntity ->
+			quizTaskResultRepository.save(QuizTaskResultEntity.createNew(quizTaskEntity.getId(), savedQuizResult.getId())));
 	}
 }

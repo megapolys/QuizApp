@@ -51,6 +51,14 @@ public class QuizResultServiceImpl implements QuizResultService {
 			.toList();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void deleteQuizResultById(Long quizResultId) {
+		quizPersistence.deleteQuizResultById(quizResultId);
+	}
+
 	public QuizResultCalculated getResult(QuizResult result) {
 		List<QuizTaskResultWithTaskType> taskResultList = quizPersistence.getQuizTaskResultByQuizResultId(result.getId());
 		int taskCount = taskResultList.size();

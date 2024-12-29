@@ -1,8 +1,5 @@
 package com.example.servingwebcontent.controller.quiz;
 
-import com.example.servingwebcontent.service.quiz.QuizInvokeService;
-import com.example.servingwebcontent.service.quiz.QuizResultService;
-import com.example.servingwebcontent.service.quiz.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 public class QuizResultController {
 
-	private final QuizResultService quizResultService;
-	private final QuizInvokeService quizInvokeService;
-	private final QuizService quizService;
-
 	@GetMapping("quiz/result/{userId}")
 	public String getQuizList(
 		@PathVariable Long userId,
@@ -26,40 +19,19 @@ public class QuizResultController {
 		model.addAttribute("usersTab", "active");
 		return "quiz/result/quizList";
 	}
-//
-//    @PostMapping("/{userId}/newQuiz/{quiz}")
-//    public String newQuiz(
-//		@PathVariable Long userId,
-//		@PathVariable QuizWithTaskSize quiz,
-//		RedirectAttributes redirectAttributes
-//	) {
-//        quizInvokeService.startQuiz(userId, quiz);
-//        redirectAttributes.addAttribute("userId", userId);
-//        return "redirect:/result/quiz/{userId}";
-//    }
-//
-//    @PostMapping("/{userId}/delete/{quizResultId}")
-//    public String deleteQuizResult(
-//            @PathVariable Long userId,
-//            @PathVariable Long quizResultId,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        quizResultService.deleteResult(quizResultId);
-//        redirectAttributes.addAttribute("userId", userId);
-//        return "redirect:/result/quiz/{userId}";
-//    }
-//
-//    @GetMapping("/{userId}/{quizResult}")
-//    public String getQuizResult(
-//            @PathVariable Long userId,
-//            @PathVariable QuizResult quizResult,
-//            Model model
-//    ) {
-//        model.addAttribute("result", quizResultService.getResult(quizResult));
-//        model.addAttribute("userId", userId);
-//        model.addAttribute("usersTab", "active");
-//        return "result/quizResult";
-//    }
+
+	@GetMapping("quiz/result/{userId}/{quizResultId}")
+	public String getQuizResult(
+		@PathVariable Long userId,
+		@PathVariable Long quizResultId,
+		Model model
+	) {
+		model.addAttribute("quizResultId", quizResultId);
+		model.addAttribute("userId", userId);
+		model.addAttribute("usersTab", "active");
+		return "quiz/result/quizResult";
+	}
+
 //
 //    @GetMapping("/{userId}/{quizResultId}/{quizTaskResult}")
 //    public String getQuizResult(

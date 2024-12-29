@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.repositories.quiz;
 
-import com.example.servingwebcontent.model.entities.quiz.QuizTaskFullEntity;
 import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultEntity;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultWithTaskTypeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -27,5 +27,7 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
 				where qtr.quizResultId = :quizResultId
 		""")
-	List<QuizTaskFullEntity> findAllByQuizResultId(Long quizResultId);
+	List<QuizTaskResultWithTaskTypeEntity> findAllByQuizResultId(Long quizResultId);
+
+	void deleteAllByQuizResultId(Long quizResultId);
 }

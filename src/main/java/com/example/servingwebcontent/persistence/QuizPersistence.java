@@ -120,4 +120,19 @@ public interface QuizPersistence {
 	 * @return список результатов тасков
 	 */
 	List<QuizTaskResultWithTaskType> getQuizTaskResultByQuizResultId(Long id);
+
+	/**
+	 * Удаление результата теста по идентификатору
+	 *
+	 * @param quizResultId идентификатор результата теста
+	 */
+	void deleteQuizResultById(Long quizResultId);
+
+	/**
+	 * Назначение пользователю теста на выполнение (создание нового результата теста)
+	 *
+	 * @param userId идентификатор пользователя, которому назначается тест
+	 * @param quizId идентификатор теста
+	 */
+	void createNewQuizResult(Long userId, Long quizId);
 }

@@ -2,10 +2,7 @@
 <#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
-    <div id="user-card" class="card">
-        <div class="card-body">
-        </div>
-    </div>
+    <h2 id="user-card" class="mb-3"></h2>
     <h3 class="mb-3">Активные опросники</h3>
     <table id="quiz-result-table" class="table">
         <thead>
@@ -17,41 +14,11 @@
             <th style="width: 10%"></th>
         </tr>
         </thead>
-        <tbody>
-        <#list quizResults as quizResult>
-            <tr>
-                <td colspan="5"><h3>${quizResult.quiz().shortName}. ${quizResult.quiz().name}</h3></td>
-            </tr>
-            <#list quizResult.results() as quiz>
-                <#assign color=quiz.quizResult().complete?then(quiz.red()?then("table-danger", quiz.yellow()?then("table-warning", "table-success")), "")>
-                <tr class="${color}">
-                    <td>${quiz.quizResult().complete?then(quiz.quizResult().completeDate?string, "")}</td>
-                    <td>${quiz.quizResult().complete?then(quiz.score()?string["0.##"], "")}</td>
-                    <td>
-                        <#if quiz.quizResult().complete>
-                            <span>Пройден</span>
-                        <#else>
-                            <span>В работе ${quiz.progress()}</span>
-                        </#if>
-                    </td>
-                    <td>
-                        <#if quiz.quizResult().complete>
-                            <a href="/result/quiz/${user.id?c}/${quiz.quizResult().id?c}">Результаты</a>
-                        </#if>
-                    </td>
-                    <td>
-                        <@modal.deleteConfirm path="/result/quiz/${user.id?c}/delete/${quiz.quizResult().id?c}"
-                        id="confirm-delete-quizResult-${quiz.quizResult().id}"
-                        text="Точно удалить результаты теста?"/>
-                    </td>
-                </tr>
-            </#list>
-        </#list>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <h3 class="mb-3">Список опросников</h3>
-    <table class="table">
+    <table id="quiz-table" class="table">
         <thead>
         <tr>
             <th style="width: 60%">Наименование</th>
@@ -59,23 +26,7 @@
             <th style="width: 30%">Действие</th>
         </tr>
         </thead>
-        <tbody>
-        <#list quizList as quiz>
-            <tr>
-                <td>${quiz.quiz().shortName}. ${quiz.quiz().name}</td>
-                <td>${(quiz.quiz().taskList)?has_content?then(quiz.quiz().taskList?size?c, "пусто")}</td>
-                <td>
-                    <#if !quiz.exists()>
-                        <@modal.postButton "/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}" "Назначить"/>
-                    <#elseif quiz.inProgress()>
-                        <div>Уже назначено</div>
-                    <#else>
-                        <@modal.postButton "/result/quiz/${user.id?c}/newQuiz/${quiz.quiz().id?c}" "Назначить еще раз"/>
-                    </#if>
-                </td>
-            </tr>
-        </#list>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <script>
@@ -91,10 +42,12 @@
             let quizResultList = await getQuizResultList(userId);
             let colorRatioProperty = await getColorRatioProperty();
             fillQuizResultTable(quizResultList, colorRatioProperty);
+            let quizList = await getQuizList();
+            fillQuizTable(quizList, quizResultList, userId);
         }
 
         function fillUserCard(user) {
-            $('#user-card .card-body').html(user.lastName + user.firstName + user.birthday);
+            $('#user-card').html(user.lastName + ' ' + user.firstName + ' ' + user.birthday);
         }
 
         function fillQuizResultTable(quizResultList, colorRatioProperty) {
@@ -103,7 +56,7 @@
             quizResultList.forEach(quizResult => {
                 table.append(`
                 <tr>
-                    <td colspan="5"><h3>` + quizResult.quiz.shortName + `. ` + quizResult.quiz.name + `</h3></td>
+                    <td colspan="5"><h5>` + quizResult.quiz.shortName + `. ` + quizResult.quiz.name + `</h5></td>
                 </tr>
                 `);
                 quizResult.results.forEach(result => {
@@ -123,14 +76,41 @@
                         <td>` + (result.complete ? result.score : "") + `</td>
                         <td>` + (result.complete ? "Пройден" : "В работе " + result.countCompleted + "/" + result.taskCount) + `</td>
                         <td>` + (result.complete ? '<a href="/quiz/result/"' + result.id + '">Результаты</a>' : '') + `</td>
-                        <td>
-                            <@modal.deleteConfirm path="/result/quiz/${user.id?c}/delete/${quiz.quizResult().id?c}"
-                            id="confirm-delete-quizResult-${quiz.quizResult().id}"
-                            text="Точно удалить результаты теста?"/>
-                        </td>
+                        <td>` + deleteConfirmString('deleteQuizResult(' + result.id + ')', 'confirm-delete-quizResult-' + result.id, 'Точно удалить результаты теста?') + `</td>
                     </tr>
                     `);
                 })
+            })
+        }
+
+        function fillQuizTable(quizList, quizResultList, userId) {
+            let assignedQuizSet = new Set();
+            let completedQuizSet = new Set();
+            quizResultList.forEach(quizResult => {
+                assignedQuizSet.add(quizResult.quiz.id);
+                let allCompleted = true;
+                quizResult.results.forEach(result => {
+                    if (!result.complete) {
+                        allCompleted = false;
+                    }
+                })
+                if (allCompleted) {
+                    completedQuizSet.add(quizResult.quiz.id);
+                }
+            })
+            let table = $('#quiz-table tbody');
+            table.html('');
+            quizList.forEach(quiz => {
+                table.append(`
+                <tr>
+                    <td>` + quiz.shortName + '. ' + quiz.name + `</td>
+                    <td>` + (quiz.size > 0 ? '' : 'пусто') + `</td>
+                    <td>` + (completedQuizSet.has(quiz.id) ?
+                    '<button class="btn btn-link p-0 mb-1" onclick="createQuizResult(' + userId + ', ' + quiz.id + ')">Назначить еще раз</button>'
+                    : (assignedQuizSet.has(quiz.id) ? 'Уже назначено' : '<button class="btn btn-link p-0 mb-1" onclick="createQuizResult(' + userId + ', ' + quiz.id + ')">Назначить</button>')) + `
+                    </td>
+                </tr>
+                `);
             })
         }
 
@@ -138,12 +118,38 @@
             return getRequestWithError('/api/user/' + userId, 'Ошибка при загрузки данных пользователя');
         }
 
+        async function getQuizList() {
+            return getRequestWithError('/api/quiz', 'Ошибка при загрузки списка тестов');
+        }
+
         async function getQuizResultList(userId) {
             return getRequestWithError('/api/quiz/result?userId=' + userId, 'Ошибка при загрузки списка результатов тестов');
         }
 
         async function getColorRatioProperty() {
-            return getRequestWithError('api/property/color-ratio', 'Ошибка при загрузки настроек цветов');
+            return getRequestWithError('/api/property/color-ratio', 'Ошибка при загрузки настроек цветов');
+        }
+
+        async function deleteQuizResult(id) {
+            await deleteByPath('/api/quiz/result/' + id, 'Результат теста успешно удален');
+            await loadContent();
+        }
+
+        async function createQuizResult(userId, quizId) {
+            let response = await fetch('/api/quiz/result?userId=' + userId + '&quizId=' + quizId, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    '${_csrf.headerName}': '${_csrf.token}'
+                }
+            });
+            if (response.ok) {
+                showSuccess('Тест успешно назначен пользователю');
+                await loadContent();
+            } else {
+                showError('Ошибка при попытке назначить тест пользователю');
+            }
         }
 
     </script>

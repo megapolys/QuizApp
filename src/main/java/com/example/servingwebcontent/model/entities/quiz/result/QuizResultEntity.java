@@ -17,6 +17,19 @@ import java.time.Instant;
 @EqualsAndHashCode
 public class QuizResultEntity {
 
+	public static QuizResultEntity createNew(
+		Long quizId,
+		Long userId
+	) {
+		return new QuizResultEntity(
+			null,
+			quizId,
+			userId,
+			false,
+			null
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_result_gen")

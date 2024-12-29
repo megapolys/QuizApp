@@ -6,8 +6,24 @@ import lombok.Data;
 @Data
 @Builder
 public class QuizWithTaskSize {
+
+	/**
+	 * Идентификатор
+	 */
 	Long id;
+
+	/**
+	 * Наименование
+	 */
 	String name;
+
+	/**
+	 * Короткое наименование
+	 */
 	String shortName;
+
+	/**
+	 * Количество тасков
+	 */
 	long size;
 }

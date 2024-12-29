@@ -14,4 +14,11 @@ public interface QuizResultService {
 	 * @return список результатов тестов
 	 */
 	List<QuizWithResults> getQuizResultListByUserId(Long userId);
+
+	/**
+	 * Удаление результата теста по идентификатору
+	 *
+	 * @param quizResultId идентификатор результата теста
+	 */
+	void deleteQuizResultById(Long quizResultId);
 }

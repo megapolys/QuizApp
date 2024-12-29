@@ -31,7 +31,7 @@
                         <td>` + user.username + `</td>
                         <td>` + user.email + `</td>
                         <td><a href="/quiz/result/` + user.id + `">Управление тестами</a></td>
-                        <td><a href="/topic/result/` + user.id + `">Управление тестами</a></td>
+                        <td><a href="/topic/result/` + user.id + `">Управление анализами</a></td>
                     </tr>
                 `);
             })
