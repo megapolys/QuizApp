@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
     <h2 id="user-card" class="mb-3"></h2>

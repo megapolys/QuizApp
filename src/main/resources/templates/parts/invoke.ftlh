@@ -1,5 +1,4 @@
 <#-- @ftlvariable name="task" type="com.example.servingwebcontent.model.quiz.result.QuizTaskResult" -->
-<#import "modal.ftlh" as modal>
 <#macro invoke path admin>
     <div class="card">
         <h3 class="card-header">№${task.task.position} <#if task.task.fiveVariantTask??>${task.task.fiveVariantTask.preQuestionText!}<#else>${task.task.yesOrNoTask.preQuestionText!}</#if></h3>

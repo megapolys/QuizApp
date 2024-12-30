@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.advice;
 
+import com.example.servingwebcontent.exceptions.AccessDeniedException;
 import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.exceptions.medical.MedicalTaskAlreadyExistsException;
@@ -94,5 +95,13 @@ public class RestControllerErrorHandler {
 	protected ValidationErrorDto handle(MedicalTaskAlreadyExistsException e) {
 		log.error("{}: {}", e.getClass().getSimpleName(), e.getMessage(), e);
 		return e.getPayload();
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	protected RestExceptionDto handle(AccessDeniedException t) {
+		String localizedMessage = t.getLocalizedMessage();
+		log.error("Exception: {}", localizedMessage, t);
+		return new RestExceptionDto(t.getClass().getName(), localizedMessage);
 	}
 }

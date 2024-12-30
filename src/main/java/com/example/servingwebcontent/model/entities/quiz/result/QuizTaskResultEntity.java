@@ -30,6 +30,26 @@ public class QuizTaskResultEntity {
 		);
 	}
 
+	public static QuizTaskResultEntity buildExists(
+		Long id,
+		Long taskId,
+		Long quizResultId,
+		boolean complete,
+		String variant,
+		Float altScore,
+		String text
+	) {
+		return new QuizTaskResultEntity(
+			id,
+			taskId,
+			quizResultId,
+			complete,
+			variant,
+			altScore,
+			text
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_result_gen")

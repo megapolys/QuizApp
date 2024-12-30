@@ -2,13 +2,17 @@ package com.example.servingwebcontent.persistence.impl;
 
 import com.example.servingwebcontent.converters.quiz.QuizTaskFullEntityToQuizTaskFullConverter;
 import com.example.servingwebcontent.exceptions.quiz.QuizNotFoundException;
+import com.example.servingwebcontent.exceptions.quiz.QuizResultNotFoundException;
 import com.example.servingwebcontent.exceptions.quiz.QuizTaskNotFoundException;
+import com.example.servingwebcontent.exceptions.quiz.QuizTaskResultNotFoundException;
 import com.example.servingwebcontent.model.entities.quiz.QuizEntity;
 import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.result.QuizResultEntity;
 import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultEntity;
+import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultWithTaskTypeEntity;
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskCompleteCommand;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.DecisionRepository;
@@ -18,8 +22,11 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @SuppressWarnings("ConstantConditions")
 @Service
@@ -233,5 +240,55 @@ public class QuizPersistenceImpl implements QuizPersistence {
 		QuizResultEntity savedQuizResult = quizResultRepository.save(QuizResultEntity.createNew(quizId, userId));
 		quizTaskRepository.findAllByQuizId(quizId).forEach(quizTaskEntity ->
 			quizTaskResultRepository.save(QuizTaskResultEntity.createNew(quizTaskEntity.getId(), savedQuizResult.getId())));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean notExistsQuizByUserId(Long userId, Long quizResultId) {
+		Optional<QuizResultEntity> quizResultEntity = quizResultRepository.findById(quizResultId);
+		return quizResultEntity.isEmpty() || !Objects.equals(quizResultEntity.get().getUserId(), userId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean notExistsQuizByUserIdAndTask(Long userId, Long quizTaskResultId) {
+		return quizTaskResultRepository.findById(quizTaskResultId)
+			.map(quizTaskResultEntity -> notExistsQuizByUserId(userId, quizTaskResultEntity.getQuizResultId()))
+			.orElse(true);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void saveTaskResult(QuizTaskCompleteCommand command) {
+		QuizTaskResultEntity quizTaskResultEntity = quizTaskResultRepository.findById(command.getQuizTaskResultId())
+			.orElseThrow(() -> QuizTaskResultNotFoundException.byId(command.getQuizTaskResultId()));
+		quizTaskResultRepository.save(QuizTaskResultEntity.buildExists(
+			quizTaskResultEntity.getId(),
+			quizTaskResultEntity.getTaskId(),
+			quizTaskResultEntity.getQuizResultId(),
+			true,
+			command.getVariant(),
+			null,
+			command.getText()
+		));
+		if (quizTaskResultRepository.findAllByQuizResultId(quizTaskResultEntity.getQuizResultId()).stream()
+			.allMatch(QuizTaskResultWithTaskTypeEntity::isComplete)) {
+			QuizResultEntity quizResultEntity = quizResultRepository.findById(quizTaskResultEntity.getQuizResultId())
+				.orElseThrow(() -> QuizResultNotFoundException.byId(quizTaskResultEntity.getQuizResultId()));
+			quizResultRepository.save(QuizResultEntity.buildExists(
+				quizResultEntity.getId(),
+				quizResultEntity.getQuizId(),
+				quizResultEntity.getUserId(),
+				true,
+				Instant.now()
+			));
+		}
 	}
 }

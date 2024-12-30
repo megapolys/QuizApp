@@ -26,6 +26,7 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
 				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
 				where qtr.quizResultId = :quizResultId
+				order by qt.position
 		""")
 	List<QuizTaskResultWithTaskTypeEntity> findAllByQuizResultId(Long quizResultId);
 

@@ -2,6 +2,7 @@ package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskCompleteCommand;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 
 import java.util.List;
@@ -135,4 +136,31 @@ public interface QuizPersistence {
 	 * @param quizId идентификатор теста
 	 */
 	void createNewQuizResult(Long userId, Long quizId);
+
+	/**
+	 * Проверка, есть ли у пользователя результат теста с данным идентификатором
+	 *
+	 * @param userId       идентификатор пользователя
+	 * @param quizResultId идентификатор результата теста
+	 *
+	 * @return true - если есть тест назначен
+	 */
+	boolean notExistsQuizByUserId(Long userId, Long quizResultId);
+
+	/**
+	 * Проверка, есть ли у пользователя результат теста с данным идентификатором результата вопроса
+	 *
+	 * @param userId           идентификатор пользователя
+	 * @param quizTaskResultId идентификатор результата вопроса
+	 *
+	 * @return true - если есть тест назначен
+	 */
+	boolean notExistsQuizByUserIdAndTask(Long userId, Long quizTaskResultId);
+
+	/**
+	 * Сохранить результат ответа
+	 *
+	 * @param command команда с результатом ответа
+	 */
+	void saveTaskResult(QuizTaskCompleteCommand command);
 }

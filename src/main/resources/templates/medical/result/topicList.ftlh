@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#import "../../parts/modal.ftlh" as modal>
 <@c.page>
     <a class="btn btn-primary mb-3" href="/user/list">К списку пользователей</a>
     <#if user.lastName?has_content && user.firstName?has_content>

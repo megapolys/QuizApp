@@ -30,6 +30,22 @@ public class QuizResultEntity {
 		);
 	}
 
+	public static QuizResultEntity buildExists(
+		Long id,
+		Long quizId,
+		Long userId,
+		boolean complete,
+		Instant completeDate
+	) {
+		return new QuizResultEntity(
+			id,
+			quizId,
+			userId,
+			complete,
+			completeDate
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_result_gen")

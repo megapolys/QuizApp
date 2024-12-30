@@ -2,7 +2,6 @@ package com.example.servingwebcontent.model.user;
 
 import com.example.servingwebcontent.model.Role;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
-import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,14 +37,7 @@ public class User implements UserDetails {
 
 	String password;
 
-	/**
-	 * Пароль, который дублирует первый для проверки
-	 */
-	String password2;
-
 	Set<Role> roles;
-
-	Set<QuizResult> results;
 
 	Set<MedicalTopicResult> medicalResults;
 

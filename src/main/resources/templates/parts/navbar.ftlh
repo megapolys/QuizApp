@@ -14,7 +14,7 @@
                     <a class="nav-link ${mainTab!}" href="/main">Главная</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${invokeQuizTab!}" href="/userQuizList">Опросники</a>
+                    <a class="nav-link ${invokeQuizTab!}" href="/quiz/invoke">Опросники</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ${invokeTopicTab!}" href="/userTopicList">Анализы</a>

@@ -30,7 +30,7 @@
     <footer class="py-3 my-4">
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="/main" class="nav-link px-2 text-muted">Главная</a></li>
-            <li class="nav-item"><a href="/userQuizList" class="nav-link px-2 text-muted">Опросники</a></li>
+            <li class="nav-item"><a href="/quiz/invoke" class="nav-link px-2 text-muted">Опросники</a></li>
             <li class="nav-item"><a href="/userTopicList" class="nav-link px-2 text-muted">Анализы</a></li>
             <#if isAdmin>
                 <li class="nav-item"><a href="/user/list" class="nav-link px-2 text-muted">Пользователи</a></li>
@@ -142,6 +142,27 @@
                         </div>
                     </div>
                 </div>
+            `;
+        }
+
+        function modalImageString(text, path, id) {
+            return `
+            <button type="button" class="btn btn-outline-danger btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#` + id + `">
+                ` + text + `
+            </button>
+            <div class="modal fade" id="` + id + `" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen-sm-down">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Картиночка</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img class="img-thumbnail" src="` + path + `" width="100%">
+                        </div>
+                    </div>
+                </div>
+            </div>
             `;
         }
     </script>
