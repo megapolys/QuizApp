@@ -6,13 +6,23 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class QuizTaskResultWithTaskType {
 
     /**
      * Идентификатор результата таска
      */
     Long id;
+
+    /**
+     * Идентификатор таска
+     */
+    Long taskId;
+
+    /**
+     * Позиция
+     */
+    Integer position;
 
     /**
      * true - выполнен
@@ -23,6 +33,11 @@ public class QuizTaskResultWithTaskType {
      * Вариант ответа
      */
     String variant;
+
+    /**
+     * Значение
+     */
+    Float score;
 
     /**
      * Альтернативное значение

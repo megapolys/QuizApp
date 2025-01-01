@@ -3,8 +3,11 @@ package com.example.servingwebcontent.model.entities.quiz.result;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.time.Instant;
+
+import static org.hibernate.type.SqlTypes.TIMESTAMP;
 
 @Getter
 @Setter
@@ -61,5 +64,6 @@ public class QuizResultEntity {
 	boolean complete;
 
 	@Column(name = "complete_date")
+	@JdbcTypeCode(TIMESTAMP)
 	Instant completeDate;
 }

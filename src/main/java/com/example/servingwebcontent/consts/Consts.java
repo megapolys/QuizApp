@@ -9,4 +9,8 @@ public interface Consts {
 	String ERROR_MESSAGE_PARAM = "message";
 
 	String SUCCESS_MESSAGE_PARAM = "successMessage";
+
+	String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+	String ZONE = "Europe/Moscow";
 }

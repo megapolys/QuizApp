@@ -13,6 +13,7 @@ import com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultWi
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskCompleteCommand;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResultUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 import com.example.servingwebcontent.persistence.QuizPersistence;
 import com.example.servingwebcontent.repositories.DecisionRepository;
@@ -290,5 +291,45 @@ public class QuizPersistenceImpl implements QuizPersistence {
 				Instant.now()
 			));
 		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Quiz getQuizByQuizResultId(Long quizResultId) {
+		QuizResultEntity quizResultEntity = quizResultRepository.findById(quizResultId)
+			.orElseThrow(() -> QuizResultNotFoundException.byId(quizResultId));
+		return quizRepository.findById(quizResultEntity.getQuizId())
+			.map(entity -> conversionService.convert(entity, Quiz.class))
+			.orElseThrow(() -> QuizNotFoundException.byId(quizResultEntity.getQuizId()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public QuizTaskResultWithTaskType getQuizTaskResultById(Long quizTaskResultId) {
+		return quizTaskResultRepository.getQuizTaskResultById(quizTaskResultId)
+			.map(entity -> conversionService.convert(entity, QuizTaskResultWithTaskType.class))
+			.orElseThrow(() -> QuizTaskResultNotFoundException.byId(quizTaskResultId));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateQuizTaskResult(QuizTaskResultUpdateCommandDto command) {
+		QuizTaskResultEntity quizTaskResultEntity = quizTaskResultRepository.findById(command.getQuizTaskResultId())
+			.orElseThrow(() -> QuizTaskResultNotFoundException.byId(command.getQuizTaskResultId()));
+		quizTaskResultRepository.save(QuizTaskResultEntity.buildExists(
+			quizTaskResultEntity.getId(),
+			quizTaskResultEntity.getTaskId(),
+			quizTaskResultEntity.getQuizResultId(),
+			quizTaskResultEntity.isComplete(),
+			quizTaskResultEntity.getVariant(),
+			command.getAltScore(),
+			quizTaskResultEntity.getText()
+		));
 	}
 }

@@ -12,8 +12,6 @@ public class DecisionCalculated {
 
 	float score;
 
-	float altScore;
-
 	int count;
 
 }

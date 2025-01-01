@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEntity, Long> {
 
@@ -14,6 +15,7 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 	@Query("""
 		select new com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultWithTaskTypeEntity(
 					qtr.id,
+					qt,
 					qtr.complete,
 					qtr.variant,
 					qtr.altScore,
@@ -21,7 +23,6 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 					fvt,
 					ynt
 				) from QuizTaskResultEntity qtr
-				join QuizResultEntity qr on qr.id = qtr.quizResultId
 				join QuizTaskEntity qt on qt.id = qtr.taskId
 				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
 				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
@@ -29,6 +30,24 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 				order by qt.position
 		""")
 	List<QuizTaskResultWithTaskTypeEntity> findAllByQuizResultId(Long quizResultId);
+
+	@Query("""
+		select new com.example.servingwebcontent.model.entities.quiz.result.QuizTaskResultWithTaskTypeEntity(
+					qtr.id,
+					qt,
+					qtr.complete,
+					qtr.variant,
+					qtr.altScore,
+					qtr.text,
+					fvt,
+					ynt
+				) from QuizTaskResultEntity qtr
+				join QuizTaskEntity qt on qt.id = qtr.taskId
+				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
+				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
+				where qtr.id = :quizTaskResultId
+		""")
+	Optional<QuizTaskResultWithTaskTypeEntity> getQuizTaskResultById(Long quizTaskResultId);
 
 	void deleteAllByQuizResultId(Long quizResultId);
 }

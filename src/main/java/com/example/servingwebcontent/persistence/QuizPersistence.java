@@ -3,6 +3,7 @@ package com.example.servingwebcontent.persistence;
 import com.example.servingwebcontent.model.quiz.*;
 import com.example.servingwebcontent.model.quiz.result.QuizResult;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskCompleteCommand;
+import com.example.servingwebcontent.model.quiz.result.QuizTaskResultUpdateCommandDto;
 import com.example.servingwebcontent.model.quiz.result.QuizTaskResultWithTaskType;
 
 import java.util.List;
@@ -163,4 +164,29 @@ public interface QuizPersistence {
 	 * @param command команда с результатом ответа
 	 */
 	void saveTaskResult(QuizTaskCompleteCommand command);
+
+	/**
+	 * Получить тест по идентификатору результата теста
+	 *
+	 * @param quizResultId идентификатор результата теста
+	 *
+	 * @return тест
+	 */
+	Quiz getQuizByQuizResultId(Long quizResultId);
+
+	/**
+	 * Получение результата теста
+	 *
+	 * @param quizTaskResultId идентификатор результата теста
+	 *
+	 * @return результат теста
+	 */
+	QuizTaskResultWithTaskType getQuizTaskResultById(Long quizTaskResultId);
+
+	/**
+	 * Изменить значение для результата вопроса
+	 *
+	 * @param command команда для обновления
+	 */
+	void updateQuizTaskResult(QuizTaskResultUpdateCommandDto command);
 }

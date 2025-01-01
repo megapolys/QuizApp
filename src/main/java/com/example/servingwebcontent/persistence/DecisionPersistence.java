@@ -1,9 +1,6 @@
 package com.example.servingwebcontent.persistence;
 
-import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
-import com.example.servingwebcontent.model.decision.Group;
-import com.example.servingwebcontent.model.decision.GroupWithDecisions;
+import com.example.servingwebcontent.model.decision.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -126,4 +123,13 @@ public interface DecisionPersistence {
 	 * @return Группы
 	 */
 	List<Group> getGroups();
+
+	/**
+	 * Получить все решения по тесту
+	 *
+	 * @param quizId идентификатор теста
+	 *
+	 * @return список решений
+	 */
+	List<DecisionByTask> findAllDecisionsByQuizId(Long quizId);
 }

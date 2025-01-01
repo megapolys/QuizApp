@@ -6,10 +6,7 @@ import com.example.servingwebcontent.converters.decision.DecisionGroupEntityToGr
 import com.example.servingwebcontent.converters.decision.DecisionGroupEntityToGroupWithDecisionsConverter;
 import com.example.servingwebcontent.exceptions.decision.DecisionNotFoundException;
 import com.example.servingwebcontent.exceptions.decision.GroupNotFoundException;
-import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
-import com.example.servingwebcontent.model.decision.Group;
-import com.example.servingwebcontent.model.decision.GroupWithDecisions;
+import com.example.servingwebcontent.model.decision.*;
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionEntity;
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionGroupEntity;
 import com.example.servingwebcontent.persistence.DecisionPersistence;
@@ -179,5 +176,13 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 		return decisionGroupRepository.findAllByOrderByName().stream()
 			.map(groupConverter::convert)
 			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<DecisionByTask> findAllDecisionsByQuizId(Long quizId) {
+		return decisionRepository.findAllByQuizId(quizId);
 	}
 }

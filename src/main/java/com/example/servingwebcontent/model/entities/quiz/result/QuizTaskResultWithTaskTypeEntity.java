@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.model.entities.quiz.result;
 
+import com.example.servingwebcontent.model.entities.quiz.QuizTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.task.FiveVariantTaskEntity;
 import com.example.servingwebcontent.model.entities.quiz.task.YesOrNoTaskEntity;
 import lombok.Builder;
@@ -13,6 +14,11 @@ public class QuizTaskResultWithTaskTypeEntity {
      * Идентификатор результата таска
      */
     Long id;
+
+    /**
+     * Таск
+     */
+    QuizTaskEntity taskEntity;
 
     /**
      * true - выполнен

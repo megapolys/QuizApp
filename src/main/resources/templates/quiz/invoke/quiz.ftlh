@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#import "../../parts/invoke.ftlh" as invoke>
 <@c.page>
     <div class="progress mb-3" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0"
          aria-valuemax="100">
@@ -19,7 +18,6 @@
             let quizResultId = ${quizResultId};
             taskList = await getQuizTaskList(quizResultId);
             fillTask();
-
         }
 
         function fillTask() {
@@ -123,9 +121,16 @@
         async function taskCompletePost(task) {
             clearMessage();
             let form = $('#task-invoke-form');
+            let variant;
+            form.find("[name|='variant']").each(function () {
+                let checkbox = $(this);
+                if (checkbox.is(':checked')) {
+                    variant = checkbox.val();
+                }
+            })
             let body = {
                 quizTaskResultId: task.id,
-                variant: form.find("[name|='variant']").val(),
+                variant: variant,
                 text: form.find("[name|='text']").val()
             };
             let response = await fetch("/api/quiz/task/invoke", {

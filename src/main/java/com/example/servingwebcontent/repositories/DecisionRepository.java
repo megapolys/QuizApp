@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.repositories;
 
+import com.example.servingwebcontent.model.decision.DecisionByTask;
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,4 +34,19 @@ public interface DecisionRepository extends JpaRepository<DecisionEntity, Long> 
 		where qtd.quizTaskId = :taskId
 		""")
 	List<Long> findAllIdsByTaskId(Long taskId);
+
+	@Query("""
+		select new com.example.servingwebcontent.model.decision.DecisionByTask(
+			d.id,
+			d.name,
+			d.description,
+			qt.id
+		)
+		from DecisionEntity d
+		join QuizTaskDecisionsEntity qtd on qtd.decisionsId = d.id
+		join QuizTaskEntity qt on qt.id = qtd.quizTaskId
+		join QuizEntity q on q.id = qt.quizId
+		where q.id = :quizId
+		""")
+	List<DecisionByTask> findAllByQuizId(Long quizId);
 }

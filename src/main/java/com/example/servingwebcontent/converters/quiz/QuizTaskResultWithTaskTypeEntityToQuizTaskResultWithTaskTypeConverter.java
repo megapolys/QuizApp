@@ -17,6 +17,8 @@ public class QuizTaskResultWithTaskTypeEntityToQuizTaskResultWithTaskTypeConvert
 	public QuizTaskResultWithTaskType convert(QuizTaskResultWithTaskTypeEntity entity) {
 		return QuizTaskResultWithTaskType.builder()
 			.id(entity.getId())
+			.taskId(entity.getTaskEntity().getId())
+			.position(entity.getTaskEntity().getPosition())
 			.text(entity.getText())
 			.variant(entity.getVariant())
 			.complete(entity.isComplete())

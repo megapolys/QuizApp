@@ -40,7 +40,7 @@
             fillUserCard(user);
             let quizResultList = await getQuizResultList(userId);
             let colorRatioProperty = await getColorRatioProperty();
-            fillQuizResultTable(quizResultList, colorRatioProperty);
+            fillQuizResultTable(quizResultList, colorRatioProperty, userId);
             let quizList = await getQuizList();
             fillQuizTable(quizList, quizResultList, userId);
         }
@@ -49,7 +49,7 @@
             $('#user-card').html(user.lastName + ' ' + user.firstName + ' ' + user.birthday);
         }
 
-        function fillQuizResultTable(quizResultList, colorRatioProperty) {
+        function fillQuizResultTable(quizResultList, colorRatioProperty, userId) {
             let table = $('#quiz-result-table tbody');
             table.html('');
             quizResultList.forEach(quizResult => {
@@ -72,9 +72,9 @@
                     table.append(`
                     <tr class="` + colorClass + `">
                         <td>` + (result.complete ? result.completeDate : "") + `</td>
-                        <td>` + (result.complete ? result.score : "") + `</td>
+                        <td>` + (result.complete ? round(result.score) : "") + `</td>
                         <td>` + (result.complete ? "Пройден" : "В работе " + result.countCompleted + "/" + result.taskCount) + `</td>
-                        <td>` + (result.complete ? '<a href="/quiz/result/"' + result.id + '">Результаты</a>' : '') + `</td>
+                        <td>` + (result.complete ? '<a href="/quiz/result/' + userId + '/' + result.id + '">Результаты</a>' : '') + `</td>
                         <td>` + deleteConfirmString('deleteQuizResult(' + result.id + ')', 'confirm-delete-quizResult-' + result.id, 'Точно удалить результаты теста?') + `</td>
                     </tr>
                     `);
@@ -103,7 +103,7 @@
                 table.append(`
                 <tr>
                     <td>` + quiz.shortName + '. ' + quiz.name + `</td>
-                    <td>` + (quiz.size > 0 ? '' : 'пусто') + `</td>
+                    <td>` + (quiz.size > 0 ? quiz.size : 'пусто') + `</td>
                     <td>` + (completedQuizSet.has(quiz.id) ?
                     '<button class="btn btn-link p-0 mb-1" onclick="createQuizResult(' + userId + ', ' + quiz.id + ')">Назначить еще раз</button>'
                     : (assignedQuizSet.has(quiz.id) ? 'Уже назначено' : '<button class="btn btn-link p-0 mb-1" onclick="createQuizResult(' + userId + ', ' + quiz.id + ')">Назначить</button>')) + `
