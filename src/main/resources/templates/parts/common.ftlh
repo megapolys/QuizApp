@@ -31,7 +31,7 @@
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="/main" class="nav-link px-2 text-muted">Главная</a></li>
             <li class="nav-item"><a href="/quiz/invoke" class="nav-link px-2 text-muted">Опросники</a></li>
-            <li class="nav-item"><a href="/userTopicList" class="nav-link px-2 text-muted">Анализы</a></li>
+            <li class="nav-item"><a href="/medical/invoke" class="nav-link px-2 text-muted">Анализы</a></li>
             <#if isAdmin>
                 <li class="nav-item"><a href="/user/list" class="nav-link px-2 text-muted">Пользователи</a></li>
                 <li class="nav-item"><a href="/quiz/list" class="nav-link px-2 text-muted">Тесты</a></li>

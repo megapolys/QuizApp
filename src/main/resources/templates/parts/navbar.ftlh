@@ -17,7 +17,7 @@
                     <a class="nav-link ${invokeQuizTab!}" href="/quiz/invoke">Опросники</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ${invokeTopicTab!}" href="/userTopicList">Анализы</a>
+                    <a class="nav-link ${invokeTopicTab!}" href="/medical/invoke">Анализы</a>
                 </li>
                 <#if isAdmin>
                     <li class="nav-item">

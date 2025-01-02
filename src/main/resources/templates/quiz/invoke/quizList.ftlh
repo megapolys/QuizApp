@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#include "../../parts/security.ftlh">
 <@c.page>
     <h3 class="mb-3">Список назначенных опросников</h3>
     <table id="quiz-invoke-table" class="table">

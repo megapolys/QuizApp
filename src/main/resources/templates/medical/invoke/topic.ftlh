@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#include "../../parts/security.ftlh">
 <@c.page>
     <h3 class="mb-3">${topicResult.medicalTopic.name}</h3>
     <form id="medical-topic-result-form" action="/completeTopic/${topicResult.id?c}" method="post">
@@ -19,7 +18,6 @@
                 </#if>
             </div>
         </#list>
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         <div class="mb-2">
             <button class="btn btn-primary" type="submit">Сохранить</button>
         </div>
