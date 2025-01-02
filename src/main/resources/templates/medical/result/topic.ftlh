@@ -1,5 +1,4 @@
 <#import "../../parts/common.ftlh" as c>
-<#import "../../parts/decisions.ftlh" as d>
 <@c.page>
     <div class="row mb-3">
         <div class="col-2">

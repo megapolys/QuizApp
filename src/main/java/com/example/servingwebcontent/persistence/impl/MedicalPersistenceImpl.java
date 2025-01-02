@@ -6,7 +6,11 @@ import com.example.servingwebcontent.model.entities.medical.MedicalTaskEntity;
 import com.example.servingwebcontent.model.entities.medical.MedicalTopicEntity;
 import com.example.servingwebcontent.model.entities.medical.decision.MedicalTaskLeftDecisionEntity;
 import com.example.servingwebcontent.model.entities.medical.decision.MedicalTaskRightDecisionEntity;
+import com.example.servingwebcontent.model.entities.medical.result.MedicalTaskResultEntity;
+import com.example.servingwebcontent.model.entities.medical.result.MedicalTopicResultEntity;
 import com.example.servingwebcontent.model.medical.*;
+import com.example.servingwebcontent.model.medical.result.MedicalTaskResultWithTask;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.repositories.medical.*;
 import lombok.RequiredArgsConstructor;
@@ -220,5 +224,56 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 		medicalTaskRightDecisionsRepository.deleteAllByMedicalTaskId(taskId);
 		medicalTaskResultRepository.deleteAllByTaskId(taskId);
 		medicalTaskRepository.deleteById(taskId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MedicalTopicResult> getMedicalResultListByUserId(Long userId) {
+		return medicalTopicResultRepository.findAllByUserId(userId).stream()
+			.map(entity -> conversionService.convert(entity, MedicalTopicResult.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MedicalTopic> getAllTopics() {
+		return medicalTopicRepository.findAll().stream()
+			.map(entity -> conversionService.convert(entity, MedicalTopic.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MedicalTaskResultWithTask> getMedicalTaskResultByTopicResultId(Long medicalTopicResultId) {
+		return medicalTaskResultRepository.findAllByTopicResultId(medicalTopicResultId).stream()
+			.map(entity -> conversionService.convert(entity, MedicalTaskResultWithTask.class))
+			.toList();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void deleteMedicalResultById(Long medicalResultId) {
+		medicalTaskResultRepository.deleteAllByTopicResultId(medicalResultId);
+		medicalTopicResultRepository.deleteById(medicalResultId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	@Transactional
+	public void createNewMedicalResult(Long userId, Long topicId) {
+		MedicalTopicResultEntity savedMedicalResult = medicalTopicResultRepository.save(MedicalTopicResultEntity.createNew(topicId, userId));
+		medicalTaskRepository.findAllByTopicId(topicId).forEach(medicalTaskEntity ->
+			medicalTaskResultRepository.save(MedicalTaskResultEntity.createNew(medicalTaskEntity.getId(), savedMedicalResult.getId())));
 	}
 }

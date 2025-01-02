@@ -1,5 +1,4 @@
 <#import "../parts/common.ftlh" as c>
-<#import "../parts/modal.ftlh" as modal>
 <@c.page>
     <h3 class="mb-3">Список анализов</h3>
     <div id="medical-form" class="mb-3"></div>
@@ -103,7 +102,7 @@
         }
 
         async function getMedicalList() {
-            return getRequestWithError('/api/medical/all', 'Ошибка при загрузки списка анализов');
+            return getRequestWithError('/api/medical', 'Ошибка при загрузки списка анализов');
         }
 
         async function deleteMedical(id) {

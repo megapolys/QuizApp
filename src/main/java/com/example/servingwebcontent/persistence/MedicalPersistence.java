@@ -1,6 +1,8 @@
 package com.example.servingwebcontent.persistence;
 
 import com.example.servingwebcontent.model.medical.*;
+import com.example.servingwebcontent.model.medical.result.MedicalTaskResultWithTask;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
 
 import java.util.List;
 
@@ -114,4 +116,44 @@ public interface MedicalPersistence {
 	 * @param medicalTaskId идентификатор анализа
 	 */
 	void deleteMedicalTask(Long medicalTaskId);
+
+	/**
+	 * Получить список результатов анализов, назначенных пользователю
+	 *
+	 * @param userId идентификатор пользователя
+	 *
+	 * @return список результатов анализов
+	 */
+	List<MedicalTopicResult> getMedicalResultListByUserId(Long userId);
+
+	/**
+	 * Получить список всех топиков анализов
+	 *
+	 * @return список топиков
+	 */
+	List<MedicalTopic> getAllTopics();
+
+	/**
+	 * Получение списка результатов анализов по идентификатору результата топика
+	 *
+	 * @param medicalTopicResultId идентификатор результата топика
+	 *
+	 * @return список результатов анализов
+	 */
+	List<MedicalTaskResultWithTask> getMedicalTaskResultByTopicResultId(Long medicalTopicResultId);
+
+	/**
+	 * Удаление результата анализов по идентификатору
+	 *
+	 * @param medicalResultId идентификатор результата анализов
+	 */
+	void deleteMedicalResultById(Long medicalResultId);
+
+	/**
+	 * Назначение пользователю топик анализов на выполнение (создание нового результата топика анализов)
+	 *
+	 * @param userId  идентификатор пользователя, которому назначается тест
+	 * @param topicId идентификатор топика
+	 */
+	void createNewMedicalResult(Long userId, Long topicId);
 }

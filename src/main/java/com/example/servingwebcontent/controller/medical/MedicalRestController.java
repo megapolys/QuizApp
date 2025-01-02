@@ -22,7 +22,7 @@ public class MedicalRestController {
 	 *
 	 * @return список топиков анализов
 	 */
-	@GetMapping("api/medical/all")
+	@GetMapping("api/medical")
 	List<MedicalTopicWithTaskSize> getMedicalTopicList() {
 		return medicalTopicService.getMedicalTopicList();
 	}

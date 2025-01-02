@@ -3,8 +3,11 @@ package com.example.servingwebcontent.model.entities.medical.result;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.time.Instant;
+
+import static org.hibernate.type.SqlTypes.TIMESTAMP;
 
 @Getter
 @Setter
@@ -16,6 +19,16 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 public class MedicalTopicResultEntity {
+
+	public static MedicalTopicResultEntity createNew(Long topicId, Long userId) {
+		return new MedicalTopicResultEntity(
+			null,
+			topicId,
+			userId,
+			null,
+			null
+		);
+	}
 
 	@Id
 	@Column(name = "id")
@@ -29,8 +42,10 @@ public class MedicalTopicResultEntity {
 	Long userId;
 
 	@Column(name = "complete_date")
+	@JdbcTypeCode(TIMESTAMP)
 	Instant completeDate;
 
 	@Column(name = "last_update_date")
+	@JdbcTypeCode(TIMESTAMP)
 	Instant lastUpdateDate;
 }

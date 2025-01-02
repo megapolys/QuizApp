@@ -21,6 +21,7 @@ public class MedicalController {
         @PathVariable Long topicId,
         Model model
     ) {
+        model.addAttribute("topicId", topicId);
         model.addAttribute("medicalAdminTab", "active");
         return "/medical/topic";
     }

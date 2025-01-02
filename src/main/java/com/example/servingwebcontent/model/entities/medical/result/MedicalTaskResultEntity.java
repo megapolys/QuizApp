@@ -15,6 +15,16 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 public class MedicalTaskResultEntity {
 
+	public static MedicalTaskResultEntity createNew(Long taskId, Long topicResultId) {
+		return new MedicalTaskResultEntity(
+			null,
+			taskId,
+			topicResultId,
+			null,
+			null
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_task_result_gen")

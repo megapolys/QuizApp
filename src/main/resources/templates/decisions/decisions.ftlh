@@ -1,15 +1,10 @@
-<#-- @ftlvariable name="changeDecision" type="com.example.servingwebcontent.model.decision.Decision" -->
-<#-- @ftlvariable name="changeGroup" type="com.example.servingwebcontent.model.decision.GroupWithDecisions" -->
 <#import "../parts/common.ftlh" as c>
-<#import "../parts/decisions.ftlh" as d>
 <@c.page>
     <h3 class="mb-3">Список решений</h3>
     <h5 class="mb-3">Группа</h5>
     <div id="group-form" class="mb-3"></div>
     <h5 class="mb-3">Решение</h5>
     <div id="decision-form" class="mb-3"></div>
-
-<#--    <@d.decisions groups=groups decisions_=decisions/>-->
     <div id="groupDecisionContent"></div>
 
     <script>
