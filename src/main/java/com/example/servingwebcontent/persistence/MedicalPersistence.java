@@ -3,6 +3,7 @@ package com.example.servingwebcontent.persistence;
 import com.example.servingwebcontent.model.medical.*;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResultWithTask;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResultUpdateCommandDto;
 
 import java.util.List;
 
@@ -156,4 +157,30 @@ public interface MedicalPersistence {
 	 * @param topicId идентификатор топика
 	 */
 	void createNewMedicalResult(Long userId, Long topicId);
+
+	/**
+	 * Получение топика анализов по идентификатору результата топика анализов
+	 *
+	 * @param topicResultId идентификатор результата топика анализов
+	 *
+	 * @return топик анализов
+	 */
+	MedicalTopic getMedicalTopicByTopicResultId(Long topicResultId);
+
+	/**
+	 * Проверка, есть ли у данного пользователя результат топика анализов с данным идентификатором
+	 *
+	 * @param userId        идентификатор пользователя
+	 * @param topicResultId идентификатор топика анализов
+	 *
+	 * @return true - есть, иначе false
+	 */
+	boolean notExistsMedicalTopicResultByUserId(Long userId, Long topicResultId);
+
+	/**
+	 * Сохранить результат топика анализов
+	 *
+	 * @param command команда с результатами
+	 */
+	void saveMedicalTopicResult(MedicalTopicResultUpdateCommandDto command);
 }

@@ -13,4 +13,8 @@ public class AccessDeniedException extends RuntimeException {
 	public static AccessDeniedException quizTaskByUserId(Long userId, Long quizTaskResultId) {
 		return new AccessDeniedException("User with id %d try to access quizTaskResultId %d".formatted(userId, quizTaskResultId));
 	}
+
+	public static AccessDeniedException medicalByUserId(Long userId, Long topicResultId) {
+		return new AccessDeniedException("User with id %d try to access medicalTopicResultId %d".formatted(userId, topicResultId));
+	}
 }

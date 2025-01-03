@@ -25,6 +25,22 @@ public class MedicalTaskResultEntity {
 		);
 	}
 
+	public static MedicalTaskResultEntity buildExists(
+		Long id,
+		Long taskId,
+		Long topicResultId,
+		Float value,
+		Float altScore
+	) {
+		return new MedicalTaskResultEntity(
+			id,
+			taskId,
+			topicResultId,
+			value,
+			altScore
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_task_result_gen")

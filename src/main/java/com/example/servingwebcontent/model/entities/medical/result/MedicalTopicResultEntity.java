@@ -30,6 +30,22 @@ public class MedicalTopicResultEntity {
 		);
 	}
 
+	public static MedicalTopicResultEntity buildExists(
+		Long id,
+		Long topicId,
+		Long userId,
+		Instant completeDate,
+		Instant lastUpdateDate
+	) {
+		return new MedicalTopicResultEntity(
+			id,
+			topicId,
+			userId,
+			completeDate,
+			lastUpdateDate
+		);
+	}
+
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "medical_topic_result_gen")

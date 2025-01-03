@@ -11,6 +11,7 @@ import com.example.servingwebcontent.model.entities.medical.result.MedicalTopicR
 import com.example.servingwebcontent.model.medical.*;
 import com.example.servingwebcontent.model.medical.result.MedicalTaskResultWithTask;
 import com.example.servingwebcontent.model.medical.result.MedicalTopicResult;
+import com.example.servingwebcontent.model.medical.result.MedicalTopicResultUpdateCommandDto;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
 import com.example.servingwebcontent.repositories.medical.*;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,11 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @SuppressWarnings("ConstantConditions")
 @Service
@@ -251,7 +255,7 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	 */
 	@Override
 	public List<MedicalTaskResultWithTask> getMedicalTaskResultByTopicResultId(Long medicalTopicResultId) {
-		return medicalTaskResultRepository.findAllByTopicResultId(medicalTopicResultId).stream()
+		return medicalTaskResultRepository.findAllWithTaskByTopicResultId(medicalTopicResultId).stream()
 			.map(entity -> conversionService.convert(entity, MedicalTaskResultWithTask.class))
 			.toList();
 	}
@@ -275,5 +279,78 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 		MedicalTopicResultEntity savedMedicalResult = medicalTopicResultRepository.save(MedicalTopicResultEntity.createNew(topicId, userId));
 		medicalTaskRepository.findAllByTopicId(topicId).forEach(medicalTaskEntity ->
 			medicalTaskResultRepository.save(MedicalTaskResultEntity.createNew(medicalTaskEntity.getId(), savedMedicalResult.getId())));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public MedicalTopic getMedicalTopicByTopicResultId(Long topicResultId) {
+		return medicalTopicRepository.findByTopicResultId(topicResultId)
+			.map(entity -> conversionService.convert(entity, MedicalTopic.class))
+			.orElseThrow(() -> MedicalTopicNotFoundException.byTopicResultId(topicResultId));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean notExistsMedicalTopicResultByUserId(Long userId, Long topicResultId) {
+		Optional<MedicalTopicResultEntity> medicalTopicResult = medicalTopicResultRepository.findById(topicResultId);
+		return medicalTopicResult.isEmpty() || !Objects.equals(medicalTopicResult.get().getUserId(), userId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("OptionalGetWithoutIsPresent")
+	@Override
+	@Transactional
+	public void saveMedicalTopicResult(MedicalTopicResultUpdateCommandDto command) {
+		MedicalTopicResultEntity topicResultEntity = medicalTopicResultRepository.findById(command.getTopicResultId()).get();
+		List<MedicalTaskResultEntity> medicalTaskResultList = medicalTaskResultRepository.findAllByTopicResultId(command.getTopicResultId());
+		boolean anyChanged = false;
+		boolean completed = true;
+		for (MedicalTaskResultEntity taskResultEntity : medicalTaskResultList) {
+			if (command.getResults().containsKey(taskResultEntity.getId())) {
+				Float value = command.getResults().get(taskResultEntity.getId());
+				if (!Objects.equals(taskResultEntity.getValue(), value)) {
+					medicalTaskResultRepository.save(MedicalTaskResultEntity.buildExists(
+						taskResultEntity.getId(),
+						taskResultEntity.getTaskId(),
+						taskResultEntity.getTopicResultId(),
+						value,
+						taskResultEntity.getAltScore()
+					));
+					anyChanged = true;
+					if (value == null) {
+						completed = false;
+					}
+				}
+			} else if (taskResultEntity.getValue() == null) {
+				completed = false;
+			}
+		}
+
+		if (anyChanged) {
+			Instant lastUpdateDate = Instant.now();
+			Instant completeDate;
+			if (completed) {
+				if (topicResultEntity.getCompleteDate() == null) {
+					completeDate = lastUpdateDate;
+				} else {
+					completeDate = topicResultEntity.getCompleteDate();
+				}
+			} else {
+				completeDate = null;
+			}
+			medicalTopicResultRepository.save(MedicalTopicResultEntity.buildExists(
+				topicResultEntity.getId(),
+				topicResultEntity.getTopicId(),
+				topicResultEntity.getUserId(),
+				completeDate,
+				lastUpdateDate
+			));
+		}
 	}
 }

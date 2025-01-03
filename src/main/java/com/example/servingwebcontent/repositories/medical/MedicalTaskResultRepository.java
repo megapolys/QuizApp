@@ -21,8 +21,11 @@ public interface MedicalTaskResultRepository extends JpaRepository<MedicalTaskRe
 		) from MedicalTaskResultEntity mtr
 		join MedicalTaskEntity mt on mt.id = mtr.taskId
 		where mtr.topicResultId = :topicResultId
+		order by mt.id
 		""")
-	List<MedicalTaskResultWithTaskEntity> findAllByTopicResultId(Long topicResultId);
+	List<MedicalTaskResultWithTaskEntity> findAllWithTaskByTopicResultId(Long topicResultId);
+
+	List<MedicalTaskResultEntity> findAllByTopicResultId(Long topicResultId);
 
 	void deleteAllByTopicResultId(Long medicalResultId);
 }

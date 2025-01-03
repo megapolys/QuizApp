@@ -25,4 +25,12 @@ public interface MedicalTopicRepository extends JpaRepository<MedicalTopicEntity
 	Optional<MedicalTopicEntity> findByName(String name);
 
 	boolean existsByName(String name);
+
+	@Query("""
+		select mt
+		from MedicalTopicEntity mt
+		join MedicalTopicResultEntity mtr on mtr.topicId = mt.id
+		where mtr.id = :topicResultId
+		""")
+	Optional<MedicalTopicEntity> findByTopicResultId(Long topicResultId);
 }
