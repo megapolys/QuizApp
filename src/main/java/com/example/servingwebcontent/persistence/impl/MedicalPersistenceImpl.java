@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings("ConstantConditions")
 @Service
@@ -309,11 +306,16 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 	public void saveMedicalTopicResult(MedicalTopicResultUpdateCommandDto command) {
 		MedicalTopicResultEntity topicResultEntity = medicalTopicResultRepository.findById(command.getTopicResultId()).get();
 		List<MedicalTaskResultEntity> medicalTaskResultList = medicalTaskResultRepository.findAllByTopicResultId(command.getTopicResultId());
+		Map<Long, Float> taskResultMap = new HashMap<>();
+		command.getResults().forEach(taskResult -> taskResultMap.put(taskResult.getTaskResultId(), taskResult.getValue()));
 		boolean anyChanged = false;
 		boolean completed = true;
 		for (MedicalTaskResultEntity taskResultEntity : medicalTaskResultList) {
-			if (command.getResults().containsKey(taskResultEntity.getId())) {
-				Float value = command.getResults().get(taskResultEntity.getId());
+			if (taskResultMap.containsKey(taskResultEntity.getId())) {
+				Float value = taskResultMap.get(taskResultEntity.getId());
+				if (value == null) {
+					completed = false;
+				}
 				if (!Objects.equals(taskResultEntity.getValue(), value)) {
 					medicalTaskResultRepository.save(MedicalTaskResultEntity.buildExists(
 						taskResultEntity.getId(),
@@ -323,9 +325,6 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 						taskResultEntity.getAltScore()
 					));
 					anyChanged = true;
-					if (value == null) {
-						completed = false;
-					}
 				}
 			} else if (taskResultEntity.getValue() == null) {
 				completed = false;

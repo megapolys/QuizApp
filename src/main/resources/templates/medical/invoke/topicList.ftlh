@@ -38,7 +38,7 @@
                         <td></td>
                         <td><a href="/medical/invoke/` + result.id + `">` + (result.complete ? 'Скорректировать' : (result.countCompleted > 0 ? "Продолжить " + result.countCompleted + "/" + result.taskCount : "Заполнить")) + `</a></td>
                         <td>` + (result.complete ? result.completeDate : '') + `</td>
-                        <td>` + (result.complete ? result.lastUpdateDate : '') + `</td>
+                        <td>` + (result.lastUpdateDate ? result.lastUpdateDate : '') + `</td>
                     </tr>
                     `);
                 })

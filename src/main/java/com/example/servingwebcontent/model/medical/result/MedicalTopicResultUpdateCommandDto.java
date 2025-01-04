@@ -3,7 +3,7 @@ package com.example.servingwebcontent.model.medical.result;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class MedicalTopicResultUpdateCommandDto {
@@ -15,9 +15,7 @@ public class MedicalTopicResultUpdateCommandDto {
 	Long topicResultId;
 
 	/**
-	 * key - идентификатор результата таска
-	 * value - значение
+	 * Список результатов тасков
 	 */
-	Map<Long, Float> results;
-
+	List<MedicalTaskResultDto> results;
 }

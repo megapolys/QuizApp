@@ -1,28 +1,14 @@
 <#import "../../parts/common.ftlh" as c>
 <@c.page>
-    <h3 id="medical-name" class="mb-3">${topicResult.medicalTopic.name}</h3>
-    <div id="medical-topic-result-form">
-        <#setting locale="en_US">
-        <#list topicResult.results as result>
-            <div data-id="${result.medicalTask.name}" class="row mb-1">
-                <div class="col-4">
-                    <label for="colFormLabel-${result.id?c}" class="col-form-label">${result.medicalTask.name}</label>
-                </div>
-                <div class="col-2">
-                    <input id="colFormLabel-${result.id?c}" name="${result.id?c}" type="number" class="form-control"
-                           step="0.01" value="${(result.value?string("0.##"))!}"/>
-                </div>
-                <#if result.medicalTask.unit?has_content>
-                    <div class="col-4">
-                        <label class="col-form-label">${result.medicalTask.unit}</label>
-                    </div>
-                </#if>
-            </div>
-        </#list>
-        <div class="mb-2">
-            <button class="btn btn-primary" type="submit">Сохранить</button>
+    <div class="row mb-3">
+        <div class="col-2">
+            <a class="btn btn-primary" href="/medical/invoke">Назад</a>
+        </div>
+        <div class="col-10">
+            <h3 id="medical-name" class="mb-3"></h3>
         </div>
     </div>
+    <div id="medical-topic-result-form"></div>
     <script>
 
         $(async function () {
@@ -69,15 +55,16 @@
         async function saveTopicResult(topicResultId) {
             clearMessage();
             let form = $('#medical-topic-result-form');
-            let taskMap = new Map();
+            let taskList = [];
             form.find("[name]").each(function () {
                 let task = $(this);
-                taskMap.set(task.attr('name'), task.val());
+                taskList.push({"taskResultId": task.attr('name'), "value": task.val()});
             })
             let body = {
                 topicResultId: topicResultId,
-                taskMap: taskMap
+                results: taskList
             };
+            console.log(body);
             let response = await fetch("/api/medical/invoke", {
                 method: 'POST',
                 headers: {
