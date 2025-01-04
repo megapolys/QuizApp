@@ -76,6 +76,7 @@
             });
             if (response.ok) {
                 clearFromInvalidFields(form);
+                showSuccess("Результаты анализов успешно сохранены");
                 await loadContent();
             } else {
                 response.json().then(json => {
