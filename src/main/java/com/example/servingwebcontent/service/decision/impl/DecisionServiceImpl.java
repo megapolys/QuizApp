@@ -3,7 +3,7 @@ package com.example.servingwebcontent.service.decision.impl;
 import com.example.servingwebcontent.exceptions.decision.DecisionAlreadyExistsException;
 import com.example.servingwebcontent.exceptions.decision.GroupAlreadyExistsByNameException;
 import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.DecisionWithGroupId;
 import com.example.servingwebcontent.model.decision.Group;
 import com.example.servingwebcontent.model.decision.GroupWithDecisions;
 import com.example.servingwebcontent.persistence.DecisionPersistence;
@@ -81,7 +81,7 @@ public class DecisionServiceImpl implements DecisionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addDecision(DecisionWithGroup decision) {
+	public void addDecision(DecisionWithGroupId decision) {
 		decision.setName(decision.getName().trim());
 		decision.setDescription(decision.getDescription() != null ? decision.getDescription().trim() : null);
 		if (decisionPersistence.existsDecisionsByName(decision.getName())) {
@@ -94,7 +94,7 @@ public class DecisionServiceImpl implements DecisionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DecisionWithGroup getDecisionById(Long decisionId) {
+	public DecisionWithGroupId getDecisionById(Long decisionId) {
 		return decisionPersistence.getDecisionById(decisionId);
 	}
 
@@ -102,7 +102,7 @@ public class DecisionServiceImpl implements DecisionService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateDecision(DecisionWithGroup decision) {
+	public void updateDecision(DecisionWithGroupId decision) {
 		decision.setName(decision.getName().trim());
 		decision.setDescription(decision.getDescription() != null ? decision.getDescription().trim() : null);
 		Optional<Decision> decisionByName = decisionPersistence.findDecisionByName(decision.getName());

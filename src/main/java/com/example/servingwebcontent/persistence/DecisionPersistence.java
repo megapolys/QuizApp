@@ -83,7 +83,7 @@ public interface DecisionPersistence {
 	 *
 	 * @param decision - Решение
 	 */
-	void createDecision(DecisionWithGroup decision);
+	void createDecision(DecisionWithGroupId decision);
 
 	/**
 	 * Получение решения
@@ -92,7 +92,7 @@ public interface DecisionPersistence {
 	 *
 	 * @return Решение
 	 */
-	DecisionWithGroup getDecisionById(Long decisionId);
+	DecisionWithGroupId getDecisionById(Long decisionId);
 
 	/**
 	 * Получение решения по имени
@@ -108,7 +108,7 @@ public interface DecisionPersistence {
 	 *
 	 * @param decision - Решение
 	 */
-	void updateDecision(DecisionWithGroup decision);
+	void updateDecision(DecisionWithGroupId decision);
 
 	/**
 	 * Удаление решения
@@ -132,4 +132,22 @@ public interface DecisionPersistence {
 	 * @return список решений
 	 */
 	List<DecisionByTask> findAllDecisionsByQuizId(Long quizId);
+
+	/**
+	 * Получить все левых решений по топику анализов
+	 *
+	 * @param medicalTopicId идентификатор топика анализов
+	 *
+	 * @return список решений
+	 */
+	List<DecisionWithGroup> findAllLeftDecisionsByMedicalTopicId(Long medicalTopicId);
+
+	/**
+	 * Получить все правых решений по топику анализов
+	 *
+	 * @param medicalTopicId идентификатор топика анализов
+	 *
+	 * @return список решений
+	 */
+	List<DecisionWithGroup> findAllRightDecisionsByMedicalTopicId(Long medicalTopicId);
 }

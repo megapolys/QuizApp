@@ -120,11 +120,11 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createDecision(DecisionWithGroup decision) {
+	public void createDecision(DecisionWithGroupId decision) {
 		decisionRepository.save(DecisionEntity.createNew(
-				decision.getName(),
-				decision.getDescription(),
-				decision.getGroupId()
+			decision.getName(),
+			decision.getDescription(),
+			decision.getGroupId()
 		));
 	}
 
@@ -132,7 +132,7 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DecisionWithGroup getDecisionById(Long decisionId) {
+	public DecisionWithGroupId getDecisionById(Long decisionId) {
 		return decisionRepository.findById(decisionId)
 			.map(decisionWithGroupConverter::convert)
 			.orElseThrow(() -> DecisionNotFoundException.byId(decisionId));
@@ -151,7 +151,7 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void updateDecision(DecisionWithGroup decision) {
+	public void updateDecision(DecisionWithGroupId decision) {
 		decisionRepository.save(DecisionEntity.buildExisting(
 			decision.getId(),
 			decision.getName(),
@@ -184,5 +184,21 @@ public class DecisionPersistenceImpl implements DecisionPersistence {
 	@Override
 	public List<DecisionByTask> findAllDecisionsByQuizId(Long quizId) {
 		return decisionRepository.findAllByQuizId(quizId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<DecisionWithGroup> findAllLeftDecisionsByMedicalTopicId(Long medicalTopicId) {
+		return decisionRepository.findAllLeftDecisionsByMedicalTopicId(medicalTopicId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<DecisionWithGroup> findAllRightDecisionsByMedicalTopicId(Long medicalTopicId) {
+		return decisionRepository.findAllRightDecisionsByMedicalTopicId(medicalTopicId);
 	}
 }

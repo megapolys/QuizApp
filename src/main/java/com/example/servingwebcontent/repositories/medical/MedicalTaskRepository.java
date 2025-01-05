@@ -27,7 +27,7 @@ public interface MedicalTaskRepository extends JpaRepository<MedicalTaskEntity, 
 		left join MedicalTaskRightDecisionEntity trd on trd.medicalTaskId = t.id
 		where t.topicId = :medicalTopicId
 		group by t.id
-		order by t.name
+		order by t.id
 		""")
 	List<MedicalTaskWithDecisionsSize> getMedicalTaskList(Long medicalTopicId);
 }

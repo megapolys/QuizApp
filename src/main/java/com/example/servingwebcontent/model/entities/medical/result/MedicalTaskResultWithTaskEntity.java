@@ -15,6 +15,4 @@ public class MedicalTaskResultWithTaskEntity {
 	Long topicResultId;
 
 	Float value;
-
-	Float altScore;
 }

@@ -20,7 +20,6 @@ public class MedicalTaskResultEntity {
 			null,
 			taskId,
 			topicResultId,
-			null,
 			null
 		);
 	}
@@ -29,15 +28,13 @@ public class MedicalTaskResultEntity {
 		Long id,
 		Long taskId,
 		Long topicResultId,
-		Float value,
-		Float altScore
+		Float value
 	) {
 		return new MedicalTaskResultEntity(
 			id,
 			taskId,
 			topicResultId,
-			value,
-			altScore
+			value
 		);
 	}
 
@@ -54,7 +51,4 @@ public class MedicalTaskResultEntity {
 
 	@Column(name = "value")
 	Float value;
-
-	@Column(name = "alt_score")
-	Float altScore;
 }

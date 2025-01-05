@@ -1,9 +1,8 @@
 package com.example.servingwebcontent.service.medical.impl;
 
-import com.example.servingwebcontent.model.decision.Decision;
+import com.example.servingwebcontent.model.decision.DecisionWithGroup;
 import com.example.servingwebcontent.model.medical.MedicalTask;
 import com.example.servingwebcontent.model.medical.MedicalTopic;
-import com.example.servingwebcontent.model.medical.MedicalTopicWithTaskSize;
 import com.example.servingwebcontent.model.medical.result.*;
 import com.example.servingwebcontent.persistence.DecisionPersistence;
 import com.example.servingwebcontent.persistence.MedicalPersistence;
@@ -12,9 +11,7 @@ import com.example.servingwebcontent.service.medical.MedicalTopicResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -57,6 +54,78 @@ public class MedicalTopicResultServiceImpl implements MedicalTopicResultService 
         medicalPersistence.deleteMedicalResultById(medicalResultId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MedicalFullResultDto getMedicalResultById(Long medicalResultId) {
+        MedicalTopic medicalTopic = medicalPersistence.getMedicalTopicByTopicResultId(medicalResultId);
+        List<MedicalTaskResultWithTask> taskResultList = medicalPersistence.getMedicalTaskResultByTopicResultId(medicalResultId);
+        Map<Long, List<DecisionWithGroup>> leftDecisionWithGroupMap = decisionPersistence.findAllLeftDecisionsByMedicalTopicId(medicalTopic.getId()).stream()
+            .collect(Collectors.groupingBy(DecisionWithGroup::getTaskId));
+        Map<Long, List<DecisionWithGroup>> rightDecisionWithGroupMap = decisionPersistence.findAllRightDecisionsByMedicalTopicId(medicalTopic.getId()).stream()
+            .collect(Collectors.groupingBy(DecisionWithGroup::getTaskId));
+
+        List<MedicalTaskResultCalculated> results = new ArrayList<>();
+        final Map<DecisionWithGroup, Float> decisionWeightMap = new LinkedHashMap<>();
+        final Map<DecisionWithGroup, Integer> decisionCountMap = new LinkedHashMap<>();
+        for (MedicalTaskResultWithTask taskResult : taskResultList) {
+            final MedicalTask task = taskResult.getTask();
+
+            List<DecisionWithGroup> decisions = new ArrayList<>();
+            final float weight;
+            if (taskResult.getValue() <= task.getLeftMid()) {
+                if (leftDecisionWithGroupMap.containsKey(task.getId())) {
+                    decisions = leftDecisionWithGroupMap.get(task.getId());
+                }
+                if (taskResult.getValue() <= task.getLeftLeft()) {
+                    weight = property.getLeftLeft();
+                } else {
+                    weight = property.getLeftMid();
+                }
+            } else if (taskResult.getValue() >= task.getRightMid()) {
+                if (rightDecisionWithGroupMap.containsKey(task.getId())) {
+                    decisions = rightDecisionWithGroupMap.get(task.getId());
+                }
+                if (taskResult.getValue() >= task.getRightRight()) {
+                    weight = property.getRightRight();
+                } else {
+                    weight = property.getRightMid();
+                }
+            } else {
+                weight = 0;
+            }
+
+            for (DecisionWithGroup decision : decisions) {
+                decisionWeightMap.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
+                decisionCountMap.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
+            }
+            results.add(MedicalTaskResultCalculated.builder()
+                .id(taskResult.getId())
+                .task(taskResult.getTask())
+                .topicResultId(taskResult.getTopicResultId())
+                .value(taskResult.getValue())
+                .score(weight)
+                .decisions(decisions)
+                .build());
+        }
+        results.sort(Comparator.comparing(taskResult -> taskResult.getTask().getId()));
+        List<DecisionCalculated> decisions = decisionWeightMap.entrySet().stream()
+            .map(entry -> DecisionCalculated.builder()
+                .decision(entry.getKey())
+                .score(entry.getValue())
+                .count(decisionCountMap.get(entry.getKey()))
+                .build())
+            .sorted(Comparator.comparing(DecisionCalculated::getScore, Comparator.reverseOrder())
+                .thenComparing(decisionCalculated -> decisionCalculated.getDecision().getName()))
+            .toList();
+        return MedicalFullResultDto.builder()
+            .topicName(medicalTopic.getName())
+            .results(results)
+            .decisions(decisions)
+            .build();
+    }
+
     private MedicalResultCalculated getResult(MedicalTopicResult result) {
         List<MedicalTaskResultWithTask> taskResultList = medicalPersistence.getMedicalTaskResultByTopicResultId(result.getId());
         int taskCount = taskResultList.size();
@@ -82,9 +151,7 @@ public class MedicalTopicResultServiceImpl implements MedicalTopicResultService 
             }
 
             final float weight;
-            if (taskResult.getAltScore() != null) {
-                weight = taskResult.getAltScore();
-            } else if (taskResult.getValue() <= task.getLeftMid()) {
+            if (taskResult.getValue() <= task.getLeftMid()) {
                 if (taskResult.getValue() <= task.getLeftLeft()) {
                     weight = property.getLeftLeft();
                 } else {
@@ -114,83 +181,6 @@ public class MedicalTopicResultServiceImpl implements MedicalTopicResultService 
             .build();
     }
 
-//    private ResultBean getResult(MedicalTopicResult result) {
-//		final Map<Decision, Float> decisionBeans = new LinkedHashMap<>();
-//		final Map<Decision, Integer> decisionsCount = new LinkedHashMap<>();
-//		float weightSum = 0;
-//		int filledCount = 0;
-//		final String progress = topicInvokeService.getProgress(result);
-//		if (result.getCompleteDate() == null) {
-//			return new ResultBean(result, null, null, 0, false, false, progress);
-//		}
-//		final List<TaskResultBean> tasks = new ArrayList<>();
-//		for (MedicalTaskResult taskResult : result.getResults()) {
-//			final MedicalTask task = taskResult.getMedicalTask();
-//			if (taskResult.getValue() == null) {
-//                continue;
-//            }
-//
-//			Set<Decision> decisions = Set.of();
-//			boolean left = false;
-//            boolean right = false;
-//            if (taskResult.getValue() <= task.getLeftMid()) {
-//                decisions = task.getLeftDecisions();
-//                left = true;
-//            }
-//            if (taskResult.getValue() >= task.getRightMid()) {
-//                decisions = task.getRightDecisions();
-//                right = true;
-//            }
-//
-//            final float weight;
-//            if (taskResult.getAltScore() != null) {
-//                weight = taskResult.getAltScore();
-//            } else if (left) {
-//                if (taskResult.getValue() <= task.getLeftLeft()) {
-//                    weight = leftLeft;
-//                } else {
-//                    weight = leftMid;
-//                }
-//            } else if (right) {
-//                if (taskResult.getValue() >= task.getRightRight()) {
-//                    weight = rightRight;
-//                } else {
-//                    weight = rightMid;
-//                }
-//            } else {
-//                weight = 0;
-//            }
-//
-//			for (Decision decision : decisions) {
-//				decisionBeans.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
-//				decisionsCount.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
-//			}
-//			tasks.add(new TaskResultBean(taskResult, weight, getAnalyse(taskResult), decisions.stream().sorted(Comparator.comparing(Decision::getName)).toList()));
-//			weightSum += weight;
-//            filledCount++;
-//        }
-//        final float score = weightSum / filledCount;
-//        final List<DecisionBean> decisionsList = decisionBeans.entrySet().stream()
-//                .map(entry -> new DecisionBean(entry.getKey(), entry.getValue(), entry.getValue() / decisionsCount.get(entry.getKey()), decisionsCount.get(entry.getKey())))
-//                .sorted(Comparator.comparing(DecisionBean::score).reversed()
-//                        .thenComparing(bean -> bean.decision().getName()))
-//                .toList();
-//        result.setResults(result.getResults().stream()
-//                .sorted(Comparator.comparing(taskResult -> taskResult.getMedicalTask().getName()))
-//                .collect(Collectors.toCollection(LinkedHashSet::new)));
-//        tasks.sort(Comparator.comparing(t -> t.taskResult.getMedicalTask().getName()));
-//        return new ResultBean(result, tasks, decisionsList, score, score >= yellowRatio, score >= redRatio, progress);
-//        return null;
-//    }
-
-    public void deleteResult(Long topicResultId) {
-//        topicResultRepository.deleteById(topicResultId);
-    }
-
-    public void updateTaskResult(MedicalTaskResult taskResult) {
-//        taskResultRepository.save(taskResult);
-    }
-
 //    public AnalyseForm getAnalyse(MedicalTaskResult result) {
 //        final float value = result.getValue();
 //        final MedicalTask task = result.getMedicalTask();
@@ -208,22 +198,4 @@ public class MedicalTopicResultServiceImpl implements MedicalTopicResultService 
 //        final float marker = (value - min) / len * 100;
 //        return new AnalyseForm(values, marker);
 //    }
-
-    public record TopicResultBean(MedicalTopicWithTaskSize topic, List<ResultBean> results) {
-
-    }
-
-    public record ResultBean(MedicalTopicResult topicResult, List<TaskResultBean> tasks, List<DecisionBean> decisions,
-                             float score, boolean yellow, boolean red, String progress) {
-    }
-
-    public record TaskResultBean(MedicalTaskResult taskResult, Float resultScore, AnalyseForm analyseForm,
-                                 List<Decision> decisions) {
-    }
-
-    public record AnalyseForm(List<Float> values, float marker) {
-    }
-
-    public record DecisionBean(Decision decision, float score, float altScore, int count) {
-    }
 }

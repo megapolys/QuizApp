@@ -321,8 +321,7 @@ public class MedicalPersistenceImpl implements MedicalPersistence {
 						taskResultEntity.getId(),
 						taskResultEntity.getTaskId(),
 						taskResultEntity.getTopicResultId(),
-						value,
-						taskResultEntity.getAltScore()
+						value
 					));
 					anyChanged = true;
 				}

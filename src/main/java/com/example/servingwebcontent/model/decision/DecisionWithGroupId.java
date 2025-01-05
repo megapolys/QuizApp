@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class DecisionWithGroup {
+public class DecisionWithGroupId {
 
 	Long id;
 
@@ -15,7 +15,5 @@ public class DecisionWithGroup {
 
 	String description;
 
-	String groupName;
-
-	Long taskId;
+	Long groupId;
 }

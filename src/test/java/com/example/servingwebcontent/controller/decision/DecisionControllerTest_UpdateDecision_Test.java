@@ -2,7 +2,7 @@ package com.example.servingwebcontent.controller.decision;
 
 import com.example.servingwebcontent.generator.decision.DecisionEntityGenerator;
 import com.example.servingwebcontent.generator.decision.DecisionWithGroupGenerator;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.DecisionWithGroupId;
 import com.example.servingwebcontent.model.entities.quiz.decision.DecisionEntity;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,7 +29,7 @@ public class DecisionControllerTest_UpdateDecision_Test extends DecisionControll
 	@Test
 	@WithMockUser(roles = {"ADMIN"})
 	void whenUpdateDecisionThenRedirect() throws Exception {
-		DecisionWithGroup decision = DecisionWithGroupGenerator.generateNew();
+		DecisionWithGroupId decision = DecisionWithGroupGenerator.generateNew();
 		DecisionEntity expectedDecisionEntity = DecisionEntityGenerator.generate();
 
 		when(decisionRepository.findByName(anyString())).thenReturn(Optional.empty());
@@ -56,7 +56,7 @@ public class DecisionControllerTest_UpdateDecision_Test extends DecisionControll
 	@Test
 	@WithMockUser(roles = {"ADMIN"})
 	void whenUpdateDecisionWithSameNameThenRedirect() throws Exception {
-		DecisionWithGroup decision = DecisionWithGroupGenerator.generateNew();
+		DecisionWithGroupId decision = DecisionWithGroupGenerator.generateNew();
 		DecisionEntity expectedDecisionEntity = DecisionEntityGenerator.generate();
 
 		when(decisionRepository.findByName(anyString())).thenReturn(Optional.of(expectedDecisionEntity));
@@ -83,7 +83,7 @@ public class DecisionControllerTest_UpdateDecision_Test extends DecisionControll
 	@Test
 	@WithMockUser(roles = {"ADMIN"})
 	void whenUpdateDecisionWithEmptyNameThenRedirect() throws Exception {
-		DecisionWithGroup decision = DecisionWithGroupGenerator.generateNew();
+		DecisionWithGroupId decision = DecisionWithGroupGenerator.generateNew();
 		decision.setName(null);
 
 		mockMvc.perform(post(URL, 1L)
@@ -101,7 +101,7 @@ public class DecisionControllerTest_UpdateDecision_Test extends DecisionControll
 	@Test
 	@WithMockUser(roles = {"ADMIN"})
 	void whenDecisionNameAlreadyExistsThenRedirect() throws Exception {
-		DecisionWithGroup decision = DecisionWithGroupGenerator.generateNew();
+		DecisionWithGroupId decision = DecisionWithGroupGenerator.generateNew();
 		DecisionEntity expectedDecisionEntity = DecisionEntityGenerator.generate();
 
 		when(decisionRepository.findByName(anyString())).thenReturn(Optional.of(expectedDecisionEntity));

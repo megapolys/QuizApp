@@ -1,5 +1,6 @@
 package com.example.servingwebcontent.controller.medical;
 
+import com.example.servingwebcontent.model.medical.result.MedicalFullResultDto;
 import com.example.servingwebcontent.model.medical.result.MedicalWithResults;
 import com.example.servingwebcontent.service.medical.MedicalTopicResultService;
 import com.example.servingwebcontent.service.medical.impl.MedicalTopicInvokeServiceImpl;
@@ -49,5 +50,18 @@ public class MedicalResultRestController {
 		@RequestParam Long topicId
 	) {
 		medicalTopicInvokeService.createNewMedicalResult(userId, topicId);
+	}
+
+
+	/**
+	 * Получить полный результат анализов по идентификатору результата анализов
+	 *
+	 * @param medicalResultId идентификатор результата анализов
+	 *
+	 * @return полный результат анализов
+	 */
+	@GetMapping(value = "api/medical/result/{medicalResultId}")
+	public MedicalFullResultDto getMedicalResultById(@PathVariable Long medicalResultId) {
+		return medicalTopicResultService.getMedicalResultById(medicalResultId);
 	}
 }

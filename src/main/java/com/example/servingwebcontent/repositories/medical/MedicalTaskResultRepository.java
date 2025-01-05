@@ -16,8 +16,7 @@ public interface MedicalTaskResultRepository extends JpaRepository<MedicalTaskRe
 			mtr.id,
 			mt,
 			mtr.topicResultId,
-			mtr.value,
-			mtr.altScore
+			mtr.value
 		) from MedicalTaskResultEntity mtr
 		join MedicalTaskEntity mt on mt.id = mtr.taskId
 		where mtr.topicResultId = :topicResultId

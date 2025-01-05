@@ -1,11 +1,11 @@
 package com.example.servingwebcontent.generator.decision;
 
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.DecisionWithGroupId;
 
 public class DecisionWithGroupGenerator {
 
-	public static DecisionWithGroup generate() {
-		return DecisionWithGroup.builder()
+	public static DecisionWithGroupId generate() {
+		return DecisionWithGroupId.builder()
 			.id(-1L)
 			.name("name")
 			.description("description")
@@ -13,8 +13,8 @@ public class DecisionWithGroupGenerator {
 			.build();
 	}
 
-	public static DecisionWithGroup generateNew() {
-		return DecisionWithGroup.builder()
+	public static DecisionWithGroupId generateNew() {
+		return DecisionWithGroupId.builder()
 			.name(" name ")
 			.description(" description ")
 			.groupId(-201L)

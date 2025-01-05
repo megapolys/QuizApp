@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.DecisionWithGroupId;
 import com.example.servingwebcontent.model.decision.Group;
 import com.example.servingwebcontent.model.decision.GroupWithDecisions;
 import com.example.servingwebcontent.service.decision.DecisionService;
@@ -72,7 +72,7 @@ public class DecisionRestController {
 	 * @return Решение с группой
 	 */
 	@GetMapping("/api/decisions/{decisionId}")
-	public DecisionWithGroup getDecisionById(@PathVariable Long decisionId) {
+	public DecisionWithGroupId getDecisionById(@PathVariable Long decisionId) {
 		return decisionService.getDecisionById(decisionId);
 	}
 
@@ -135,7 +135,7 @@ public class DecisionRestController {
 	 * @param decision - Решение
 	 */
 	@PostMapping(value = "/api/decisions")
-	public void addDecision(@Valid @RequestBody DecisionWithGroup decision) {
+	public void addDecision(@Valid @RequestBody DecisionWithGroupId decision) {
 		decisionService.addDecision(decision);
 	}
 
@@ -145,7 +145,7 @@ public class DecisionRestController {
 	 * @param decision - Решение
 	 */
 	@PutMapping("/api/decisions")
-	public void decisionUpdate(@Valid @RequestBody DecisionWithGroup decision) {
+	public void decisionUpdate(@Valid @RequestBody DecisionWithGroupId decision) {
 		decisionService.updateDecision(decision);
 	}
 }

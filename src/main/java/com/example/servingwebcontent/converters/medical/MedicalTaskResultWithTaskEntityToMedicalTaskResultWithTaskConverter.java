@@ -19,7 +19,6 @@ public class MedicalTaskResultWithTaskEntityToMedicalTaskResultWithTaskConverter
 			.task(taskConverter.convert(entity.getTask()))
 			.topicResultId(entity.getTopicResultId())
 			.value(entity.getValue())
-			.altScore(entity.getAltScore())
 			.build();
 	}
 }

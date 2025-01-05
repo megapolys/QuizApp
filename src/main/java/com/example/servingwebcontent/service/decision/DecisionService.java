@@ -1,7 +1,7 @@
 package com.example.servingwebcontent.service.decision;
 
 import com.example.servingwebcontent.model.decision.Decision;
-import com.example.servingwebcontent.model.decision.DecisionWithGroup;
+import com.example.servingwebcontent.model.decision.DecisionWithGroupId;
 import com.example.servingwebcontent.model.decision.Group;
 import com.example.servingwebcontent.model.decision.GroupWithDecisions;
 
@@ -52,7 +52,7 @@ public interface DecisionService {
 	/**
 	 * Добавление нового решения
 	 */
-	void addDecision(DecisionWithGroup decision);
+	void addDecision(DecisionWithGroupId decision);
 
 	/**
 	 * Получение решения
@@ -61,14 +61,14 @@ public interface DecisionService {
 	 *
 	 * @return Решение
 	 */
-	DecisionWithGroup getDecisionById(Long decisionId);
+	DecisionWithGroupId getDecisionById(Long decisionId);
 
 	/**
 	 * Изменение решения
 	 *
 	 * @param decision - Решение
 	 */
-	void updateDecision(DecisionWithGroup decision);
+	void updateDecision(DecisionWithGroupId decision);
 
 	/**
 	 * Удаление решения
