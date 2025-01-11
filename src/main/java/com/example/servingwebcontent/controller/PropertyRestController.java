@@ -1,4 +1,4 @@
-package com.example.servingwebcontent.controller.quiz;
+package com.example.servingwebcontent.controller;
 
 import com.example.servingwebcontent.property.ColorRatioProperty;
 import com.example.servingwebcontent.property.FiveVariantProperty;

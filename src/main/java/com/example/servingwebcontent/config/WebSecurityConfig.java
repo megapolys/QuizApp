@@ -26,7 +26,10 @@ public class WebSecurityConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/login", "/registration", "/activate/**", "/repairPassword", "/repairPassword/*").anonymous()
-                .requestMatchers("/user/list", "/quiz/**", "/api/quiz/**", "/decisions/**", "/api/decisions/**", "/medical/**", "/api/medical/**").hasRole("ADMIN")
+                .requestMatchers("/user/list", "/quiz/**", "/api/quiz/**", "/decisions/**", "/api/decisions/**", "/medical/**", "/api/medical/**",
+                    "/topic/result/**", "/api/property/**"
+                ).hasRole("ADMIN")
+                .requestMatchers("/quiz/invoke/**", "/api/quiz/invoke/**", "/medical/invoke/**", "/api/medical/invoke/**").hasRole("USER")
                 .requestMatchers("/", "/main", "/static/**").permitAll()
                 .anyRequest().authenticated()
             )

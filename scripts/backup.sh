@@ -7,7 +7,7 @@ DATA=$(date +"%Y-%m-%d")
 ssh -i ~/.ssh/id_rsa root@185.182.111.235 << EOF
 
 tar -cvf backup/logs_uploads_backup.tar log.txt uploads
-pg_dump -f backup/db_backup.tar -F t -T flyway_schema_history -U postgres -a -W quiz
+pg_dump -f backup/db_backup.tar -F t -U postgres -a -W quiz
 pass
 
 
@@ -19,3 +19,5 @@ scp -i ~/.ssh/id_rsa root@185.182.111.235:/root/backup/db_backup.tar C:/db_backu
 scp -i ~/.ssh/id_rsa root@185.182.111.235:/root/backup/logs_uploads_backup.tar C:/db_backup/logs_uploads_backup_"$DATA".tar
 
 echo 'Bye'
+
+#pg_dump -f C:/db_backup/db_backup_updated_old.tar -F t -U postgres -a --exclude-schema=changes dbname=quiz_app_test_1

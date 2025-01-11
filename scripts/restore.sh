@@ -8,5 +8,6 @@ pg_restore -d postgres --data-only -a --verbose -U postgres db_backup.tar
 pass #admin
 
 EOF
-# pg_restore -d postgres --data-only -a --verbose -U postgres db_backup.tar
 echo 'Bye'
+
+#pg_restore -d quiz_app_test_2 --data-only -a --verbose -U postgres C:/db_backup/db_backup_updated_old.tar

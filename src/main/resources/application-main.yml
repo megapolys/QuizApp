@@ -6,7 +6,7 @@ spring:
       hibernate:
         default_schema: quiz_app
   datasource:
-    url: jdbc:postgresql://localhost:5432/quiz_app
+    url: jdbc:postgresql://localhost:5432/quiz_app_test_2
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
