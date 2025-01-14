@@ -11,6 +11,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quiz_app
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SERVER_PORT=8082
   postgres:
     image: "postgres:14"
     ports:
@@ -19,4 +20,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=quiz_app
-
+  nginx:
+    image: "nginx:1.26.2"
+    ports:
+      - "8083:80"
