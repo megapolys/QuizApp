@@ -7,7 +7,7 @@ DATA=$(date +"%Y-%m-%d")
 ssh -i ~/.ssh/id_rsa root@185.182.111.235 << EOF
 
 tar -cvf backup/logs_uploads_backup.tar log.txt uploads
-pg_dump -f backup/db_backup.tar -F t -U postgres -a -W quiz
+pg_dump --file=var/backups/db_backup.tar --format=tar --username=postgres --data-only --password=postgres
 pass
 
 
