@@ -21,11 +21,11 @@ public interface QuizTaskRepository extends JpaRepository<QuizTaskEntity, Long> 
 					fvt,
 					ynt
 				) from QuizTaskEntity qt
-				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
-				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
+				left join FiveVariantTaskEntity fvt on qt.id = fvt.taskId
+				left join YesOrNoTaskEntity ynt on qt.id = ynt.taskId
 				left join QuizTaskDecisionsEntity qtd on qt.id = qtd.quizTaskId
 				where qt.quizId = :quizId
-				group by qt.id, fvt.id, ynt.id
+				group by qt.id, fvt, ynt
 				order by qt.position
 		""")
 	List<QuizTaskFullEntity> findAllFullByQuizId(Long quizId);
@@ -41,11 +41,11 @@ public interface QuizTaskRepository extends JpaRepository<QuizTaskEntity, Long> 
 					fvt,
 					ynt
 				) from QuizTaskEntity qt
-				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
-				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
+				left join FiveVariantTaskEntity fvt on qt.id = fvt.taskId
+				left join YesOrNoTaskEntity ynt on qt.id = ynt.taskId
 				left join QuizTaskDecisionsEntity qtd on qt.id = qtd.quizTaskId
 				where qt.id = :taskId
-				group by qt.id, fvt.id, ynt.id
+				group by qt.id, fvt, ynt
 		""")
 	Optional<QuizTaskFullEntity> findFullByTaskId(Long taskId);
 

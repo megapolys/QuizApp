@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class FiveVariantTaskEntity {
 
 	public static FiveVariantTaskEntity createNew(
+		Long taskId,
 		String preQuestionText,
 		String questionText,
 		String fileName,
@@ -26,7 +27,7 @@ public class FiveVariantTaskEntity {
 		Float fifthWeight
 	) {
 		return new FiveVariantTaskEntity(
-			null,
+			taskId,
 			preQuestionText,
 			questionText,
 			fileName,
@@ -39,7 +40,7 @@ public class FiveVariantTaskEntity {
 	}
 
 	public static FiveVariantTaskEntity buildExists(
-		Long id,
+		Long taskId,
 		String preQuestionText,
 		String questionText,
 		String fileName,
@@ -50,7 +51,7 @@ public class FiveVariantTaskEntity {
 		Float fifthWeight
 	) {
 		return new FiveVariantTaskEntity(
-			id,
+			taskId,
 			preQuestionText,
 			questionText,
 			fileName,
@@ -63,9 +64,8 @@ public class FiveVariantTaskEntity {
 	}
 
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_five_variant_gen")
-	Long id;
+	@Column(name = "task_id")
+	Long taskId;
 
 	@Column(name = "pre_question_text")
 	String preQuestionText;

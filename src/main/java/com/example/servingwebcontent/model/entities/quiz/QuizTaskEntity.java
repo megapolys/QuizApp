@@ -17,32 +17,24 @@ public class QuizTaskEntity {
 
 	public static QuizTaskEntity createNew(
 		Long quizId,
-		int position,
-		Long quizTaskFiveVariantId,
-		Long quizTaskYesOrNoId
+		int position
 	) {
 		return new QuizTaskEntity(
 			null,
 			quizId,
-			position,
-			quizTaskFiveVariantId,
-			quizTaskYesOrNoId
+			position
 		);
 	}
 
 	public static QuizTaskEntity buildExists(
 		Long id,
 		Long quizId,
-		int position,
-		Long quizTaskFiveVariantId,
-		Long quizTaskYesOrNoId
+		int position
 	) {
 		return new QuizTaskEntity(
 			id,
 			quizId,
-			position,
-			quizTaskFiveVariantId,
-			quizTaskYesOrNoId
+			position
 		);
 	}
 
@@ -56,10 +48,4 @@ public class QuizTaskEntity {
 
 	@Column(name = "position")
 	int position;
-
-	@Column(name = "quiz_task_five_variant_id")
-	Long quizTaskFiveVariantId;
-
-	@Column(name = "quiz_task_yes_or_no_id")
-	Long quizTaskYesOrNoId;
 }

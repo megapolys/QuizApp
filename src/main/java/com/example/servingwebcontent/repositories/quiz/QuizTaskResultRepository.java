@@ -24,8 +24,8 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 					ynt
 				) from QuizTaskResultEntity qtr
 				join QuizTaskEntity qt on qt.id = qtr.taskId
-				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
-				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
+				left join FiveVariantTaskEntity fvt on qt.id = fvt.taskId
+				left join YesOrNoTaskEntity ynt on qt.id = ynt.taskId
 				where qtr.quizResultId = :quizResultId
 				order by qt.position
 		""")
@@ -43,8 +43,8 @@ public interface QuizTaskResultRepository extends JpaRepository<QuizTaskResultEn
 					ynt
 				) from QuizTaskResultEntity qtr
 				join QuizTaskEntity qt on qt.id = qtr.taskId
-				left join FiveVariantTaskEntity fvt on qt.quizTaskFiveVariantId = fvt.id
-				left join YesOrNoTaskEntity ynt on qt.quizTaskYesOrNoId = ynt.id
+				left join FiveVariantTaskEntity fvt on qt.id = fvt.taskId
+				left join YesOrNoTaskEntity ynt on qt.id = ynt.taskId
 				where qtr.id = :quizTaskResultId
 		""")
 	Optional<QuizTaskResultWithTaskTypeEntity> getQuizTaskResultById(Long quizTaskResultId);

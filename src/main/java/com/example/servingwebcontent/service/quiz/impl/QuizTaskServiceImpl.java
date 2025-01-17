@@ -97,11 +97,15 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 		if (file != null && !file.isEmpty()) {
 			fileName = UUID.randomUUID() + "." + file.getOriginalFilename();
 		}
-		FiveVariantTaskEntity fiveVariantEntity = null;
-		YesOrNoTaskEntity yesOrNoEntity = null;
+		movePosition(command.getQuizId(), command.getPosition());
+		QuizTaskEntity taskEntity = quizTaskRepository.save(QuizTaskEntity.createNew(
+			command.getQuizId(),
+			command.getPosition()
+		));
 		if (command.getFiveVariant() != null) {
-			fiveVariantEntity = fiveVariantRepository.save(
+			fiveVariantRepository.save(
 				FiveVariantTaskEntity.createNew(
+					taskEntity.getId(),
 					command.getPreQuestionText(),
 					command.getQuestionText(),
 					fileName,
@@ -113,8 +117,9 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 				));
 		}
 		if (command.getYesOrNo() != null) {
-			yesOrNoEntity = yesOrNoRepository.save(
+			yesOrNoRepository.save(
 				YesOrNoTaskEntity.createNew(
+					taskEntity.getId(),
 					command.getPreQuestionText(),
 					command.getQuestionText(),
 					fileName,
@@ -122,13 +127,6 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 					command.getYesOrNo().getNoWeight()
 				));
 		}
-		movePosition(command.getQuizId(), command.getPosition());
-		QuizTaskEntity taskEntity = quizTaskRepository.save(QuizTaskEntity.createNew(
-			command.getQuizId(),
-			command.getPosition(),
-			fiveVariantEntity == null ? null : fiveVariantEntity.getId(),
-			yesOrNoEntity == null ? null : yesOrNoEntity.getId()
-		));
 		if (command.getDecisionIds() != null) {
 			for (Long decisionId : command.getDecisionIds()) {
 				quizTaskDecisionsRepository.save(QuizTaskDecisionsEntity.createNew(taskEntity.getId(), decisionId));
@@ -153,13 +151,18 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 		if (file != null && !file.isEmpty()) {
 			fileName = UUID.randomUUID() + "." + file.getOriginalFilename();
 		}
-		FiveVariantTaskEntity fiveVariantEntity = null;
-		YesOrNoTaskEntity yesOrNoEntity = null;
+		movePosition(task.getQuizId(), command.getPosition());
+		quizTaskRepository.save(QuizTaskEntity.buildExists(
+			task.getId(),
+			task.getQuizId(),
+			command.getPosition()
+		));
 		if (command.getFiveVariant() != null) {
 			if (task.getYesOrNoTask() != null) {
 				yesOrNoRepository.deleteById(task.getYesOrNoTask().getId());
-				fiveVariantEntity = fiveVariantRepository.save(
+				fiveVariantRepository.save(
 					FiveVariantTaskEntity.createNew(
+						taskId,
 						command.getPreQuestionText(),
 						command.getQuestionText(),
 						command.isDeleteFile() ? null :
@@ -171,9 +174,9 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 						command.getFiveVariant().getFifthWeight()
 					));
 			} else {
-				fiveVariantEntity = fiveVariantRepository.save(
+				fiveVariantRepository.save(
 					FiveVariantTaskEntity.buildExists(
-						task.getFiveVariantTask().getId(),
+						taskId,
 						command.getPreQuestionText(),
 						command.getQuestionText(),
 						command.isDeleteFile() ? null :
@@ -189,8 +192,9 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 		if (command.getYesOrNo() != null) {
 			if (task.getFiveVariantTask() != null) {
 				fiveVariantRepository.deleteById(task.getFiveVariantTask().getId());
-				yesOrNoEntity = yesOrNoRepository.save(
+				yesOrNoRepository.save(
 					YesOrNoTaskEntity.createNew(
+						taskId,
 						command.getPreQuestionText(),
 						command.getQuestionText(),
 						command.isDeleteFile() ? null :
@@ -199,9 +203,9 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 						command.getYesOrNo().getNoWeight()
 					));
 			} else {
-				yesOrNoEntity = yesOrNoRepository.save(
+				yesOrNoRepository.save(
 					YesOrNoTaskEntity.buildExists(
-						task.getYesOrNoTask().getId(),
+						taskId,
 						command.getPreQuestionText(),
 						command.getQuestionText(),
 						command.isDeleteFile() ? null :
@@ -211,14 +215,6 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 					));
 			}
 		}
-		movePosition(task.getQuizId(), command.getPosition());
-		quizTaskRepository.save(QuizTaskEntity.buildExists(
-			task.getId(),
-			task.getQuizId(),
-			command.getPosition(),
-			fiveVariantEntity == null ? null : fiveVariantEntity.getId(),
-			yesOrNoEntity == null ? null : yesOrNoEntity.getId()
-		));
 		if (command.getDecisionIds() != null) {
 			for (Long decisionId : command.getDecisionIds()) {
 				quizTaskDecisionsRepository.save(QuizTaskDecisionsEntity.createNew(task.getId(), decisionId));
@@ -228,6 +224,7 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 			deleteFile(task);
 		}
 		if (fileName != null) {
+			deleteFile(task);
 			saveFile(file, fileName);
 		}
 	}
@@ -252,7 +249,9 @@ public class QuizTaskServiceImpl implements QuizTaskService {
 		} else {
 			fileName = task.getFiveVariantTask().getFileName();
 		}
-		new File(uploadPathProperty.getImgPrefix() + uploadPathProperty.getImg() + "/" + fileName).delete();
+		if (fileName != null) {
+			new File(uploadPathProperty.getImgPrefix() + uploadPathProperty.getImg() + "/" + fileName).delete();
+		}
 	}
 
 	private void movePosition(Long quizId, Integer position) {

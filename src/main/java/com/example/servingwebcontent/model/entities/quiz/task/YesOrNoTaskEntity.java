@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 public class YesOrNoTaskEntity {
 
 	public static YesOrNoTaskEntity createNew(
+		Long taskId,
 		String preQuestionText,
 		String questionText,
 		String fileName,
@@ -23,7 +24,7 @@ public class YesOrNoTaskEntity {
 		Float noWeight
 	) {
 		return new YesOrNoTaskEntity(
-			null,
+			taskId,
 			preQuestionText,
 			questionText,
 			fileName,
@@ -33,7 +34,7 @@ public class YesOrNoTaskEntity {
 	}
 
 	public static YesOrNoTaskEntity buildExists(
-		Long id,
+		Long taskId,
 		String preQuestionText,
 		String questionText,
 		String fileName,
@@ -41,7 +42,7 @@ public class YesOrNoTaskEntity {
 		Float noWeight
 	) {
 		return new YesOrNoTaskEntity(
-			id,
+			taskId,
 			preQuestionText,
 			questionText,
 			fileName,
@@ -51,9 +52,8 @@ public class YesOrNoTaskEntity {
 	}
 
 	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quiz_task_yes_or_no_gen")
-	Long id;
+	@Column(name = "task_id")
+	Long taskId;
 
 	@Column(name = "pre_question_text")
 	String preQuestionText;

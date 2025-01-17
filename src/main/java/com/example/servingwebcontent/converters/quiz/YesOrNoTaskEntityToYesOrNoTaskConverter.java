@@ -11,7 +11,6 @@ public class YesOrNoTaskEntityToYesOrNoTaskConverter implements Converter<YesOrN
 	@Override
 	public YesOrNoTask convert(YesOrNoTaskEntity entity) {
 		return YesOrNoTask.builder()
-			.id(entity.getId())
 			.preQuestionText(entity.getPreQuestionText())
 			.questionText(entity.getQuestionText())
 			.fileName(entity.getFileName())
