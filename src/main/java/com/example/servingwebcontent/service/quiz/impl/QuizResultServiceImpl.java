@@ -70,9 +70,11 @@ public class QuizResultServiceImpl implements QuizResultService {
 		final Map<Decision, Integer> decisionCountMap = new LinkedHashMap<>();
 		for (QuizTaskResultWithTaskType taskResult : taskResultList) {
 			final float weight = taskResult.getAltScore() == null ? getWeight(taskResult) : taskResult.getAltScore();
-			for (Decision decision : decisionsByTaskId.get(taskResult.getTaskId())) {
-				decisionWeightMap.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
-				decisionCountMap.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
+			if (decisionsByTaskId.containsKey(taskResult.getTaskId())) {
+				for (Decision decision : decisionsByTaskId.get(taskResult.getTaskId())) {
+					decisionWeightMap.compute(decision, (dec, localWeight) -> localWeight == null ? weight : localWeight + weight);
+					decisionCountMap.compute(decision, (dec, count) -> count == null ? 1 : count + 1);
+				}
 			}
 			results.add(QuizTaskResultCalculated.builder()
 				.id(taskResult.getId())

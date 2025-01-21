@@ -10,6 +10,8 @@
 
         let taskList;
 
+        let filledTaskMap = new Map();
+
         $(async function () {
             await loadContent();
         });
@@ -17,27 +19,28 @@
         async function loadContent() {
             let quizResultId = ${quizResultId};
             taskList = await getQuizTaskList(quizResultId);
-            fillTask();
+            fillTask(null);
         }
 
-        function fillTask() {
+        function fillTask(taskIndex) {
             let taskCount = taskList.length;
             let completeCount = 0;
             let task;
-            let taskIndex;
             for (let i = 0; i < taskList.length; i++) {
                 task = taskList[i];
                 if (task.complete) {
                     completeCount = completeCount + 1;
                 } else {
-                    taskIndex = i;
+                    if (!taskIndex) {
+                        taskIndex = i;
+                    }
                     break;
                 }
             }
             if (completeCount === taskCount) {
                 window.location.replace("/quiz/invoke");
             }
-            console.log((taskIndex + 1) + '/' + taskCount);
+            task = taskList[taskIndex];
             let lastTask = completeCount === taskCount - 1;
             $('#progress-bar').css({"width": (completeCount / taskCount * 100) + '%'});
             let preQuestionText = task.fiveVariantTask ? task.fiveVariantTask.preQuestionText : task.yesOrNoTask.preQuestionText;
@@ -48,8 +51,25 @@
                 <p class="card-text">` + questionText + `</p>
                 <div id="task-invoke-form"></div>
             </div>
-            <div class="card-footer text-body-secondary text-center">` + (taskIndex + 1) + `/` + taskCount + `</div>
+            <div class="card-footer text-body-secondary text-center">
+                <div id="pagination-nav">
+                    <nav aria-label="Пример навигации по страницам">
+                        <ul class="pagination justify-content-center mb-0">
+                        </ul>
+                    </nav>
+                </div>
+            </div>
             `);
+
+            let paginationNav = $('#pagination-nav nav ul');
+            let navLen = 3;
+            let startIndex = Math.max(0, taskIndex - navLen + 1);
+            let endIndex = Math.min(taskList.length, taskIndex + navLen);
+            for (let i = startIndex; i < endIndex; i++) {
+                paginationNav.append('<li class="page-item' + (i === taskIndex ? ' active' : '') + '"><a class="page-link" href="#" onclick="fillTask(' + i + ')">' + (i + 1) + '</a></li>');
+            }
+            paginationNav.append('<li class="page-item"><a class="page-link" href="#" onclick="fillTask(null)">Следующий вопрос</a></li>');
+
             let taskInvokeForm = $('#task-invoke-form');
             if (task.fiveVariantTask) {
                 let fileName = task.fiveVariantTask.fileName;
@@ -108,6 +128,17 @@
             taskInvokeForm.append(lastTask ?
                 '<button class="btn btn-success" onclick="finishQuiz(' + taskIndex + ')">Завершить тестирование</button>' :
                 '<button class="btn btn-primary" onclick="nextTask(' + taskIndex + ')">Следующий вопрос</button>');
+
+            let filledTask = filledTaskMap.get(task.id);
+            if (filledTask) {
+                taskInvokeForm.find("[name|='variant']").each(function () {
+                    let checkbox = $(this);
+                    if (checkbox.val() === filledTask.variant) {
+                        checkbox.prop('checked', true);
+                    }
+                })
+                taskInvokeForm.find("[name|='text']").val(filledTask.text);
+            }
         }
 
         async function finishQuiz(index) {
@@ -145,7 +176,8 @@
             if (response.ok) {
                 clearFromInvalidFields(form);
                 task.complete = true;
-                fillTask();
+                filledTaskMap.set(task.id, body);
+                fillTask(null);
             } else {
                 response.json().then(json => {
                     fillFormInvalidFields(json, form);
