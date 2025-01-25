@@ -19,6 +19,15 @@
         async function loadContent() {
             let quizResultId = ${quizResultId};
             taskList = await getQuizTaskList(quizResultId);
+            for (let i = 0; i < taskList.length; i++) {
+                if (taskList[i].complete) {
+                    let body = {
+                        variant: taskList[i].variant,
+                        text: taskList[i].text
+                    };
+                    filledTaskMap.set(taskList[i].id, body);
+                }
+            }
             fillTask(null);
         }
 
@@ -31,7 +40,7 @@
                 if (task.complete) {
                     completeCount = completeCount + 1;
                 } else {
-                    if (!taskIndex) {
+                    if (taskIndex !== 0 && !taskIndex) {
                         taskIndex = i;
                     }
                     break;
@@ -60,16 +69,6 @@
                 </div>
             </div>
             `);
-
-            let paginationNav = $('#pagination-nav nav ul');
-            let navLen = 3;
-            let startIndex = Math.max(0, taskIndex - navLen + 1);
-            let endIndex = Math.min(taskList.length, taskIndex + navLen);
-            for (let i = startIndex; i < endIndex; i++) {
-                paginationNav.append('<li class="page-item' + (i === taskIndex ? ' active' : '') + '"><a class="page-link" href="#" onclick="fillTask(' + i + ')">' + (i + 1) + '</a></li>');
-            }
-            paginationNav.append('<li class="page-item"><a class="page-link" href="#" onclick="fillTask(null)">Следующий вопрос</a></li>');
-
             let taskInvokeForm = $('#task-invoke-form');
             if (task.fiveVariantTask) {
                 let fileName = task.fiveVariantTask.fileName;
@@ -125,12 +124,21 @@
                               placeholder="можно оставить пустым"></textarea>
                 </div>
             `);
-            taskInvokeForm.append(lastTask ?
-                '<button class="btn btn-success" onclick="finishQuiz(' + taskIndex + ')">Завершить тестирование</button>' :
-                '<button class="btn btn-primary" onclick="nextTask(' + taskIndex + ')">Следующий вопрос</button>');
+
+            let paginationNav = $('#pagination-nav nav ul');
+            let navLen = 3;
+            let startIndex = Math.max(0, taskIndex - navLen + 1);
+            let endIndex = Math.min(taskList.length, taskIndex + navLen);
+            for (let i = startIndex; i < endIndex; i++) {
+                paginationNav.append('<li class="page-item' + (i === taskIndex ? ' active' : '') + '"><a class="page-link" href="#" onclick="taskCompletePost(' + taskIndex + ', ' + i + ')">' + (i + 1) + '</a></li>');
+            }
+            paginationNav.append(lastTask ?
+                '<li class="page-item"><a class="page-link" href="#" onclick="taskCompletePost(' + taskIndex + ', null)">Завершить опросник</a></li>' :
+                '<li class="page-item"><a class="page-link" href="#" onclick="taskCompletePost(' + taskIndex + ', null)">Следующий вопрос</a></li>');
 
             let filledTask = filledTaskMap.get(task.id);
             if (filledTask) {
+                console.log(filledTask);
                 taskInvokeForm.find("[name|='variant']").each(function () {
                     let checkbox = $(this);
                     if (checkbox.val() === filledTask.variant) {
@@ -141,24 +149,21 @@
             }
         }
 
-        async function finishQuiz(index) {
-            await taskCompletePost(taskList[index]);
-        }
-
-        async function nextTask(index) {
-            await taskCompletePost(taskList[index]);
-        }
-
-        async function taskCompletePost(task) {
+        async function taskCompletePost(currentIndex, nextIndex) {
+            let task = taskList[currentIndex];
             clearMessage();
             let form = $('#task-invoke-form');
             let variant;
             form.find("[name|='variant']").each(function () {
-                let checkbox = $(this);
-                if (checkbox.is(':checked')) {
-                    variant = checkbox.val();
+                let radiobox = $(this);
+                if (radiobox.is(':checked')) {
+                    variant = radiobox.val();
                 }
             })
+            if (!variant && variant !== 0) {
+                fillTask(nextIndex);
+                return;
+            }
             let body = {
                 quizTaskResultId: task.id,
                 variant: variant,
@@ -177,7 +182,7 @@
                 clearFromInvalidFields(form);
                 task.complete = true;
                 filledTaskMap.set(task.id, body);
-                fillTask(null);
+                fillTask(nextIndex);
             } else {
                 response.json().then(json => {
                     fillFormInvalidFields(json, form);

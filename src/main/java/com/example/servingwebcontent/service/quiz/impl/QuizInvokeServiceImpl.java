@@ -44,7 +44,6 @@ public class QuizInvokeServiceImpl implements QuizInvokeService {
 		if (quizPersistence.notExistsQuizByUserIdAndTask(userId, command.getQuizTaskResultId())) {
 			throw AccessDeniedException.quizTaskByUserId(userId, command.getQuizTaskResultId());
 		}
-
 		quizPersistence.saveTaskResult(command);
 	}
 
