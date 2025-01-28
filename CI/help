@@ -1,0 +1,9 @@
+\\wsl$\docker-desktop-data\data\docker\volumes # место хранения volumes
+
+docker compose exec -it postgres sh # вход в консоль контейнера postgres
+psql -U postgres -d quiz_app # команда для подключения к бд
+
+# Очистка бд после первого запуска
+delete from quiz_app.usr_role where true;
+delete from quiz_app.role where true;
+delete from quiz_app.usr where true;

@@ -1,6 +1,7 @@
 version: '3'
 services:
   quiz-app:
+    container_name: quiz-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,7 +14,13 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SERVER_PORT=8080
+      - UPLOAD_PATH_IMG=/app/uploads
+      - UPLOAD_PATH_IMGPREFIX=
+    volumes:
+      - pg_backups:/var/backups
+      - uploads:/app/uploads
   postgres:
+    container_name: postgres
     image: "postgres:14"
     restart: always
     ports:
@@ -24,7 +31,9 @@ services:
       - POSTGRES_DB=quiz_app
     volumes:
       - pg_backups:/var/backups
+      - pg_data:/var/lib/postgresql/data
   nginx:
+    container_name: nginx
     build:
       context: ./nginx
       dockerfile: Dockerfile
@@ -35,3 +44,5 @@ services:
 
 volumes:
   pg_backups:
+  pg_data:
+  uploads:
