@@ -1,48 +1,57 @@
-version: '3'
 services:
   quiz-app:
-    container_name: quiz-app
+    container_name: ${APP_NAME}
+
+    # собираем образ из Dockerfile в текущей папке
     build:
       context: .
       dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "8082:8080"
-    # Эти свойства перегружают соответствующие в application.yml
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/quiz_app
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - SERVER_PORT=8080
-      - UPLOAD_PATH_IMG=/app/uploads
-      - UPLOAD_PATH_IMGPREFIX=
-    volumes:
-      - pg_backups:/var/backups
-      - uploads:/app/uploads
-  postgres:
-    container_name: postgres
-    image: "postgres:14"
-    restart: always
-    ports:
-      - "5433:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=quiz_app
-    volumes:
-      - pg_backups:/var/backups
-      - pg_data:/var/lib/postgresql/data
-  nginx:
-    container_name: nginx
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
 
-volumes:
-  pg_backups:
-  pg_data:
-  uploads:
+    # автоматически перезапускать контейнер при сбоях и после перезагрузки
+    restart: unless-stopped
+
+    environment:
+      # включаем deploy-профиль spring
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+
+      # порт приложения внутри контейнера
+      - SERVER_PORT=${APP_PORT}
+
+      # пути для загружаемых файлов
+      - UPLOAD_PATH_IMG=${UPLOAD_PATH_IMG}
+      - UPLOAD_PATH_IMGPREFIX=${UPLOAD_PATH_IMGPREFIX}
+
+    volumes:
+      # подключаем постоянную папку с файлами приложения
+      - /data/storage/quiz-app/uploads:/app/uploads
+
+    networks:
+      # сеть для публикации через Traefik
+      - proxy
+      # внутренняя сеть для будущего подключения к базе данных
+      - backend
+
+    labels:
+      # разрешаем Traefik публиковать контейнер
+      - "traefik.enable=true"
+
+      # домен приложения
+      - "traefik.http.routers.${APP_NAME}.rule=Host(`${APP_DOMAIN}`)"
+
+      # публикуем через HTTPS
+      - "traefik.http.routers.${APP_NAME}.entrypoints=websecure"
+
+      # выпускаем сертификат через Let's Encrypt
+      - "traefik.http.routers.${APP_NAME}.tls.certresolver=letsencrypt"
+
+      # подключаем стандартные middleware для публичного сайта
+      - "traefik.http.routers.${APP_NAME}.middlewares=chain-public@file"
+
+      # внутренний порт приложения внутри контейнера
+      - "traefik.http.services.${APP_NAME}.loadbalancer.server.port=${APP_PORT}"
+
+networks:
+  proxy:
+    external: true
+  backend:
+    external: true
